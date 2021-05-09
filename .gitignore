@@ -1,0 +1,4 @@
+# ignore everything in the root except the src directory
+/*
+!.gitignore
+!src/
