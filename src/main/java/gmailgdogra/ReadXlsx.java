@@ -22,11 +22,10 @@ public class ReadXlsx {
         System.out.println(firstSheet.getSheetName());
     }
 
-    public FileInputStream getFileInputStream(String filePath) throws FileNotFoundException {
-        FileInputStream file;
-        try {
-            file = new FileInputStream(new File(filePath));
-            return file;
+    public FileInputStream getFileInputStream(String filePath) throws IOException {
+
+        try(FileInputStream fileStream = new FileInputStream(filePath)) {
+            return fileStream;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             throw new FileNotFoundException(filePath + " not found");
