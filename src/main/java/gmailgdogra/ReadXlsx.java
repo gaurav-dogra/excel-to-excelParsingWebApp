@@ -1,6 +1,5 @@
-package com.gmailatgauru.dogra.exceltoexcelparsingwebapp;
+package gmailgdogra;
 
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -13,7 +12,7 @@ import java.io.IOException;
 public class ReadXlsx {
 
     public void parse(String filePath) throws IOException {
-        FileInputStream file = readFile(filePath);
+        FileInputStream file = getFileInputStream(filePath);
         Workbook workbook = getWorkbook(file);
         Sheet firstSheet = getFirstSheet(workbook);
         printDataFromSheet(firstSheet); // for testing purpose
@@ -23,7 +22,7 @@ public class ReadXlsx {
         System.out.println(firstSheet.getSheetName());
     }
 
-    public FileInputStream readFile(String filePath) throws FileNotFoundException {
+    public FileInputStream getFileInputStream(String filePath) throws FileNotFoundException {
         FileInputStream file;
         try {
             file = new FileInputStream(new File(filePath));
