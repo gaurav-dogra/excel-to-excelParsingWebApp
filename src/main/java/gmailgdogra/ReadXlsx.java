@@ -12,8 +12,8 @@ import java.io.IOException;
 public class ReadXlsx {
 
     public void parse(String filePath) throws IOException {
-        FileInputStream file = getFileInputStream(filePath);
-        Workbook workbook = getWorkbook(file);
+        FileInputStream fileStream = getFileInputStream(filePath);
+        Workbook workbook = getWorkbook(fileStream);
         Sheet firstSheet = getFirstSheet(workbook);
         printDataFromSheet(firstSheet); // for testing purpose
     }
