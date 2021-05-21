@@ -4,7 +4,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,10 +11,12 @@ import java.io.IOException;
 public class ReadXlsx {
 
     public void parse(String filePath) throws IOException {
-        FileInputStream fileStream = getFileInputStream(filePath);
-        Workbook workbook = getWorkbook(fileStream);
-        Sheet firstSheet = getFirstSheet(workbook);
-        printDataFromSheet(firstSheet); // for testing purpose
+
+        try(FileInputStream fileStream = getFileInputStream(filePath)) {
+            Workbook workbook = getWorkbook(fileStream);
+            Sheet firstSheet = getFirstSheet(workbook);
+            printDataFromSheet(firstSheet); // for testing purpose
+        }
     }
 
     private void printDataFromSheet(Sheet firstSheet) {
@@ -24,8 +25,8 @@ public class ReadXlsx {
 
     public FileInputStream getFileInputStream(String filePath) throws IOException {
 
-        try(FileInputStream fileStream = new FileInputStream(filePath)) {
-            return fileStream;
+        try {
+            return new FileInputStream(filePath);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             throw new FileNotFoundException(filePath + " not found");
