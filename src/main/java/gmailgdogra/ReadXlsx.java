@@ -1,5 +1,6 @@
 package gmailgdogra;
 
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -7,23 +8,46 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+// this file reads firstName(col no. 0), lastName(col no. 1), Event Date(col no. 2)
+// and deviceName(col no. 5) from a given file
 public class ReadXlsx {
 
-    public void parse(String filePath) throws IOException {
+    // actual data always start from row 7, Note: Rows index start at 0
+    private static final int ROW_START = 7;
 
-        try(FileInputStream fileStream = getFileInputStream(filePath)) {
+    public List<Record> parse(String filePath) throws IOException {
+
+        try (FileInputStream fileStream = getFileInputStream(filePath)) {
             Workbook workbook = getWorkbook(fileStream);
             Sheet firstSheet = getFirstSheet(workbook);
-            printDataFromSheet(firstSheet); // for testing purpose
+//            List<Record> records = collectDataFrom(firstSheet);
+//            records
+//                    .forEach(System.out::println);
+//            System.out.println("total records " + records.size());
+            return collectDataFrom(firstSheet);
         }
     }
 
-    private void printDataFromSheet(Sheet firstSheet) {
-        System.out.println(firstSheet.getSheetName());
+    private List<Record> collectDataFrom(Sheet sheet) {
+        List<Record> data = new ArrayList<>();
+        for (int rowIndex = ROW_START; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            if (row != null) {
+                String firstName = row.getCell(0).getStringCellValue();
+                String lastName = row.getCell(1).getStringCellValue();
+                LocalDateTime swipeDateAndTime = row.getCell(2).getLocalDateTimeCellValue();
+                String deviceName = row.getCell(5).getStringCellValue();
+                data.add(new Record(firstName, lastName, swipeDateAndTime, deviceName));
+            }
+        }
+        return data;
     }
 
-    public FileInputStream getFileInputStream(String filePath) throws IOException {
+    private FileInputStream getFileInputStream(String filePath) throws IOException {
 
         try {
             return new FileInputStream(filePath);
@@ -33,18 +57,19 @@ public class ReadXlsx {
         }
     }
 
-    public Workbook getWorkbook(FileInputStream file) throws IOException {
+    private Workbook getWorkbook(FileInputStream file) throws IOException {
+
         Workbook workbook;
-            try {
-                workbook = new XSSFWorkbook(file);
-                return workbook;
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Not able to find the workbook");
-            }
+        try {
+            workbook = new XSSFWorkbook(file);
+            return workbook;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Not able to find the workbook");
+        }
     }
 
-    public Sheet getFirstSheet(Workbook workbook) {
+    private Sheet getFirstSheet(Workbook workbook) {
         return workbook.getSheetAt(0);
     }
 }
