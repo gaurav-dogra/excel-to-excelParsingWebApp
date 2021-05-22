@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ReadXlsxTest {
 
-    private final ReadXlsx xlsxReader = new ReadXlsx();
     private List<Record> records;
 
     private final Record FIRST_RECORD = new Record("Abdul",
@@ -28,7 +27,7 @@ class ReadXlsxTest {
     @BeforeEach
     void fillData() throws IOException {
         String TEST_FILE_PATH = "src/main/resources/testFile.xlsx";
-        records = xlsxReader.parse(TEST_FILE_PATH);
+        records = ReadXlsx.parse(TEST_FILE_PATH);
     }
 
     @Test
