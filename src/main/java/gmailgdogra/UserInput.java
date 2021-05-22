@@ -6,20 +6,15 @@ import java.util.stream.Collectors;
 
 public class UserInput {
 
-    // returns Map<Officer Name, Location Name>
     public static Set<Officer> start(String filePathAndName) throws IOException {
-        List<TransactionRecord> transactionRecords = readFile(filePathAndName);
+        List<TransactionRecord> transactionRecords = ReadXlsx.parse(filePathAndName);
         return getAllOfficersLocation(transactionRecords);
-    }
-
-    private static List<TransactionRecord> readFile(String filePath) throws IOException {
-        return ReadXlsx.parse(filePath);
     }
 
     private static Set<Officer> getAllOfficersLocation(List<TransactionRecord> transactionRecords) {
         Scanner scanner = new Scanner(System.in);
 
-        Set<Officer> officers = getAllOfficers(transactionRecords);
+        Set<Officer> officers = ExtractOfficers.from(transactionRecords);
 
         for (Officer officer : officers) {
             printAllLocations();
@@ -49,16 +44,11 @@ public class UserInput {
     }
 
     private static void printAllLocations() {
-        System.out.println("Choose from below sites or press enter to ignore the officer");
+        System.out.println("Choose a number from below or press enter to ignore the officer");
         System.out.print("Main Gate(1), ");
         System.out.print("Visitors Reception(2), ");
         System.out.print("EP WeighBridge(3), ");
         System.out.print("TL Plaistow(4). ");
     }
 
-    private static Set<Officer> getAllOfficers(List<TransactionRecord> transactionRecords) {
-        return transactionRecords.stream()
-                .map(transactionRecord -> new Officer(transactionRecord.getFirstName(), transactionRecord.getLastName()))
-                .collect(Collectors.toSet());
-    }
 }
