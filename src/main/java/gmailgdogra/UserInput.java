@@ -31,30 +31,33 @@ public class UserInput {
         Map<String, String> officerAndLocation = new HashMap<>();
 
         for (String officerName : officersNames) {
-            printSites();
+            printAllLocations();
             System.out.print("\nOfficer: " + officerName + ", Enter Location(id): " );
-            int location = scanner.nextInt();
-            officerAndLocation.put(officerName, convertToString(location));
+            String locationAsNumber = scanner.nextLine().trim();
+            String locationFullName = convertInputToFullName(locationAsNumber);
+            if (locationFullName != null) {
+                officerAndLocation.put(officerName, locationFullName);
+            }
         }
         return officerAndLocation;
     }
 
-    private String convertToString(int location) {
+    private String convertInputToFullName(String location) {
         switch(location) {
-            case 1:
+            case "1":
                 return "Main Gate";
-            case 2:
+            case "2":
                 return "Visitors Reception";
-            case 3:
+            case "3":
                 return "EP WeighBridge";
-            case 4:
+            case "4":
                 return "Plaistow";
             default:
                 return null;
         }
     }
 
-    private void printSites() {
+    private void printAllLocations() {
         System.out.println("Choose from below sites or press enter to ignore the officer");
         System.out.print("Main Gate(1), ");
         System.out.print("Visitors Reception(2), ");
