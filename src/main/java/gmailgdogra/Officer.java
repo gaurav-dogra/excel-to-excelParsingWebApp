@@ -44,4 +44,30 @@ public class Officer {
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Officer officer = (Officer) o;
+
+        if (!getFirstName().equals(officer.getFirstName())) return false;
+        if (!getLastName().equals(officer.getLastName())) return false;
+        return getLocation() == officer.getLocation();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getFirstName().hashCode();
+        result = 31 * result + getLastName().hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " +
+                lastName + ":" +
+                location;
+    }
 }
