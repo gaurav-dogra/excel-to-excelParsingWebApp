@@ -19,7 +19,7 @@ public class ReadXlsx {
     // actual data always start from row 7, Note: Rows index start at 0
     private static final int ROW_START = 7;
 
-    public List<Record> parse(String filePath) throws IOException {
+    public static List<Record> parse(String filePath) throws IOException {
 
         try (FileInputStream fileStream = getFileInputStream(filePath)) {
             Workbook workbook = getWorkbook(fileStream);
@@ -32,7 +32,7 @@ public class ReadXlsx {
         }
     }
 
-    private List<Record> collectDataFrom(Sheet sheet) {
+    private static List<Record> collectDataFrom(Sheet sheet) {
         List<Record> data = new ArrayList<>();
         for (int rowIndex = ROW_START; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
             Row row = sheet.getRow(rowIndex);
@@ -47,7 +47,7 @@ public class ReadXlsx {
         return data;
     }
 
-    private FileInputStream getFileInputStream(String filePath) throws IOException {
+    private static FileInputStream getFileInputStream(String filePath) throws IOException {
 
         try {
             return new FileInputStream(filePath);
@@ -57,7 +57,7 @@ public class ReadXlsx {
         }
     }
 
-    private Workbook getWorkbook(FileInputStream file) throws IOException {
+    private static Workbook getWorkbook(FileInputStream file) throws IOException {
 
         Workbook workbook;
         try {
@@ -69,7 +69,7 @@ public class ReadXlsx {
         }
     }
 
-    private Sheet getFirstSheet(Workbook workbook) {
+    private static Sheet getFirstSheet(Workbook workbook) {
         return workbook.getSheetAt(0);
     }
 }
