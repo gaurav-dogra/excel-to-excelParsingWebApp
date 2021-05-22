@@ -1,20 +1,14 @@
 package gmailgdogra;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
 public class UserInput {
 
-    public static Set<Officer> start(String filePathAndName) throws IOException {
-        List<TransactionRecord> transactionRecords = ReadXlsx.parse(filePathAndName);
-        return getAllOfficersLocation(transactionRecords);
-    }
+    public static Set<Officer> getOfficersFrom(List<TransactionRecord> transactionRecords) {
 
-    private static Set<Officer> getAllOfficersLocation(List<TransactionRecord> transactionRecords) {
         Scanner scanner = new Scanner(System.in);
-
         Set<Officer> officers = ExtractOfficers.from(transactionRecords);
 
         for (Officer officer : officers) {
