@@ -11,7 +11,7 @@
     <groupId>com.gmailatgauru.dogra</groupId>
     <artifactId>excel-to-excelParsingWebApp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>excel-to-excelParsingWebApp</name>
+    <officer>excel-to-excelParsingWebApp</officer>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>

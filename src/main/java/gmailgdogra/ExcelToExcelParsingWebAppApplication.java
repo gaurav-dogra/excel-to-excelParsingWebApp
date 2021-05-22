@@ -10,7 +10,7 @@ public class ExcelToExcelParsingWebAppApplication {
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(ExcelToExcelParsingWebAppApplication.class, args);
-        new ReadXlsx().parse("myFile.xlsx");
+        new UserInput().start();
     }
 
 }
