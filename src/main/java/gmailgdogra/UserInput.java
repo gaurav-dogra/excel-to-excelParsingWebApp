@@ -1,8 +1,9 @@
 package gmailgdogra;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
 public class UserInput {
 
@@ -18,18 +19,16 @@ public class UserInput {
 
         for (Officer officer : officers) {
             printAllLocations();
-            System.out.print("\nOfficer: " + officer.getFullName() + ", Enter Location(id): " );
+            System.out.print("\nOfficer: " + officer.getFullName() + ", Enter Location(id): ");
             String locationAsNumber = scanner.nextLine().trim();
             Location location = convertInputToLocation(locationAsNumber);
-            if (location != null) {
-                officer.setLocation(location);
-            }
+            officer.setLocation(location);
         }
         return officers;
     }
 
     private static Location convertInputToLocation(String location) {
-        switch(location) {
+        switch (location) {
             case "1":
                 return Location.MAIN_GATE;
             case "2":
