@@ -54,4 +54,26 @@ public class Record {
                 getSwipeTime() + ", " +
                 getDeviceName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Record record = (Record) o;
+
+        if (!getFirstName().equals(record.getFirstName())) return false;
+        if (!getLastName().equals(record.getLastName())) return false;
+        if (!getSwipeTime().equals(record.getSwipeTime())) return false;
+        return getDeviceName().equals(record.getDeviceName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getFirstName().hashCode();
+        result = 31 * result + getLastName().hashCode();
+        result = 31 * result + getSwipeTime().hashCode();
+        result = 31 * result + getDeviceName().hashCode();
+        return result;
+    }
 }
