@@ -19,7 +19,7 @@ public class ReadXlsx {
     // actual data always start from row 7, Note: Rows index start at 0
     private static final int ROW_START = 7;
 
-    public static List<Record> parse(String filePath) throws IOException {
+    public static List<TransactionRecord> parse(String filePath) throws IOException {
 
         try (FileInputStream fileStream = getFileInputStream(filePath)) {
             Workbook workbook = getWorkbook(fileStream);
@@ -32,8 +32,8 @@ public class ReadXlsx {
         }
     }
 
-    private static List<Record> collectDataFrom(Sheet sheet) {
-        List<Record> data = new ArrayList<>();
+    private static List<TransactionRecord> collectDataFrom(Sheet sheet) {
+        List<TransactionRecord> data = new ArrayList<>();
         for (int rowIndex = ROW_START; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
@@ -41,7 +41,7 @@ public class ReadXlsx {
                 String lastName = row.getCell(1).getStringCellValue();
                 LocalDateTime swipeDateAndTime = row.getCell(2).getLocalDateTimeCellValue();
                 String deviceName = row.getCell(5).getStringCellValue();
-                data.add(new Record(firstName, lastName, swipeDateAndTime, deviceName));
+                data.add(new TransactionRecord(firstName, lastName, swipeDateAndTime, deviceName));
             }
         }
         return data;
