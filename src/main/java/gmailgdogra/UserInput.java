@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
 
 public class UserInput {
 
-    public void start() throws IOException {
+    // returns Map<Officer Name, Location Name>
+    public Map<String, String> start() throws IOException {
         String filePath = getFilePath();
         List<Record> records = readFile(filePath);
-        Map<String, String> officerAndLocation = getAllOfficersLocation(records);
-        officerAndLocation.keySet()
-                .forEach(key -> System.out.println(key + ":" + officerAndLocation.get(key)));
+        //        officerAndLocation.keySet()
+//                .forEach(key -> System.out.println(key + ":" + officerAndLocation.get(key)));
+        return getAllOfficersLocation(records);
     }
 
     private String getFilePath() {
