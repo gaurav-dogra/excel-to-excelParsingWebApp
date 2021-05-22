@@ -2,13 +2,13 @@ package gmailgdogra;
 
 import java.time.LocalDateTime;
 
-public class Record {
+public class TransactionRecord {
     private String firstName;
     private String lastName;
     private LocalDateTime swipeTime;
     private String deviceName;
 
-    public Record(String firstName, String lastName, LocalDateTime swipeTime, String deviceName) {
+    public TransactionRecord(String firstName, String lastName, LocalDateTime swipeTime, String deviceName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.swipeTime = swipeTime;
@@ -64,12 +64,12 @@ public class Record {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Record record = (Record) o;
+        TransactionRecord transactionRecord = (TransactionRecord) o;
 
-        if (!getFirstName().equals(record.getFirstName())) return false;
-        if (!getLastName().equals(record.getLastName())) return false;
-        if (!getSwipeTime().equals(record.getSwipeTime())) return false;
-        return getDeviceName().equals(record.getDeviceName());
+        if (!getFirstName().equals(transactionRecord.getFirstName())) return false;
+        if (!getLastName().equals(transactionRecord.getLastName())) return false;
+        if (!getSwipeTime().equals(transactionRecord.getSwipeTime())) return false;
+        return getDeviceName().equals(transactionRecord.getDeviceName());
     }
 
     @Override
