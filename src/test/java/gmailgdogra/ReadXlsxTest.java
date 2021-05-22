@@ -38,7 +38,7 @@ class ReadXlsxTest {
 
     @Test
     @DisplayName("checking first and last record")
-    void parseFirstRowCheck() {
+    void parseFirstAndLastRowCheck() {
         assertAll("records",
                 () -> assertEquals(FIRST_RECORD, transactionRecords.get(0)),
                 () -> assertEquals(LAST_RECORD, transactionRecords.get(transactionRecords.size() - 1))
