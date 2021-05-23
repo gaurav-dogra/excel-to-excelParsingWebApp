@@ -11,7 +11,7 @@ public class PrepareOutputData {
 
     public static List<TransactionRecord> from(String filePathAndName) throws IOException {
         transactionRecords = ReadXlsx.parse(filePathAndName);
-        Set<Officer> officers = UserInput.getOfficersLocationFromUser(transactionRecords);
+        Set<Officer> officers = UserInput.getOfficersShiftInfo(transactionRecords);
         return getOutputRows(officers);
     }
 
@@ -115,7 +115,7 @@ public class PrepareOutputData {
             case "VISITORS_RECEPTION":
                 return new String[]{"",
                         "Thames LSI0302 - Empl W Turnstile OUT",
-                        "Thames LSI0304 - Empl E Turnstile OUT"}; // to be checked
+                        "Thames LSI0304 - Empl E Turnstile OUT"};
 
             case "EP_WEIGHBRIDGE":
                 return new String[]{"Thames LSI0702 - Weighbridge OUT"};
