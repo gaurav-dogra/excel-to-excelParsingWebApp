@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class UserInput {
 
-    public static Set<Officer> getOfficersFrom(List<TransactionRecord> transactionRecords) {
+    public static Set<Officer> getOfficersLocationFromUser(List<TransactionRecord> transactionRecords) {
 
         Scanner scanner = new Scanner(System.in);
         Set<Officer> officers = ExtractOfficers.from(transactionRecords);
