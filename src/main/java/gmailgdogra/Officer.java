@@ -5,11 +5,13 @@ public class Officer {
     private String firstName;
     private String lastName;
     private Location location;
+    private boolean isDayShift;
 
-    public Officer(String firstName, String lastName, Location location) {
+    public Officer(String firstName, String lastName, Location location, boolean isDayShift) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.location = location;
+        this.isDayShift = isDayShift;
     }
 
     public Officer(String firstName, String lastName) {
@@ -69,5 +71,13 @@ public class Officer {
         return firstName + " " +
                 lastName + ":" +
                 location;
+    }
+
+    public boolean isDayShift() {
+        return isDayShift;
+    }
+
+    public void setDayShift(boolean dayShift) {
+        isDayShift = dayShift;
     }
 }
