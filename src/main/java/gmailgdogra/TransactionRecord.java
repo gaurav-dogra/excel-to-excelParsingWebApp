@@ -2,7 +2,7 @@ package gmailgdogra;
 
 import java.time.LocalDateTime;
 
-public class TransactionRecord {
+public class TransactionRecord implements Comparable<TransactionRecord> {
     private String firstName;
     private String lastName;
     private LocalDateTime swipeTime;
@@ -79,5 +79,10 @@ public class TransactionRecord {
         result = 31 * result + getSwipeTime().hashCode();
         result = 31 * result + getDeviceName().hashCode();
         return result;
+    }
+
+    @Override
+    public int compareTo(TransactionRecord o) {
+        return this.swipeTime.compareTo(o.swipeTime);
     }
 }
