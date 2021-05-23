@@ -13,6 +13,7 @@ public class ExcelToExcelParsingWebApp {
         SpringApplication.run(ExcelToExcelParsingWebApp.class, args);
         List<TransactionRecord> outputData =
                 PrepareOutputData.from("src/main/resources/testFile.xlsx");
+        outputData.forEach(System.out::println);
     }
 
 }
