@@ -2,13 +2,13 @@ package gmailgdogra;
 
 import java.time.LocalDateTime;
 
-public class TransactionRecord {
+public class SwipeRecord implements Comparable<SwipeRecord> {
     private String firstName;
     private String lastName;
     private LocalDateTime swipeTime;
     private String deviceName;
 
-    public TransactionRecord(String firstName, String lastName, LocalDateTime swipeTime, String deviceName) {
+    public SwipeRecord(String firstName, String lastName, LocalDateTime swipeTime, String deviceName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.swipeTime = swipeTime;
@@ -64,12 +64,12 @@ public class TransactionRecord {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TransactionRecord transactionRecord = (TransactionRecord) o;
+        SwipeRecord swipeRecord = (SwipeRecord) o;
 
-        if (!getFirstName().equals(transactionRecord.getFirstName())) return false;
-        if (!getLastName().equals(transactionRecord.getLastName())) return false;
-        if (!getSwipeTime().equals(transactionRecord.getSwipeTime())) return false;
-        return getDeviceName().equals(transactionRecord.getDeviceName());
+        if (!getFirstName().equals(swipeRecord.getFirstName())) return false;
+        if (!getLastName().equals(swipeRecord.getLastName())) return false;
+        if (!getSwipeTime().equals(swipeRecord.getSwipeTime())) return false;
+        return getDeviceName().equals(swipeRecord.getDeviceName());
     }
 
     @Override
@@ -79,5 +79,10 @@ public class TransactionRecord {
         result = 31 * result + getSwipeTime().hashCode();
         result = 31 * result + getDeviceName().hashCode();
         return result;
+    }
+
+    @Override
+    public int compareTo(SwipeRecord o) {
+        return this.swipeTime.compareTo(o.swipeTime);
     }
 }
