@@ -14,8 +14,8 @@ public class PrepareOutputData {
         SwipeProcessor swipeProcessor = new SwipeProcessor(swipeRecords);
         for (Officer officer : officers) {
             if (officer.getLocation() != null) {
-                outputData.add(swipeProcessor.getFirstSwipeIn(officer));
-                outputData.add(swipeProcessor.getLastSwipeOut(officer));
+                outputData.add(swipeProcessor.getFirstSwipeIn(officer)); // one row
+                outputData.add(swipeProcessor.getLastSwipeOut(officer)); // another row
             }
         }
         return outputData;
