@@ -24,8 +24,8 @@ class ExtractOfficersTest {
 
     @Test
     void from() throws IOException {
-        List<TransactionRecord> transactionRecords = ReadXlsx.parse("src/main/resources/testFile.xlsx");
-        Set<Officer> officers = ExtractOfficers.from(transactionRecords);
+        List<SwipeRecord> swipeRecords = ReadXlsx.parse("src/main/resources/testFile.xlsx");
+        Set<Officer> officers = ExtractOfficers.from(swipeRecords);
         assertEquals(officers, expectedOfficers);
     }
 }
