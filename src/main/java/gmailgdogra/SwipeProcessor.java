@@ -49,7 +49,7 @@ public class SwipeProcessor {
                 .filter(swipeRecord -> allSwipeInDevices.get(officer.getLocation()).contains(swipeRecord.getDeviceName()))
                 .filter(swipeRecord -> {
                     if (officer.isDayShift()) {
-                        return swipeRecord.getSwipeTime().getHour() < 12; // touch in is before 12 noon
+                        return swipeRecord.getSwipeTime().getHour() <= 12; // touch-in is before 12 noon
                     } else {
                         return swipeRecord.getSwipeTime().getHour() > 12; // touch in should be after 12 noon
                     }
@@ -64,7 +64,7 @@ public class SwipeProcessor {
                 .filter(swipeRecord -> allSwipeOutDevices.get(officer.getLocation()).contains(swipeRecord.getDeviceName()))
                 .filter(swipeRecord -> {
                     if (officer.isDayShift()) {
-                        return swipeRecord.getSwipeTime().getHour() > 12; // touch out must be after 12 noon
+                        return swipeRecord.getSwipeTime().getHour() >= 12; // touch out must be 12 noon or after
                     } else {
                         return swipeRecord.getSwipeTime().getHour() < 12; // touch out must be before 12 noon
                     }
