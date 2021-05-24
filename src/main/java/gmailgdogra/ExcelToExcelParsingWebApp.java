@@ -11,7 +11,7 @@ public class ExcelToExcelParsingWebApp {
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(ExcelToExcelParsingWebApp.class, args);
-        List<TransactionRecord> outputData =
+        List<SwipeRecord> outputData =
                 PrepareOutputData.from("src/main/resources/testFile.xlsx");
         outputData.forEach(System.out::println);
     }
