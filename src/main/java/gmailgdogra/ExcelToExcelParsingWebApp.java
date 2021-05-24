@@ -13,7 +13,10 @@ public class ExcelToExcelParsingWebApp {
         SpringApplication.run(ExcelToExcelParsingWebApp.class, args);
         List<SwipeRecord> outputData =
                 PrepareOutputData.from("src/main/resources/testFile.xlsx");
-        outputData.forEach(System.out::println);
+        boolean isSuccess = WriteOutputXlsx.write(outputData);
+        if (isSuccess) {
+            System.out.println("File Created and Saved.");
+        }
     }
 
 }
