@@ -55,7 +55,8 @@ public class SwipeProcessor {
                     }
                 })
                 .sorted()
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
     }
 
     public SwipeRecord getLastSwipeOut(Officer officer) {
@@ -71,7 +72,7 @@ public class SwipeProcessor {
                 })
                 .sorted()
                 .reduce((first, second) -> second)
-                .orElse(null);
+                .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
     }
 
     private List<SwipeRecord> getAllInOutSwipesOfAnOfficer(Officer officer) {
