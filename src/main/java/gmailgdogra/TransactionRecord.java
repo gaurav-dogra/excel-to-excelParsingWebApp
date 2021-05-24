@@ -2,13 +2,13 @@ package gmailgdogra;
 
 import java.time.LocalDateTime;
 
-public class Record {
+public class TransactionRecord {
     private String firstName;
     private String lastName;
     private LocalDateTime swipeTime;
     private String deviceName;
 
-    public Record(String firstName, String lastName, LocalDateTime swipeTime, String deviceName) {
+    public TransactionRecord(String firstName, String lastName, LocalDateTime swipeTime, String deviceName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.swipeTime = swipeTime;
@@ -57,5 +57,27 @@ public class Record {
 
     public String getFullName() {
         return getFirstName() + " " + getLastName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TransactionRecord transactionRecord = (TransactionRecord) o;
+
+        if (!getFirstName().equals(transactionRecord.getFirstName())) return false;
+        if (!getLastName().equals(transactionRecord.getLastName())) return false;
+        if (!getSwipeTime().equals(transactionRecord.getSwipeTime())) return false;
+        return getDeviceName().equals(transactionRecord.getDeviceName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getFirstName().hashCode();
+        result = 31 * result + getLastName().hashCode();
+        result = 31 * result + getSwipeTime().hashCode();
+        result = 31 * result + getDeviceName().hashCode();
+        return result;
     }
 }
