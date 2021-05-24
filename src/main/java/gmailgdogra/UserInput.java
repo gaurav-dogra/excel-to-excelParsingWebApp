@@ -6,9 +6,9 @@ import java.util.Set;
 
 public class UserInput {
 
-    public static Set<Officer> getOfficersShiftInfo(List<TransactionRecord> transactionRecords) {
+    public static Set<Officer> getOfficers(List<SwipeRecord> swipeRecords) {
 
-        Set<Officer> officers = ExtractOfficers.from(transactionRecords);
+        Set<Officer> officers = ExtractOfficers.from(swipeRecords);
         for (Officer officer : officers) {
             printAllLocations();
             Location location = getLocation(officer);
