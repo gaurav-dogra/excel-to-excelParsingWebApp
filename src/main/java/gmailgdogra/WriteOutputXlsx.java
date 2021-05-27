@@ -71,10 +71,7 @@ public class WriteOutputXlsx {
         int rowNo = row.getRowNum();
         if (rowNo == 0) {
             applyHeaderStyle(row);
-            return;
         }
-
-
     }
 
     private static void applyHeaderStyle(Row titleRow) {
