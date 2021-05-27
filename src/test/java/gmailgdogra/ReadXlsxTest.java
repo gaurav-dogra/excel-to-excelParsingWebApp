@@ -3,8 +3,13 @@ package gmailgdogra;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,8 +31,18 @@ class ReadXlsxTest {
 
     @BeforeEach
     void fillData() throws IOException {
-        String TEST_FILE_PATH = "src/main/resources/testFile.xlsx";
-        swipeRecords = ReadXlsx.parse(TEST_FILE_PATH);
+        Path path = Paths.get("src/main/resources/testFile.xlsx");
+        String name = "testFile.xlsx";
+        String originalFileName = "testFile.xlsx";
+        String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        byte[] content = null;
+        try {
+            content = Files.readAllBytes(path);
+        } catch (final IOException ignored) {
+        }
+        MultipartFile result = new MockMultipartFile(name,
+                originalFileName, contentType, content);
+        swipeRecords = ReadXlsx.parse(result.getInputStream());
     }
 
     @Test
