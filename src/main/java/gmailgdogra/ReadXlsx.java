@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +20,10 @@ public class ReadXlsx {
     // actual data always start from row 7, Note: Rows index start at 0
     private static final int ROW_START = 7;
 
-    public static List<SwipeRecord> parse(String filePath) throws IOException {
-
-        try (FileInputStream fileStream = getFileInputStream(filePath)) {
-            Workbook workbook = getWorkbook(fileStream);
+    public static List<SwipeRecord> parse(InputStream inputStream) throws IOException {
+            Workbook workbook = new XSSFWorkbook(inputStream);
             Sheet firstSheet = getFirstSheet(workbook);
-//            List<Record> records = collectDataFrom(firstSheet);
-//            records
-//                    .forEach(System.out::println);
-//            System.out.println("total records " + records.size());
             return collectDataFrom(firstSheet);
-        }
     }
 
     private static List<SwipeRecord> collectDataFrom(Sheet sheet) {
