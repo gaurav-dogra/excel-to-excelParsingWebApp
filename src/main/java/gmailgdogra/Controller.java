@@ -15,7 +15,7 @@ public class Controller {
 
     @GetMapping("/")
     public String home() {
-        return "Excel To Excel Parsing Web App";
+        return "GD Welcomes you to Excel -> Excel Parsing Web App";
     }
 
     @PostMapping("/upload")
@@ -26,7 +26,8 @@ public class Controller {
             try {
                 List<SwipeRecord> outputData = PrepareOutputDataService.from(file.getInputStream());
                 message = "file uploaded successfully: " + file.getOriginalFilename();
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new ResponseMessage(message));
             } catch (Exception e) {
                 message = "failed to upload the file " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
