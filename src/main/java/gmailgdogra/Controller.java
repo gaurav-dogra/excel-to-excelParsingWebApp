@@ -24,9 +24,10 @@ public class Controller {
     public ResponseEntity<ResponseMessage> upload(@RequestParam MultipartFile file) {
         String message = "";
 
-        if (PrepareOutputDataService.hasExcelFormat(file)) {
+        if (ReadXlsxService.hasExcelFormat(file)) {
             try {
-                allData = PrepareOutputDataService.from(file.getInputStream());
+                allData = ReadXlsxService.parse(file.getInputStream());
+                message = "Successfully uploaded: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseMessage(message));
             } catch (Exception e) {
