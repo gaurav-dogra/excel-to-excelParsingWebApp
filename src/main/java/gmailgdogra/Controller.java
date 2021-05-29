@@ -13,6 +13,8 @@ import java.util.List;
 @RestController
 public class Controller {
 
+    private List<SwipeRecord> allData;
+
     @GetMapping("/")
     public String home() {
         return "GD Welcomes you to Excel -> Excel Parsing Web App";
@@ -21,17 +23,15 @@ public class Controller {
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> upload(@RequestParam MultipartFile file) {
         String message = "";
-        System.out.println(file.getOriginalFilename());
+
         if (PrepareOutputDataService.hasExcelFormat(file)) {
             try {
-                List<SwipeRecord> outputData = PrepareOutputDataService.from(file.getInputStream());
-                message = "file uploaded successfully: " + file.getOriginalFilename();
+                allData = PrepareOutputDataService.from(file.getInputStream());
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new ResponseMessage(message));
             } catch (Exception e) {
-                message = "failed to upload the file " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                        .body(new ResponseMessage(message));
+                        .body(new ResponseMessage("Unable to parse file: " + file.getName()));
             }
         } else {
             message = "Please upload an excel file!";
@@ -40,8 +40,9 @@ public class Controller {
         }
     }
 
-@GetMapping("/download")
+    @GetMapping("/download")
     public boolean download() {
+
         return true;
     }
 
