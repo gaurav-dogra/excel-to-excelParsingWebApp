@@ -5,8 +5,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -21,9 +19,9 @@ public class ReadXlsx {
     private static final int ROW_START = 7;
 
     public static List<SwipeRecord> parse(InputStream inputStream) throws IOException {
-            Workbook workbook = new XSSFWorkbook(inputStream);
-            Sheet firstSheet = getFirstSheet(workbook);
-            return collectDataFrom(firstSheet);
+        Workbook workbook = new XSSFWorkbook(inputStream);
+        Sheet firstSheet = getFirstSheet(workbook);
+        return collectDataFrom(firstSheet);
     }
 
     private static List<SwipeRecord> collectDataFrom(Sheet sheet) {
@@ -39,28 +37,6 @@ public class ReadXlsx {
             }
         }
         return data;
-    }
-
-    private static FileInputStream getFileInputStream(String filePath) throws IOException {
-
-        try {
-            return new FileInputStream(filePath);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new FileNotFoundException(filePath + " not found");
-        }
-    }
-
-    private static Workbook getWorkbook(FileInputStream file) throws IOException {
-
-        Workbook workbook;
-        try {
-            workbook = new XSSFWorkbook(file);
-            return workbook;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new IOException("Not able to find the workbook");
-        }
     }
 
     private static Sheet getFirstSheet(Workbook workbook) {
