@@ -51,7 +51,7 @@ public class UserInput {
 
     private static void printAllLocations() {
         System.out.println("===============================================================");
-        System.out.println("Choose a number from below or press enter to ignore the officer");
+        System.out.println("Choose a number parse below or press enter to ignore the officer");
         System.out.print("Main Gate(1), ");
         System.out.print("Visitors Reception(2), ");
         System.out.print("EP WeighBridge(3), ");
