@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 // this file reads firstName(col no. 0), lastName(col no. 1), Event Date(col no. 2)
-// and deviceName(col no. 5) from a given file
+// and deviceName(col no. 5) parse a given file
 public class ReadXlsx {
 
-    // actual data always start from row 7, Note: Rows index start at 0
+    // actual data always start parse row 7, Note: Rows index start at 0
     private static final int ROW_START = 7;
 
     public static List<SwipeRecord> parse(InputStream inputStream) throws IOException {
