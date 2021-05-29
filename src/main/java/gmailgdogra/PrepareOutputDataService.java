@@ -15,21 +15,24 @@ public class PrepareOutputDataService {
     public static String EXCEL_FILE_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     public static List<SwipeRecord> from(InputStream inputStream) throws IOException {
-        List<SwipeRecord> outputData = new ArrayList<>();
-        List<SwipeRecord> swipeRecords = ReadXlsx.parse(inputStream);
-        Set<Officer> officers = UserInput.getOfficers(swipeRecords);
-        SwipeProcessor swipeProcessor = new SwipeProcessor(swipeRecords);
-        for (Officer officer : officers) {
-            if (officer.getLocation() != null) {
-                outputData.add(swipeProcessor.getFirstSwipeIn(officer)); // one row
-                outputData.add(swipeProcessor.getLastSwipeOut(officer)); // another row
-            }
-        }
-        return outputData;
+        return ReadXlsx.parse(inputStream);
     }
 
     public static boolean hasExcelFormat(MultipartFile file) {
         return EXCEL_FILE_TYPE.equals(file.getContentType());
+    }
+
+    public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes) {
+        List<SwipeRecord> outputData = new ArrayList<>();
+        Set<Officer> officers = UserInput.getOfficers(allSwipes);
+        SwipeProcessor swipeProcessor = new SwipeProcessor(allSwipes);
+        for (Officer officer : officers) {
+            if (officer.getLocation() != null) {
+                outputData.add(swipeProcessor.getFirstSwipeIn(officer)); // swipe in row
+                outputData.add(swipeProcessor.getLastSwipeOut(officer)); // swipe out row
+            }
+        }
+        return outputData;
     }
 }
 
