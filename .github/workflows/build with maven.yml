@@ -1,6 +1,6 @@
 # This workflow will build a Java project with Maven
 
-name: Java CI with Maven
+name: Build with Maven
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
     - name: Step 4 - List the current directory
       run: ls -a
       
-    - name: What is in the target folder?
+    - name: Step 5 - What is in the target folder?
       run: |
         cd target
         ls -a
