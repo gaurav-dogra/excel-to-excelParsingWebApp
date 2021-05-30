@@ -3,3 +3,5 @@
 !.gitignore
 !src/
 !pom.xml
+!sonar-project.properties
+
