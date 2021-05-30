@@ -4,4 +4,4 @@
 !src/
 !pom.xml
 !sonar-project.properties
-
+!.mvn/
