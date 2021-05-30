@@ -1,5 +1,6 @@
 package gmailgdogra;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,7 @@ class ExtractOfficersTest {
     ));
 
     @Test
-    void from() throws IOException {
+    void from() {
         Path path = Paths.get("src/main/resources/testFile.xlsx");
         String name = "testFile.xlsx";
         String originalFileName = "testFile.xlsx";
@@ -36,11 +37,18 @@ class ExtractOfficersTest {
         byte[] content = null;
         try {
             content = Files.readAllBytes(path);
-        } catch (final IOException ignored) {
+        } catch (IOException e) {
+            Assertions.fail("Unable to read file at " + path);
         }
+
         MultipartFile result = new MockMultipartFile(name,
                 originalFileName, contentType, content);
-        List<SwipeRecord> swipeRecords = ReadXlsx.parse(result.getInputStream());
+        List<SwipeRecord> swipeRecords = null;
+        try {
+            swipeRecords = ReadXlsx.parse(result.getInputStream());
+        } catch (IOException e) {
+            Assertions.fail("Unable to parse the file " + result.getName());
+        }
         Set<Officer> officers = ExtractOfficers.from(swipeRecords);
         assertEquals(officers, expectedOfficers);
     }
