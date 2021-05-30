@@ -1,14 +1,9 @@
 package gmailgdogra;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SwipeProcessor {
 
-    private final List<SwipeRecord> swipeRecords;
     private static final Map<Location, List<String>> allSwipeInDevices = new HashMap<>();
     private static final Map<Location, List<String>> allSwipeOutDevices = new HashMap<>();
 
@@ -39,19 +34,29 @@ public class SwipeProcessor {
 
     }
 
-    public SwipeProcessor(List<SwipeRecord> swipeRecords) {
-        this.swipeRecords = swipeRecords;
+    public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes) {
+
+        List<SwipeRecord> outputData = new ArrayList<>();
+        Set<Officer> officers = UserInput.getOfficers(allSwipes);
+        for (Officer officer : officers) {
+            if (officer.getLocation() != null) {
+                outputData.add(getFirstSwipeIn(officer, allSwipes)); // swipe in row
+                outputData.add(getLastSwipeOut(officer, allSwipes)); // swipe out row
+            }
+        }
+        return outputData;
     }
 
-    public SwipeRecord getFirstSwipeIn(Officer officer) {
-        var allInOutSwipesOfAnOfficer = getAllInOutSwipesOfAnOfficer(officer);
-        return allInOutSwipesOfAnOfficer.stream()
-                .filter(swipeRecord -> allSwipeInDevices.get(officer.getLocation()).contains(swipeRecord.getDeviceName()))
-                .filter(swipeRecord -> {
+    public static SwipeRecord getFirstSwipeIn(Officer officer, List<SwipeRecord> allSwipes) {
+        Location loc = officer.getLocation();
+        return allSwipes.stream()
+                .filter(swipe -> officer.getFullName().equals(swipe.getFullName()))
+                .filter(swipe -> allSwipeInDevices.get(loc).contains(swipe.getDeviceName()))
+                .filter(swipe -> {
                     if (officer.isDayShift()) {
-                        return swipeRecord.getSwipeTime().getHour() <= 12; // touch-in is before 12 noon
+                        return swipe.getSwipeTime().getHour() <= 12; // touch-in is before 12 noon
                     } else {
-                        return swipeRecord.getSwipeTime().getHour() > 12; // touch in should be after 12 noon
+                        return swipe.getSwipeTime().getHour() > 12; // touch in should be after 12 noon
                     }
                 })
                 .sorted()
@@ -59,15 +64,16 @@ public class SwipeProcessor {
                 .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
     }
 
-    public SwipeRecord getLastSwipeOut(Officer officer) {
-        var allInOutSwipesOfAnOfficer = getAllInOutSwipesOfAnOfficer(officer); // duplicate work
-        return allInOutSwipesOfAnOfficer.stream()
-                .filter(swipeRecord -> allSwipeOutDevices.get(officer.getLocation()).contains(swipeRecord.getDeviceName()))
-                .filter(swipeRecord -> {
+    public static SwipeRecord getLastSwipeOut(Officer officer, List<SwipeRecord> allSwipes) {
+        Location loc = officer.getLocation();
+        return allSwipes.stream()
+                .filter(swipe -> officer.getFullName().equals(swipe.getFullName()))
+                .filter(swipe -> allSwipeOutDevices.get(loc).contains(swipe.getDeviceName()))
+                .filter(swipe -> {
                     if (officer.isDayShift()) {
-                        return swipeRecord.getSwipeTime().getHour() >= 12; // touch out must be 12 noon or after
+                        return swipe.getSwipeTime().getHour() >= 12; // touch out must be 12 noon or after
                     } else {
-                        return swipeRecord.getSwipeTime().getHour() < 12; // touch out must be before 12 noon
+                        return swipe.getSwipeTime().getHour() < 12; // touch out must be before 12 noon
                     }
                 })
                 .sorted()
@@ -75,20 +81,4 @@ public class SwipeProcessor {
                 .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
     }
 
-    private List<SwipeRecord> getAllInOutSwipesOfAnOfficer(Officer officer) {
-        List<SwipeRecord> allInOutSwipesOfAnOfficer = new ArrayList<>();
-        for (SwipeRecord record : swipeRecords) {
-            if (record.getFullName().equals(officer.getFullName())) {
-                String firstName = officer.getFirstName();
-                String lastName = officer.getLastName();
-                String deviceName = record.getDeviceName();
-                LocalDateTime swipeTime = record.getSwipeTime();
-                if (allSwipeInDevices.get(officer.getLocation()).contains(deviceName) ||
-                        allSwipeOutDevices.get(officer.getLocation()).contains(deviceName)) {
-                    allInOutSwipesOfAnOfficer.add(new SwipeRecord(firstName, lastName, swipeTime, deviceName));
-                }
-            }
-        }
-        return allInOutSwipesOfAnOfficer;
-    }
 }

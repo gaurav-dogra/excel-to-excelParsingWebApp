@@ -1,8 +1,13 @@
 package gmailgdogra;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +29,18 @@ class ExtractOfficersTest {
 
     @Test
     void from() throws IOException {
-        List<SwipeRecord> swipeRecords = ReadXlsx.parse("src/main/resources/testFile.xlsx");
+        Path path = Paths.get("src/main/resources/testFile.xlsx");
+        String name = "testFile.xlsx";
+        String originalFileName = "testFile.xlsx";
+        String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        byte[] content = null;
+        try {
+            content = Files.readAllBytes(path);
+        } catch (final IOException ignored) {
+        }
+        MultipartFile result = new MockMultipartFile(name,
+                originalFileName, contentType, content);
+        List<SwipeRecord> swipeRecords = ReadXlsx.parse(result.getInputStream());
         Set<Officer> officers = ExtractOfficers.from(swipeRecords);
         assertEquals(officers, expectedOfficers);
     }
