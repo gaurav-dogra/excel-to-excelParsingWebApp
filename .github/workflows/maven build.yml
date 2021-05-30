@@ -35,8 +35,4 @@ jobs:
       - name: Step 4 - Build with Maven
         run: mvn --batch-mode --update-snapshots verify
         
-      - name: show directory
-        run: |
-            cd target
-            ls -a
             
