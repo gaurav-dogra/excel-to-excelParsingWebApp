@@ -26,11 +26,8 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           
-     # - name: Step 3 - Analyze with SonarCloud
-      #  uses: sonarsource/sonarcloud-github-action@v1.3
-       # env:
-        #  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-         # SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+      - name: Step 3 - Analyze with SonarCloud
+        run: org.sonarsource.scanner.maven:sonar
           
       - name: Step 4 - Build with Maven
         run: mvn --batch-mode --update-snapshots verify
