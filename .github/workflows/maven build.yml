@@ -27,4 +27,4 @@ jobs:
           distribution: 'adopt'
           
       - name: Step 3 - Build with Maven
-        run: mvn --batch-mode --update-snapshots-verify
+        run: mvn --batch-mode --update-snapshots verify
