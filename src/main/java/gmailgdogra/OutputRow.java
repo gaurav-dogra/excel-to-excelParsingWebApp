@@ -1,5 +1,7 @@
 package gmailgdogra;
 
+import javax.validation.constraints.NotNull;
+
 public class OutputRow {
     private final String firstName;
     private final String lastName;
@@ -10,7 +12,8 @@ public class OutputRow {
         return new OutputRow(firstName, lastName, swipeTime, deviceName);
     }
 
-    public OutputRow(String firstName, String lastName, String swipeTime, String deviceName) {
+    public OutputRow(@NotNull final String firstName, @NotNull final String lastName,
+                     String swipeTime, String deviceName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.swipeTime = swipeTime;
