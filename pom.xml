@@ -8,7 +8,7 @@
         <version>2.4.5</version>
         <relativePath/> <!-- lookup parent parse repository -->
     </parent>
-    <groupId>com.gmailatgauru.dogra</groupId>
+    <groupId>gmailgdogra</groupId>
     <artifactId>excel-to-excelParsingWebApp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <description>Demo project for Spring Boot</description>
@@ -19,12 +19,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>5.0.0</version>
         </dependency>
 
         <dependency>
