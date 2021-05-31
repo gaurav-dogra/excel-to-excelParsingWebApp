@@ -38,7 +38,7 @@ class SwipeProcessorTest {
     void getFirstSwipeIn() {
         String abdulKhanSwipeIn = SwipeProcessor.getFirstSwipeIn(abdulKhan, allSwipes).getSwipeTime().toString();
         String basharatIqbalSwipeIn = SwipeProcessor.getFirstSwipeIn(basharatIqbal, allSwipes).getSwipeTime().toString();
-        assertEquals("2021-05-08T05:42:35", abdulKhanSwipeIn);
+        assertEquals("2021-05-08T06:05:14", abdulKhanSwipeIn);
         assertEquals("2021-05-08T18:00:23", basharatIqbalSwipeIn);
     }
 
