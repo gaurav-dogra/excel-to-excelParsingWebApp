@@ -34,21 +34,17 @@ class ExtractOfficersTest {
         String name = "testFile.xlsx";
         String originalFileName = "testFile.xlsx";
         String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        byte[] content = null;
+        List<SwipeRecord> swipeRecords = null;
         try {
-            content = Files.readAllBytes(path);
+            byte[] content = Files.readAllBytes(path);
+            MultipartFile result = new MockMultipartFile(name,
+                    originalFileName, contentType, content);
+            swipeRecords = ReadXlsx.parse(result.getInputStream());
+
         } catch (IOException e) {
             Assertions.fail("Unable to read file at " + path);
         }
 
-        MultipartFile result = new MockMultipartFile(name,
-                originalFileName, contentType, content);
-        List<SwipeRecord> swipeRecords = null;
-        try {
-            swipeRecords = ReadXlsx.parse(result.getInputStream());
-        } catch (IOException e) {
-            Assertions.fail("Unable to parse the file " + result.getName());
-        }
         Set<Officer> officers = ExtractOfficers.from(swipeRecords);
         assertEquals(officers, expectedOfficers);
     }
