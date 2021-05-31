@@ -30,25 +30,27 @@ class ReadXlsxTest {
             "Thames LSI0901 - Turnstile South IN");
 
     @BeforeEach
-    void fillData() throws IOException {
+    void fillData() {
         Path path = Paths.get("src/main/resources/testFile.xlsx");
         String name = "testFile.xlsx";
         String originalFileName = "testFile.xlsx";
         String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        byte[] content = null;
+        byte[] content;
         try {
             content = Files.readAllBytes(path);
-        } catch (final IOException ignored) {
+            MultipartFile result = new MockMultipartFile(name,
+                    originalFileName, contentType, content);
+            swipeRecords = ReadXlsx.parse(result.getInputStream());
+        } catch (IOException e) {
+            fail("Unable to read the file: " + name);
         }
-        MultipartFile result = new MockMultipartFile(name,
-                originalFileName, contentType, content);
-        swipeRecords = ReadXlsx.parse(result.getInputStream());
     }
 
     @Test
     @DisplayName("checking total number of records")
     void parseTotalRowsCheck() {
-        assertEquals(109, swipeRecords.size());
+        final int EXPECTED_NO_OF_RECORDS = 106;
+        assertEquals(EXPECTED_NO_OF_RECORDS, swipeRecords.size());
     }
 
     @Test
