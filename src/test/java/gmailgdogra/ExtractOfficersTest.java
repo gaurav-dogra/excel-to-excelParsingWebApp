@@ -20,12 +20,16 @@ class ExtractOfficersTest {
     private final Set<Officer> expectedOfficers = new HashSet<>(List.of(
             new Officer("Abdul", "Khan"),
             new Officer("Anthony", "Capes"),
-            new Officer("Basharat", "Iqbal"),
+            new Officer("Dean", "Colquhoun"),
+            new Officer("Derek", "Devlin"),
+            new Officer("Fesal", "Amin"),
             new Officer("GAURAV", "DOGRA"),
             new Officer("Kayode", "Dairo"),
             new Officer("Media", "Coulibaly"),
             new Officer("Omoogbolahan", "Adeola"),
-            new Officer("Tahiru", "Haruna")
+            new Officer("Reehad", "Ali"),
+            new Officer("Tahiru", "Haruna"),
+            new Officer("Zubair", "Patel")
     ));
 
     @Test
