@@ -1,6 +1,7 @@
 package gmailgdogra;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class SwipeRecord implements Comparable<SwipeRecord> {
     private String firstName;
@@ -31,7 +32,7 @@ public class SwipeRecord implements Comparable<SwipeRecord> {
         this.lastName = lastName;
     }
 
-    public LocalDateTime getSwipeTime() {
+    public LocalDateTime getSwipeDateTime() {
         return swipeTime;
     }
 
@@ -51,7 +52,7 @@ public class SwipeRecord implements Comparable<SwipeRecord> {
     public String toString() {
         return getFirstName() + " " +
                 getLastName() + ", " +
-                getSwipeTime() + ", " +
+                getSwipeDateTime() + ", " +
                 getDeviceName();
     }
 
@@ -64,20 +65,20 @@ public class SwipeRecord implements Comparable<SwipeRecord> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SwipeRecord swipeRecord = (SwipeRecord) o;
+        SwipeRecord that = (SwipeRecord) o;
 
-        if (!getFirstName().equals(swipeRecord.getFirstName())) return false;
-        if (!getLastName().equals(swipeRecord.getLastName())) return false;
-        if (!getSwipeTime().equals(swipeRecord.getSwipeTime())) return false;
-        return getDeviceName().equals(swipeRecord.getDeviceName());
+        if (!getFirstName().equals(that.getFirstName())) return false;
+        if (!getLastName().equals(that.getLastName())) return false;
+        if (!Objects.equals(swipeTime, that.swipeTime)) return false;
+        return getDeviceName() != null ? getDeviceName().equals(that.getDeviceName()) : that.getDeviceName() == null;
     }
 
     @Override
     public int hashCode() {
         int result = getFirstName().hashCode();
         result = 31 * result + getLastName().hashCode();
-        result = 31 * result + getSwipeTime().hashCode();
-        result = 31 * result + getDeviceName().hashCode();
+        result = 31 * result + (swipeTime != null ? swipeTime.hashCode() : 0);
+        result = 31 * result + (getDeviceName() != null ? getDeviceName().hashCode() : 0);
         return result;
     }
 
