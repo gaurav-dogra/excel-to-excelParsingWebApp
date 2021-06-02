@@ -44,7 +44,7 @@ public class WriteOutputXlsx {
         for (SwipeRecord record : outputData) {
             String firstName = record.getFirstName();
             String lastName = record.getLastName();
-            String swipeTime = record.getSwipeTime()
+            String swipeTime = record.getSwipeDateTime()
                     .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             String deviceName = record.getDeviceName();
             addToSheet(OutputRow.of(firstName, lastName, swipeTime, deviceName), rowNo);
