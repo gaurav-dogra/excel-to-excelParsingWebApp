@@ -35,21 +35,26 @@ public class SwipeProcessor {
     public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes) {
 
         List<SwipeRecord> outputData = new ArrayList<>();
-        List<SwipeRecord> allInOutSwipes = allSwipes.stream()
-                .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()) ||
-                        allSwipeOutDevices.contains(swipe.getDeviceName()))
-                .collect(Collectors.toList());
+        List<SwipeRecord> allInOutSwipes = filterInOutSwipes(allSwipes);
         Set<Officer> officers = ExtractOfficers.from(allInOutSwipes);
         firstDay = getFirstDay(allInOutSwipes);
 
         for (Officer officer : officers) {
-
             SwipeRecord swipeIn = getSwipeIn(allInOutSwipes, officer);
-            System.out.println("swipeIn = " + swipeIn);
             SwipeRecord swipeOut = getSwipeOut(allInOutSwipes, officer);
-            System.out.println("swipeOut = " + swipeOut);
+            if (swipeIn.getSwipeDateTime() != null || swipeOut.getSwipeDateTime() != null) {
+                outputData.add(swipeIn);
+                outputData.add(swipeOut);
+            }
         }
         return outputData;
+    }
+
+    private static List<SwipeRecord> filterInOutSwipes(List<SwipeRecord> allSwipes) {
+        return allSwipes.stream()
+                .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()) ||
+                        allSwipeOutDevices.contains(swipe.getDeviceName()))
+                .collect(Collectors.toList());
     }
 
     private static SwipeRecord getSwipeOut(List<SwipeRecord> allInOutSwipes, Officer officer) {
@@ -88,7 +93,7 @@ public class SwipeProcessor {
                 .filter(swipe -> swipe.getFullName().equals(officer.getFullName()))
                 .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()))
                 .filter(swipe -> swipe.getSwipeDateTime().toLocalDate().isEqual(firstDay));
-        System.out.println(officer + ": " + isNightShift(allInOutSwipes, officer));
+//        System.out.println(officer + ": " + isNightShift(allInOutSwipes, officer));
 
         if (isNightShift(allInOutSwipes, officer)) {
             return recordsStream
