@@ -2,22 +2,24 @@ package gmailgdogra;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SwipeProcessorTest {
 
-    private static Officer abdulKhan;
-    private static Officer basharatIqbal;
-    private static List<SwipeRecord> allSwipes;
+    private static List<SwipeRecord> outputData;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -28,26 +30,30 @@ class SwipeProcessorTest {
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 IOUtils.toByteArray(inputStream));
 
-        allSwipes = ReadXlsx.parse(multipartFile.getInputStream());
-        abdulKhan = new Officer("Abdul", "Khan", Location.TL_PLAISTOW, true);
-        basharatIqbal = new Officer("Basharat", "Iqbal", Location.MAIN_GATE, false);
+        List<SwipeRecord> allSwipes = ReadXlsx.parse(multipartFile.getInputStream());
+        outputData = SwipeProcessor.getOutputDataFrom(allSwipes);
     }
 
     @Test
-    @DisplayName("Checking Swipe-In times")
-    void getFirstSwipeIn() {
-        String abdulKhanSwipeIn = SwipeProcessor.getFirstSwipeIn(abdulKhan, allSwipes).getSwipeTime().toString();
-        String basharatIqbalSwipeIn = SwipeProcessor.getFirstSwipeIn(basharatIqbal, allSwipes).getSwipeTime().toString();
-        assertEquals("2021-05-08T06:05:14", abdulKhanSwipeIn);
-        assertEquals("2021-05-08T18:00:23", basharatIqbalSwipeIn);
+    void ignore_Swipeout_prev_night_shift() {
+        SwipeRecord swipeOut_prev_night = new SwipeRecord("Anthony", "Capes",
+                LocalDateTime.parse("24/05/2021 05:51", formatter), "PLA0103 - Turnstile West OUT");
+
+        assertFalse(outputData.contains(swipeOut_prev_night), "Swipe Out from prev night shift must be ignored");
     }
 
     @Test
-    @DisplayName("Checking Swipe-Out Times")
-    void getLastSwipeOut() {
-        String abdulKhanSwipeOut = SwipeProcessor.getLastSwipeOut(abdulKhan, allSwipes).getSwipeTime().toString();
-        String basharatIqbalSwipeOut = SwipeProcessor.getLastSwipeOut(basharatIqbal, allSwipes).getSwipeTime().toString();
-        assertEquals("2021-05-08T17:49:01", abdulKhanSwipeOut);
-        assertEquals("2021-05-09T05:59:48", basharatIqbalSwipeOut);
+    void ignore_SwipeIn_next_day_shift() {
+        SwipeRecord swipeIn_next_Day_shift = new SwipeRecord("Fesal", "Amin",
+                LocalDateTime.parse("25/05/2021 05:58", formatter), "Thames LSI0903 - Turnstile North IN");
+
+        assertFalse(outputData.contains(swipeIn_next_Day_shift), "Swipe In from next Day shift must be ignored");
+    }
+
+    @Test
+    void forgot_swipeIn_on_nightShift() {
+        SwipeRecord missedSwipeInExpectedRepresentation = new SwipeRecord("Media", "Coulibaly",
+                null, null);
+        assertTrue(outputData.contains(missedSwipeInExpectedRepresentation), "Missed swipe-in must be added");
     }
 }
