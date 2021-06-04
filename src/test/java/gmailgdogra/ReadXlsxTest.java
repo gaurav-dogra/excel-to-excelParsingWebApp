@@ -21,13 +21,13 @@ class ReadXlsxTest {
 
     private final SwipeRecord FIRST_RECORD = new SwipeRecord("Abdul",
             "Khan",
-            LocalDateTime.of(2021, 5, 7, 17, 45, 35),
-            "PLA0102 - Turnstile West IN");
+            LocalDateTime.of(2021, 5, 24, 17, 42, 37),
+            "PLA0101 - Barrier IN");
 
-    private final SwipeRecord LAST_RECORD = new SwipeRecord("Tahiru",
-            "Haruna",
-            LocalDateTime.of(2021, 5, 9, 5, 39, 58),
-            "Thames LSI0901 - Turnstile South IN");
+    private final SwipeRecord LAST_RECORD = new SwipeRecord("Zubair",
+            "Patel",
+            LocalDateTime.of(2021, 5, 25, 10, 28, 27),
+            "Thames LSI0306 - Reception Dr In/Out");
 
     @BeforeEach
     void fillData() {
@@ -49,7 +49,7 @@ class ReadXlsxTest {
     @Test
     @DisplayName("checking total number of records")
     void parseTotalRowsCheck() {
-        final int EXPECTED_NO_OF_RECORDS = 106;
+        final int EXPECTED_NO_OF_RECORDS = 136;
         assertEquals(EXPECTED_NO_OF_RECORDS, swipeRecords.size());
     }
 
