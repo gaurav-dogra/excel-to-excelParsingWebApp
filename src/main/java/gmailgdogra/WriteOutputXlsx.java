@@ -17,7 +17,7 @@ public class WriteOutputXlsx {
     private static final XSSFSheet sheet = workbook.createSheet("Securitas Daily Report");
     private static final int TITLE_ROW = 0;
 
-    public static boolean write(List<SwipeRecord> outputData) throws IOException {
+    public static void write(List<SwipeRecord> outputData) throws IOException {
 
         addToSheet(OutputRow.of("First Name", "Last Name", "Event Date",
                 "Logical Device"), TITLE_ROW);
@@ -29,8 +29,6 @@ public class WriteOutputXlsx {
             workbook.write(outputStream);
             System.out.println("Excel file created");
         }
-
-        return true;
     }
 
     private static void autoSizeColumns() {
@@ -42,12 +40,14 @@ public class WriteOutputXlsx {
     private static void writeData(List<SwipeRecord> outputData) {
         int rowNo = 1;
         for (SwipeRecord record : outputData) {
-            String firstName = record.getFirstName();
-            String lastName = record.getLastName();
-            String swipeTime = record.getSwipeDateTime()
-                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            String deviceName = record.getDeviceName();
-            addToSheet(OutputRow.of(firstName, lastName, swipeTime, deviceName), rowNo);
+            String swipeTime;
+            if (record.getSwipeDateTime() == null) {
+                swipeTime = "Did Not Swipe";
+            } else {
+                swipeTime = record.getSwipeDateTime()
+                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            }
+            addToSheet(OutputRow.of(record.getFirstName(), record.getLastName(), swipeTime, record.getDeviceName()), rowNo);
             rowNo++;
         }
     }
@@ -58,7 +58,6 @@ public class WriteOutputXlsx {
         for (int column = 0; column < 4; column++) {
             row.createCell(column);
         }
-
         row.getCell(0).setCellValue(outputRow.getFirstName());
         row.getCell(1).setCellValue(outputRow.getLastName());
         row.getCell(2).setCellValue(outputRow.getSwipeTime());
@@ -76,18 +75,25 @@ public class WriteOutputXlsx {
 
         if (rowNo % 2 != 0) { // rows for swipe-ins
             final int TIME_INFO_START_INDEX = 11;
-            final int CELL_FOR_SWIPE_DATE_TIME = 3;
+            final int CELL_FOR_SWIPE_DATE_TIME = 2;
 
             String time = row.getCell(CELL_FOR_SWIPE_DATE_TIME)
-                    .toString().substring(TIME_INFO_START_INDEX);
-            if (!time.equals("06:00") && !time.equals("18:00") // bang on time
-                    && !time.startsWith("05") && !time.startsWith("17")) { // up to one hour early
-                applyLateSwipeInStyle(row);
+                    .getStringCellValue();
+
+            if (time.equals("Did Not Swipe")) {
+                applyRowHighlight(row);
+            } else {
+                time = time.substring(TIME_INFO_START_INDEX);
+                if (!time.equals("06:00") && !time.equals("18:00")
+                        && !time.startsWith("04") && !time.startsWith("05")
+                        && !time.startsWith("16") && !time.startsWith("17")) {
+                    applyRowHighlight(row);
+                }
             }
         }
     }
 
-    private static void applyLateSwipeInStyle(Row row) {
+    private static void applyRowHighlight(Row row) {
         CellStyle style = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setColor(HSSFColor.HSSFColorPredefined.DARK_RED.getIndex());
