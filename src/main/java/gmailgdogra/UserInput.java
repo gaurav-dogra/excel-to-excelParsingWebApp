@@ -25,6 +25,7 @@ public class UserInput {
             Optional<Shift> shiftInfo = getShiftInfo(n, officer);
             shiftInfo.ifPresent(shifts::add);
         }
+        System.out.println("All inputs recorded");
         return shifts;
     }
 

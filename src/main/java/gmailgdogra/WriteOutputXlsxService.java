@@ -2,33 +2,29 @@ package gmailgdogra;
 
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class WriteOutputXlsxService {
 
-    private static final String SHEET_NAME = "Securitas Daily Report";
-    private static final int TITLE_ROW = 0;
-    private static final Workbook workbook = new XSSFWorkbook();
+    private static Workbook workbook;
+    private static final File templateFile =
+            new File("src/main/resources/templates/Securitas Daily Report Template.xlsx");
 
-    public static byte[] write(List<SwipeRecord> outputData) {
+    public static byte[] write(List<SwipeRecord> outputData, List<Shift> shifts) throws IOException {
+        workbook = loadTemplateFile();
+        Sheet sheet = workbook.getSheetAt(0);
+        System.out.println(sheet.getSheetName());
+        return null;
+    }
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet(SHEET_NAME);
-            addToSheet(sheet, OutputRow.of("First Name", "Last Name", "Event Date",
-                    "Logical Device"), TITLE_ROW);
-            writeData(sheet, outputData);
-            autoSizeColumns(sheet);
-            workbook.write(out);
-            workbook.close();
-            return out.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException("fail to write data to Excel file " + e.getMessage());
-        }
+    private static Workbook loadTemplateFile() throws IOException {
+        FileInputStream inputStream = new FileInputStream(templateFile);
+        return new XSSFWorkbook(inputStream);
     }
 
     private static void autoSizeColumns(Sheet sheet) {
@@ -68,10 +64,6 @@ public class WriteOutputXlsxService {
 
     private static void applyStyle(Row row) {
         int rowNo = row.getRowNum();
-        if (rowNo == TITLE_ROW) {
-            createHeaderStyle(row);
-            return;
-        }
 
         if (rowNo % 2 != 0) { // rows for swipe-ins
             final int TIME_INFO_START_INDEX = 11;
@@ -105,15 +97,5 @@ public class WriteOutputXlsxService {
         for (int column = 0; column < 4; column++) {
             row.getCell(column).setCellStyle(style);
         }
-    }
-
-    private static void createHeaderStyle(Row row) {
-        Font headerFont = workbook.createFont();
-        headerFont.setColor(IndexedColors.WHITE.index);
-        CellStyle headerStyle = workbook.createCellStyle();
-        headerStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerStyle.setFont(headerFont);
-        applyGivenStyle(row, headerStyle);
     }
 }
