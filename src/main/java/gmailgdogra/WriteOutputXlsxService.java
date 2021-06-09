@@ -2,42 +2,42 @@ package gmailgdogra;
 
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class WriteOutputXlsx {
+public class WriteOutputXlsxService {
 
-    private static final XSSFWorkbook workbook = new XSSFWorkbook();
-    private static final XSSFSheet sheet = workbook.createSheet("Securitas Daily Report");
+    private static final String SHEET_NAME = "Securitas Daily Report";
     private static final int TITLE_ROW = 0;
+    private static final Workbook workbook = new XSSFWorkbook();
 
-    public static void write(List<SwipeRecord> outputData) throws IOException {
+    public static byte[] write(List<SwipeRecord> outputData) {
 
-        addToSheet(OutputRow.of("First Name", "Last Name", "Event Date",
-                "Logical Device"), TITLE_ROW);
-        writeData(outputData);
-        autoSizeColumns();
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-        try (FileOutputStream outputStream = new FileOutputStream("Securitas Report " + date + ".xlsx")) {
-            workbook.write(outputStream);
-            System.out.println("Excel file created");
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet(SHEET_NAME);
+            addToSheet(sheet, OutputRow.of("First Name", "Last Name", "Event Date",
+                    "Logical Device"), TITLE_ROW);
+            writeData(sheet, outputData);
+            autoSizeColumns(sheet);
+            workbook.write(out);
+            workbook.close();
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("fail to write data to Excel file " + e.getMessage());
         }
     }
 
-    private static void autoSizeColumns() {
+    private static void autoSizeColumns(Sheet sheet) {
         for (int column = 0; column < 4; column++) {
             sheet.autoSizeColumn(column);
         }
     }
 
-    private static void writeData(List<SwipeRecord> outputData) {
+    private static void writeData(Sheet sheet, List<SwipeRecord> outputData) {
         int rowNo = 1;
         for (SwipeRecord record : outputData) {
             String swipeTime;
@@ -47,12 +47,12 @@ public class WriteOutputXlsx {
                 swipeTime = record.getSwipeDateTime()
                         .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             }
-            addToSheet(OutputRow.of(record.getFirstName(), record.getLastName(), swipeTime, record.getDeviceName()), rowNo);
+            addToSheet(sheet, OutputRow.of(record.getFirstName(), record.getLastName(), swipeTime, record.getDeviceName()), rowNo);
             rowNo++;
         }
     }
 
-    private static void addToSheet(OutputRow outputRow, int rowNo) {
+    private static void addToSheet(Sheet sheet, OutputRow outputRow, int rowNo) {
         Row row = sheet.createRow(rowNo);
 
         for (int column = 0; column < 4; column++) {
@@ -69,7 +69,7 @@ public class WriteOutputXlsx {
     private static void applyStyle(Row row) {
         int rowNo = row.getRowNum();
         if (rowNo == TITLE_ROW) {
-            applyHeaderStyle(row);
+            createHeaderStyle(row);
             return;
         }
 
@@ -81,39 +81,39 @@ public class WriteOutputXlsx {
                     .getStringCellValue();
 
             if (time.equals("Did Not Swipe")) {
-                applyRowHighlight(row);
+                createRowHighlight(row);
             } else {
                 time = time.substring(TIME_INFO_START_INDEX);
                 if (!time.equals("06:00") && !time.equals("18:00")
                         && !time.startsWith("04") && !time.startsWith("05")
                         && !time.startsWith("16") && !time.startsWith("17")) {
-                    applyRowHighlight(row);
+                    createRowHighlight(row);
                 }
             }
         }
     }
 
-    private static void applyRowHighlight(Row row) {
+    private static void createRowHighlight(Row row) {
         CellStyle style = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setColor(HSSFColor.HSSFColorPredefined.DARK_RED.getIndex());
         style.setFont(font);
-        applyStyleToRow(row, style);
+        applyGivenStyle(row, style);
     }
 
-    private static void applyStyleToRow(Row row, CellStyle style) {
+    private static void applyGivenStyle(Row row, CellStyle style) {
         for (int column = 0; column < 4; column++) {
             row.getCell(column).setCellStyle(style);
         }
     }
 
-    private static void applyHeaderStyle(Row row) {
+    private static void createHeaderStyle(Row row) {
         Font headerFont = workbook.createFont();
         headerFont.setColor(IndexedColors.WHITE.index);
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         headerStyle.setFont(headerFont);
-        applyStyleToRow(row, headerStyle);
+        applyGivenStyle(row, headerStyle);
     }
 }
