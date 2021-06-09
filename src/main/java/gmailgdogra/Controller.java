@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class Controller {
@@ -57,7 +58,9 @@ public class Controller {
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
             header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-            List<SwipeRecord> outputData = SwipeProcessor.getOutputDataFrom(allSwipes);
+            Set<Officer> officers = ExtractOfficers.from(allSwipes);
+            List<Shift> shifts = UserInput.getShiftDetails(officers);
+            List<SwipeRecord> outputData = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
             return new ResponseEntity<>(new ByteArrayResource(WriteOutputXlsxService.write(outputData)),
                     header, HttpStatus.CREATED);
         } catch (Exception e) {
