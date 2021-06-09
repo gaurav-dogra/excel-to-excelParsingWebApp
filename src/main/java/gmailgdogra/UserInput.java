@@ -1,61 +1,61 @@
 package gmailgdogra;
 
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class UserInput {
 
-    public static Set<Officer> getOfficers(List<SwipeRecord> swipeRecords) {
+    public static List<Shift> getShiftDetails(Set<Officer> allOfficers) {
+        List<Shift> shifts = new ArrayList<>();
 
-        Set<Officer> officers = ExtractOfficers.from(swipeRecords);
-        for (Officer officer : officers) {
-            printAllLocations();
-            Location location = getLocation(officer);
-            boolean isDayShift = getShiftType();
-            officer.setLocation(location);
-            officer.setDayShift(isDayShift);
+        for (Officer officer : allOfficers) {
+            System.out.println("==============");
+            System.out.println(officer.getFullName());
+            System.out.println("==============");
+            System.out.println("Please select appropriate number from below");
+            System.out.println("MG Day Shift(1)");
+            System.out.println("MG Night Shift(2)");
+            System.out.println("EP WB Day Shift(3)");
+            System.out.println("EP WB Night Shift(4)");
+            System.out.println("Plaistow Day Shift(5)");
+            System.out.println("Plaistow Night Shift(6)");
+            System.out.println("Visitors Reception Shift(7)");
+            System.out.println("Press enter if the officer does not have any shift");
+            System.out.print(">");
+            int n = getInput();
+            Optional<Shift> shiftInfo = getShiftInfo(n, officer);
+            shiftInfo.ifPresent(shifts::add);
         }
-        return officers;
+        return shifts;
     }
 
-    private static Location getLocation(Officer officer) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("\nOfficer: " + officer.getFullName() + ", Enter Location(id): ");
-        String locationAsNumber = scanner.nextLine().trim();
-        return convertInputToLocation(locationAsNumber);
-    }
+    private static Optional<Shift> getShiftInfo(int n, Officer officer) {
 
-    private static boolean getShiftType() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Is it day shift(y/n): ");
-        String isDayShift = scanner.nextLine().trim().toLowerCase();
-        if (isDayShift.equals("")) { return false; }
-        return isDayShift.charAt(0) == 'y';
-    }
-
-    private static Location convertInputToLocation(String location) {
-        switch (location) {
-            case "1":
-                return Location.MAIN_GATE;
-            case "2":
-                return Location.VISITORS_RECEPTION;
-            case "3":
-                return Location.EP_WEIGHBRIDGE;
-            case "4":
-                return Location.TL_PLAISTOW;
+        switch (n) {
+            case 1:
+                return Optional.of(new Shift(officer, Location.MAIN_GATE, true));
+            case 2:
+                return Optional.of(new Shift(officer, Location.MAIN_GATE, false));
+            case 3:
+                return Optional.of(new Shift(officer, Location.EP_WEIGHBRIDGE, true));
+            case 4:
+                return Optional.of(new Shift(officer, Location.EP_WEIGHBRIDGE, false));
+            case 5:
+                return Optional.of(new Shift(officer, Location.TL_PLAISTOW, true));
+            case 6:
+                return Optional.of(new Shift(officer, Location.TL_PLAISTOW, false));
+            case 7:
+                return Optional.of(new Shift(officer, Location.VISITORS_RECEPTION, true));
             default:
-                return null;
+                return Optional.empty();
         }
     }
 
-    private static void printAllLocations() {
-        System.out.println("===============================================================");
-        System.out.println("Choose a number parse below or press enter to ignore the officer");
-        System.out.print("Main Gate(1), ");
-        System.out.print("Visitors Reception(2), ");
-        System.out.print("EP WeighBridge(3), ");
-        System.out.print("TL Plaistow(4). ");
+    private static int getInput() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            return Integer.parseInt(scanner.nextLine());
+        } catch (Exception e) {
+            return -1;
+        }
     }
-
 }

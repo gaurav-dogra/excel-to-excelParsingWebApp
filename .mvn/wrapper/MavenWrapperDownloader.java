@@ -23,7 +23,7 @@ public class MavenWrapperDownloader {
 
     private static final String WRAPPER_VERSION = "0.5.6";
     /**
-     * Default URL to download the maven-wrapper.jar parse, if no 'downloadUrl' is provided.
+     * Default URL to download the maven-wrapper.jar readAllRows, if no 'downloadUrl' is provided.
      */
     private static final String DEFAULT_DOWNLOAD_URL = "https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/"
             + WRAPPER_VERSION + "/maven-wrapper-" + WRAPPER_VERSION + ".jar";
@@ -74,7 +74,7 @@ public class MavenWrapperDownloader {
                 }
             }
         }
-        System.out.println("- Downloading parse: " + url);
+        System.out.println("- Downloading readAllRows: " + url);
 
         File outputFile = new File(baseDirectory.getAbsolutePath(), MAVEN_WRAPPER_JAR_PATH);
         if (!outputFile.getParentFile().exists()) {

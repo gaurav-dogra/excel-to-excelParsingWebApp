@@ -1,84 +1,91 @@
 package gmailgdogra;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SwipeProcessor {
 
-    private static final Map<Location, List<String>> allSwipeInDevices = new HashMap<>();
-    private static final Map<Location, List<String>> allSwipeOutDevices = new HashMap<>();
+    private static final List<String> allSwipeInDevices = new ArrayList<>();
+    private static final List<String> allSwipeOutDevices = new ArrayList<>();
 
     static {
-        allSwipeInDevices.put(Location.MAIN_GATE,
-                List.of("Thames LSI0903 - Turnstile North IN",
-                        "Thames LSI0901 - Turnstile South IN"));
-        allSwipeInDevices.put(Location.VISITORS_RECEPTION,
-                List.of("Thames LSI0303 - Empl East Turnstile IN",
-                        "Thames LSI0301 - Empl West Turnstile IN"));
-        allSwipeInDevices.put(Location.EP_WEIGHBRIDGE,
-                List.of("Thames LSI0701 - Weighbridge IN"));
-        allSwipeInDevices.put(Location.TL_PLAISTOW,
-                List.of("PLA0102 - Turnstile West IN",
-                        "PLA0104 - Turnstile East IN"));
+        allSwipeInDevices.add("Thames LSI0903 - Turnstile North IN");
+        allSwipeInDevices.add("Thames LSI0901 - Turnstile South IN");
+        allSwipeInDevices.add("Thames LSI0303 - Empl East Turnstile IN");
+        allSwipeInDevices.add("Thames LSI0301 - Empl West Turnstile IN");
+        allSwipeInDevices.add("Thames LSI0701 - Weighbridge IN");
+        allSwipeInDevices.add("PLA0102 - Turnstile West IN");
+        allSwipeInDevices.add("PLA0104 - Turnstile East IN");
 
-        allSwipeOutDevices.put(Location.MAIN_GATE,
-                List.of("Thames LSI0904 - Turnstile North OUT",
-                        "Thames LSI0902 - Turnstile South OUT"));
-        allSwipeOutDevices.put(Location.VISITORS_RECEPTION,
-                List.of("Thames LSI0302 - Empl W Turnstile OUT",
-                        "Thames LSI0304 - Empl E Turnstile OUT"));
-        allSwipeOutDevices.put(Location.EP_WEIGHBRIDGE,
-                List.of("Thames LSI0702 - Weighbridge OUT"));
-        allSwipeOutDevices.put(Location.TL_PLAISTOW,
-                List.of("PLA0103 - Turnstile West OUT",
-                        "PLA0105 - Turnstile East OUT"));
+        allSwipeOutDevices.add("Thames LSI0904 - Turnstile North OUT");
+        allSwipeOutDevices.add("Thames LSI0902 - Turnstile South OUT");
+        allSwipeOutDevices.add("Thames LSI0302 - Empl W Turnstile OUT");
+        allSwipeOutDevices.add("Thames LSI0304 - Empl E Turnstile OUT");
+        allSwipeOutDevices.add("Thames LSI0702 - Weighbridge OUT");
+        allSwipeOutDevices.add("PLA0103 - Turnstile West OUT");
+        allSwipeOutDevices.add("PLA0105 - Turnstile East OUT");
 
     }
 
     public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes) {
 
         List<SwipeRecord> outputData = new ArrayList<>();
-        Set<Officer> officers = UserInput.getOfficers(allSwipes);
-        for (Officer officer : officers) {
-            if (officer.getLocation() != null) {
-                outputData.add(getFirstSwipeIn(officer, allSwipes)); // swipe in row
-                outputData.add(getLastSwipeOut(officer, allSwipes)); // swipe out row
-            }
+        List<SwipeRecord> onlyInOutSwipes = filterInOutSwipes(allSwipes);
+        Set<Officer> allOfficers = ExtractOfficers.from(onlyInOutSwipes);
+        List<Shift> shifts = UserInput.getShiftDetails(allOfficers);
+
+        for (Shift shift : shifts) {
+            outputData.add(getSwipeIn(shift, onlyInOutSwipes));
+            outputData.add(getSwipeOut(shift, onlyInOutSwipes));
         }
         return outputData;
     }
 
-    public static SwipeRecord getFirstSwipeIn(Officer officer, List<SwipeRecord> allSwipes) {
-        Location loc = officer.getLocation();
+    private static List<SwipeRecord> filterInOutSwipes(List<SwipeRecord> allSwipes) {
         return allSwipes.stream()
-                .filter(swipe -> officer.getFullName().equals(swipe.getFullName()))
-                .filter(swipe -> allSwipeInDevices.get(loc).contains(swipe.getDeviceName()))
+                .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()) ||
+                        allSwipeOutDevices.contains(swipe.getDeviceName()))
+                .collect(Collectors.toList());
+    }
+
+    private static SwipeRecord getSwipeIn(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
+        return onlyInOutSwipes.stream()
+                .filter(swipe -> swipe.getFullName().equals(shift.getOfficer().getFullName()))
+                .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()))
                 .filter(swipe -> {
-                    if (officer.isDayShift()) {
-                        return swipe.getSwipeTime().getHour() <= 12; // touch-in is before 12:59 afternoon
+                    if (shift.isDayShift()) {
+                        return swipe.getSwipeDateTime().getHour() >= 4 &&
+                                swipe.getSwipeDateTime().getHour() <= 7;
                     } else {
-                        return swipe.getSwipeTime().getHour() > 12; // touch-in on or after 13:00
+                        return swipe.getSwipeDateTime().getHour() >= 16 &&
+                                swipe.getSwipeDateTime().getHour() <= 19;
                     }
                 })
                 .sorted()
                 .findFirst()
-                .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
+                .orElse(new SwipeRecord(
+                        shift.getOfficer().getFirstName(), shift.getOfficer().getLastName(), null, null));
     }
 
-    public static SwipeRecord getLastSwipeOut(Officer officer, List<SwipeRecord> allSwipes) {
-        Location loc = officer.getLocation();
-        return allSwipes.stream()
-                .filter(swipe -> officer.getFullName().equals(swipe.getFullName()))
-                .filter(swipe -> allSwipeOutDevices.get(loc).contains(swipe.getDeviceName()))
+    private static SwipeRecord getSwipeOut(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
+        return onlyInOutSwipes.stream()
+                .filter(swipe -> swipe.getFullName().equals(shift.getOfficer().getFullName()))
+                .filter(swipe -> allSwipeOutDevices.contains(swipe.getDeviceName()))
                 .filter(swipe -> {
-                    if (officer.isDayShift()) {
-                        return swipe.getSwipeTime().getHour() >= 12; // touch out must be 12 noon or after
+                    if (shift.isDayShift()) {
+                        return swipe.getSwipeDateTime().getHour() >= 16 &&
+                                swipe.getSwipeDateTime().getHour() <= 19;
                     } else {
-                        return swipe.getSwipeTime().getHour() < 12; // touch out must be before 12 noon
+                        return swipe.getSwipeDateTime().getHour() >= 4 &&
+                                swipe.getSwipeDateTime().getHour() <= 7;
                     }
                 })
                 .sorted()
                 .reduce((first, second) -> second)
-                .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
+                .orElse(new SwipeRecord(
+                        shift.getOfficer().getFirstName(), shift.getOfficer().getLastName(), null, null));
     }
 
 }

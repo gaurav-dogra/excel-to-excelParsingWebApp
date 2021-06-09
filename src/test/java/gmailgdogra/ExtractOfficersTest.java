@@ -20,12 +20,16 @@ class ExtractOfficersTest {
     private final Set<Officer> expectedOfficers = new HashSet<>(List.of(
             new Officer("Abdul", "Khan"),
             new Officer("Anthony", "Capes"),
-            new Officer("Basharat", "Iqbal"),
+            new Officer("Dean", "Colquhoun"),
+            new Officer("Derek", "Devlin"),
+            new Officer("Fesal", "Amin"),
             new Officer("GAURAV", "DOGRA"),
             new Officer("Kayode", "Dairo"),
             new Officer("Media", "Coulibaly"),
             new Officer("Omoogbolahan", "Adeola"),
-            new Officer("Tahiru", "Haruna")
+            new Officer("Reehad", "Ali"),
+            new Officer("Tahiru", "Haruna"),
+            new Officer("Zubair", "Patel")
     ));
 
     @Test
@@ -34,21 +38,17 @@ class ExtractOfficersTest {
         String name = "testFile.xlsx";
         String originalFileName = "testFile.xlsx";
         String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        byte[] content = null;
+        List<SwipeRecord> swipeRecords = null;
         try {
-            content = Files.readAllBytes(path);
+            byte[] content = Files.readAllBytes(path);
+            MultipartFile result = new MockMultipartFile(name,
+                    originalFileName, contentType, content);
+            swipeRecords = ReadXlsx.parse(result.getInputStream());
+
         } catch (IOException e) {
             Assertions.fail("Unable to read file at " + path);
         }
 
-        MultipartFile result = new MockMultipartFile(name,
-                originalFileName, contentType, content);
-        List<SwipeRecord> swipeRecords = null;
-        try {
-            swipeRecords = ReadXlsx.parse(result.getInputStream());
-        } catch (IOException e) {
-            Assertions.fail("Unable to parse the file " + result.getName());
-        }
         Set<Officer> officers = ExtractOfficers.from(swipeRecords);
         assertEquals(officers, expectedOfficers);
     }

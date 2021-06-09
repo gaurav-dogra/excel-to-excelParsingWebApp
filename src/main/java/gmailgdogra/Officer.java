@@ -4,15 +4,6 @@ public class Officer {
 
     private final String firstName;
     private final String lastName;
-    private Location location;
-    private boolean isDayShift;
-
-    public Officer(String firstName, String lastName, Location location, boolean isDayShift) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.location = location;
-        this.isDayShift = isDayShift;
-    }
 
     public Officer(String firstName, String lastName) {
         this.firstName = firstName;
@@ -25,14 +16,6 @@ public class Officer {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public String getFullName() {
@@ -59,16 +42,7 @@ public class Officer {
 
     @Override
     public String toString() {
-        return firstName + " " +
-                lastName + ":" +
-                location;
+        return getFullName();
     }
 
-    public boolean isDayShift() {
-        return isDayShift;
-    }
-
-    public void setDayShift(boolean dayShift) {
-        isDayShift = dayShift;
-    }
 }
