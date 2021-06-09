@@ -1,17 +1,14 @@
 package gmailgdogra;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SwipeProcessor {
 
     private static final List<String> allSwipeInDevices = new ArrayList<>();
     private static final List<String> allSwipeOutDevices = new ArrayList<>();
-    private static LocalDate firstDay;
 
     static {
         allSwipeInDevices.add("Thames LSI0903 - Turnstile North IN");
@@ -35,17 +32,13 @@ public class SwipeProcessor {
     public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes) {
 
         List<SwipeRecord> outputData = new ArrayList<>();
-        List<SwipeRecord> allInOutSwipes = filterInOutSwipes(allSwipes);
-        Set<Officer> officers = ExtractOfficers.from(allInOutSwipes);
-        firstDay = getFirstDay(allInOutSwipes);
+        List<SwipeRecord> onlyInOutSwipes = filterInOutSwipes(allSwipes);
+        Set<Officer> allOfficers = ExtractOfficers.from(onlyInOutSwipes);
+        List<Shift> shifts = UserInput.getShiftDetails(allOfficers);
 
-        for (Officer officer : officers) {
-            SwipeRecord swipeIn = getSwipeIn(allInOutSwipes, officer);
-            SwipeRecord swipeOut = getSwipeOut(allInOutSwipes, officer);
-            if (swipeIn.getSwipeDateTime() != null || swipeOut.getSwipeDateTime() != null) {
-                outputData.add(swipeIn);
-                outputData.add(swipeOut);
-            }
+        for (Shift shift : shifts) {
+            outputData.add(getSwipeIn(shift, onlyInOutSwipes));
+            outputData.add(getSwipeOut(shift, onlyInOutSwipes));
         }
         return outputData;
     }
@@ -57,92 +50,42 @@ public class SwipeProcessor {
                 .collect(Collectors.toList());
     }
 
-    private static SwipeRecord getSwipeOut(List<SwipeRecord> allInOutSwipes, Officer officer) {
-
-        Stream<SwipeRecord> recordsStream = allInOutSwipes.stream()
-                .filter(swipe -> swipe.getFullName().equals(officer.getFullName()))
-                .filter(swipe -> allSwipeOutDevices.contains(swipe.getDeviceName()))
-                .filter(swipe -> {
-                    if (swipe.getSwipeDateTime().toLocalDate().equals(firstDay)) {
-                        return swipe.getSwipeDateTime().toLocalTime().getHour() >= 17;
-                    } else {
-                        return true;
-                    }
-                });
-
-        if (isNightShift(allInOutSwipes, officer)) {
-            return recordsStream
-                    .filter(swipe -> swipe.getSwipeDateTime().getHour() >= 5 &&
-                            swipe.getSwipeDateTime().getHour() <= 9)
-                    .sorted()
-                    .reduce((first, second) -> second)
-                    .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
-        } else {
-            return recordsStream
-                    .filter(swipe -> swipe.getSwipeDateTime().getHour() >= 17 &&
-                            swipe.getSwipeDateTime().getHour() <= 21)
-                    .sorted()
-                    .reduce((first, second) -> second)
-                    .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
-        }
-    }
-
-    private static SwipeRecord getSwipeIn(List<SwipeRecord> allInOutSwipes, Officer officer) {
-
-        Stream<SwipeRecord> recordsStream = allInOutSwipes.stream()
-                .filter(swipe -> swipe.getFullName().equals(officer.getFullName()))
+    private static SwipeRecord getSwipeIn(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
+        return onlyInOutSwipes.stream()
+                .filter(swipe -> swipe.getFullName().equals(shift.getOfficer().getFullName()))
                 .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()))
-                .filter(swipe -> swipe.getSwipeDateTime().toLocalDate().isEqual(firstDay));
-//        System.out.println(officer + ": " + isNightShift(allInOutSwipes, officer));
-
-        if (isNightShift(allInOutSwipes, officer)) {
-            return recordsStream
-                    .filter(swipe -> swipe.getSwipeDateTime().getHour() >= 17 &&
-                            swipe.getSwipeDateTime().getHour() <= 21)
-                    .sorted()
-                    .findFirst()
-                    .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
-        } else {
-            return recordsStream
-                    .filter(swipe -> swipe.getSwipeDateTime().getHour() >= 5 &&
-                            swipe.getSwipeDateTime().getHour() <= 9)
-                    .sorted()
-                    .findFirst()
-                    .orElseGet(() -> new SwipeRecord(officer.getFirstName(), officer.getLastName(), null, null));
-        }
-    }
-
-    private static boolean isNightShift(List<SwipeRecord> allInOutSwipes, Officer officer) {
-
-        if (getStreamOfSwipesForGivenOfficer(allInOutSwipes, officer)
-                .anyMatch(swipe -> swipe.getSwipeDateTime().getHour() > 21)) {
-            return true;
-        }
-
-        if (getStreamOfSwipesForGivenOfficer(allInOutSwipes, officer)
-                .anyMatch(swipe -> swipe.getSwipeDateTime().getHour() > 9 &&
-                        swipe.getSwipeDateTime().getHour() < 17)) {
-            return false;
-        }
-
-        return getStreamOfSwipesForGivenOfficer(allInOutSwipes, officer)
-                .filter(swipe -> allSwipeOutDevices.contains(swipe.getDeviceName()))
-                .anyMatch(swipe -> swipe.getSwipeDateTime().getHour() >= 5 &&
-                        swipe.getSwipeDateTime().getHour() <= 9);
-    }
-
-    private static Stream<SwipeRecord> getStreamOfSwipesForGivenOfficer(List<SwipeRecord> allInOutSwipes, Officer officer) {
-        return allInOutSwipes.stream()
-                .filter(swipe -> swipe.getFullName().equals(officer.getFullName()));
-    }
-
-    private static LocalDate getFirstDay(List<SwipeRecord> allSwipes) {
-        return allSwipes.stream()
-                .map(swipeRecord -> swipeRecord.getSwipeDateTime().toLocalDate())
-                .distinct()
+                .filter(swipe -> {
+                    if (shift.isDayShift()) {
+                        return swipe.getSwipeDateTime().getHour() >= 4 &&
+                                swipe.getSwipeDateTime().getHour() <= 7;
+                    } else {
+                        return swipe.getSwipeDateTime().getHour() >= 16 &&
+                                swipe.getSwipeDateTime().getHour() <= 19;
+                    }
+                })
                 .sorted()
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Failure to read the data"));
+                .orElse(new SwipeRecord(
+                        shift.getOfficer().getFirstName(), shift.getOfficer().getLastName(), null, null));
+    }
+
+    private static SwipeRecord getSwipeOut(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
+        return onlyInOutSwipes.stream()
+                .filter(swipe -> swipe.getFullName().equals(shift.getOfficer().getFullName()))
+                .filter(swipe -> allSwipeOutDevices.contains(swipe.getDeviceName()))
+                .filter(swipe -> {
+                    if (shift.isDayShift()) {
+                        return swipe.getSwipeDateTime().getHour() >= 16 &&
+                                swipe.getSwipeDateTime().getHour() <= 19;
+                    } else {
+                        return swipe.getSwipeDateTime().getHour() >= 4 &&
+                                swipe.getSwipeDateTime().getHour() <= 7;
+                    }
+                })
+                .sorted()
+                .reduce((first, second) -> second)
+                .orElse(new SwipeRecord(
+                        shift.getOfficer().getFirstName(), shift.getOfficer().getLastName(), null, null));
     }
 
 }
