@@ -20,32 +20,16 @@ public class SwipeRecord implements Comparable<SwipeRecord> {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public LocalDateTime getSwipeDateTime() {
         return swipeTime;
     }
 
-    public void setSwipeTime(LocalDateTime swipeTime) {
-        this.swipeTime = swipeTime;
-    }
-
     public String getDeviceName() {
         return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
     }
 
     @Override
