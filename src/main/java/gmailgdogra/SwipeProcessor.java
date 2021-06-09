@@ -2,7 +2,6 @@ package gmailgdogra;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SwipeProcessor {
@@ -29,12 +28,10 @@ public class SwipeProcessor {
 
     }
 
-    public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes) {
+    public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes, List<Shift> shifts) {
 
         List<SwipeRecord> outputData = new ArrayList<>();
         List<SwipeRecord> onlyInOutSwipes = filterInOutSwipes(allSwipes);
-        Set<Officer> allOfficers = ExtractOfficers.from(onlyInOutSwipes);
-        List<Shift> shifts = UserInput.getShiftDetails(allOfficers);
 
         for (Shift shift : shifts) {
             outputData.add(getSwipeIn(shift, onlyInOutSwipes));
