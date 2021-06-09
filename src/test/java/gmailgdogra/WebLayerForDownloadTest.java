@@ -11,12 +11,5 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 public class WebLayerForDownloadTest {
 
-    @Autowired
-    private MockMvc mockMvc;
 
-    @Test
-    public void shouldReturnBadRequest() throws Exception {
-        mockMvc.perform(get("/download"))
-                .andExpect(status().isBadRequest());
-    }
 }
