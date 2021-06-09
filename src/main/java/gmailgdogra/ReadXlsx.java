@@ -18,7 +18,7 @@ public class ReadXlsx {
     private static final int COL_SWIPE_DATE_TIME = 2;
     private static final int COL_DEVICE_NAME = 5;
 
-    public static List<SwipeRecord> parse(InputStream inputStream) throws IOException {
+    public static List<SwipeRecord> readAllRows(InputStream inputStream) throws IOException {
         return collectDataFrom(new XSSFWorkbook(inputStream).getSheetAt(0));
     }
 
