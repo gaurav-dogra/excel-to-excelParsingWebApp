@@ -49,7 +49,7 @@ public class SwipeProcessor {
 
     private static SwipeRecord getSwipeIn(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
         return onlyInOutSwipes.stream()
-                .filter(swipe -> swipe.getFullName().equals(shift.getOfficer().getFullName()))
+                .filter(swipe -> swipe.getOfficer().equals(shift.getOfficer()))
                 .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()))
                 .filter(swipe -> {
                     if (shift.isDayShift()) {
@@ -62,13 +62,12 @@ public class SwipeProcessor {
                 })
                 .sorted()
                 .findFirst()
-                .orElse(new SwipeRecord(
-                        shift.getOfficer().getFirstName(), shift.getOfficer().getLastName(), null, null));
+                .orElse(new SwipeRecord(shift.getOfficer(), null, null));
     }
 
     private static SwipeRecord getSwipeOut(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
         return onlyInOutSwipes.stream()
-                .filter(swipe -> swipe.getFullName().equals(shift.getOfficer().getFullName()))
+                .filter(swipe -> swipe.getOfficer().equals(shift.getOfficer()))
                 .filter(swipe -> allSwipeOutDevices.contains(swipe.getDeviceName()))
                 .filter(swipe -> {
                     if (shift.isDayShift()) {
@@ -81,8 +80,7 @@ public class SwipeProcessor {
                 })
                 .sorted()
                 .reduce((first, second) -> second)
-                .orElse(new SwipeRecord(
-                        shift.getOfficer().getFirstName(), shift.getOfficer().getLastName(), null, null));
+                .orElse(new SwipeRecord(shift.getOfficer(), null, null));
     }
 
 }

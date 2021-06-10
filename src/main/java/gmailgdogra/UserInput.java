@@ -9,7 +9,7 @@ public class UserInput {
 
         for (Officer officer : allOfficers) {
             System.out.println("==============");
-            System.out.println(officer.getFullName());
+            System.out.println(officer);
             System.out.println("==============");
             System.out.println("Please select appropriate number from below");
             System.out.println("MG Day Shift(1)");

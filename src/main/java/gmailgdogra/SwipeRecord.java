@@ -4,24 +4,18 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SwipeRecord implements Comparable<SwipeRecord> {
-    private String firstName;
-    private String lastName;
-    private LocalDateTime swipeTime;
-    private String deviceName;
+    private final Officer officer;
+    private final LocalDateTime swipeTime;
+    private final String deviceName;
 
-    public SwipeRecord(String firstName, String lastName, LocalDateTime swipeTime, String deviceName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public SwipeRecord(Officer officer, LocalDateTime swipeTime, String deviceName) {
+        this.officer = officer;
         this.swipeTime = swipeTime;
         this.deviceName = deviceName;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public Officer getOfficer() {
+        return officer;
     }
 
     public LocalDateTime getSwipeDateTime() {
@@ -34,14 +28,9 @@ public class SwipeRecord implements Comparable<SwipeRecord> {
 
     @Override
     public String toString() {
-        return getFirstName() + " " +
-                getLastName() + ", " +
+        return officer + ", " +
                 getSwipeDateTime() + ", " +
                 getDeviceName();
-    }
-
-    public String getFullName() {
-        return getFirstName() + " " + getLastName();
     }
 
     @Override
@@ -51,16 +40,14 @@ public class SwipeRecord implements Comparable<SwipeRecord> {
 
         SwipeRecord that = (SwipeRecord) o;
 
-        if (!getFirstName().equals(that.getFirstName())) return false;
-        if (!getLastName().equals(that.getLastName())) return false;
+        if (!getOfficer().equals(that.getOfficer())) return false;
         if (!Objects.equals(swipeTime, that.swipeTime)) return false;
         return getDeviceName() != null ? getDeviceName().equals(that.getDeviceName()) : that.getDeviceName() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getFirstName().hashCode();
-        result = 31 * result + getLastName().hashCode();
+        int result = getOfficer().hashCode();
         result = 31 * result + (swipeTime != null ? swipeTime.hashCode() : 0);
         result = 31 * result + (getDeviceName() != null ? getDeviceName().hashCode() : 0);
         return result;

@@ -8,14 +8,13 @@ public class OutputRow {
     private final String swipeTime;
     private final String deviceName;
 
-    public static OutputRow of(String firstName, String lastName, String swipeTime, String deviceName) {
-        return new OutputRow(firstName, lastName, swipeTime, deviceName);
+    public static OutputRow of(Officer officer, String swipeTime, String deviceName) {
+        return new OutputRow(officer, swipeTime, deviceName);
     }
 
-    public OutputRow(@NotNull final String firstName, @NotNull final String lastName,
-                     String swipeTime, String deviceName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public OutputRow(@NotNull Officer officer, String swipeTime, String deviceName) {
+        this.firstName = officer.getFirstName();
+        this.lastName = officer.getLastName();
         this.swipeTime = swipeTime;
         this.deviceName = deviceName;
     }
