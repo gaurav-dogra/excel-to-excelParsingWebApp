@@ -60,7 +60,7 @@ class SwipeProcessorTest {
 
     @Test
     void ignore_Swipeout_prev_night_shift() {
-        SwipeRecord swipeOut_prev_night = new SwipeRecord("Anthony", "Capes",
+        SwipeRecord swipeOut_prev_night = new SwipeRecord(new Officer("Anthony", "Capes"),
                 LocalDateTime.parse("24/05/2021 05:51:29", formatter), "PLA0103 - Turnstile West OUT");
 
         assertFalse(outputData.contains(swipeOut_prev_night), "Swipe Out from prev night shift must be ignored");
@@ -68,7 +68,7 @@ class SwipeProcessorTest {
 
     @Test
     void ignore_SwipeIn_next_day_shift() {
-        SwipeRecord swipeIn_next_Day_shift = new SwipeRecord("Fesal", "Amin",
+        SwipeRecord swipeIn_next_Day_shift = new SwipeRecord(new Officer("Fesal", "Amin"),
                 LocalDateTime.parse("25/05/2021 05:58:17", formatter), "Thames LSI0903 - Turnstile North IN");
 
         assertFalse(outputData.contains(swipeIn_next_Day_shift), "Swipe In from next Day shift must be ignored");
@@ -76,7 +76,7 @@ class SwipeProcessorTest {
 
     @Test
     void forgot_swipeIn_on_nightShift() {
-        SwipeRecord missedSwipeInExpectedRepresentation = new SwipeRecord("Media", "Coulibaly",
+        SwipeRecord missedSwipeInExpectedRepresentation = new SwipeRecord(new Officer("Media", "Coulibaly"),
                 null, null);
         assertTrue(outputData.contains(missedSwipeInExpectedRepresentation), "Missed swipe-in must be added");
     }
@@ -84,13 +84,13 @@ class SwipeProcessorTest {
     @Test
     void swipeTimesTest() {
 
-        SwipeRecord swipeInGaurav = new SwipeRecord("GAURAV", "DOGRA",
+        SwipeRecord swipeInGaurav = new SwipeRecord(new Officer("GAURAV", "DOGRA"),
                 LocalDateTime.parse("24/05/2021 17:47:07", formatter), "Thames LSI0903 - Turnstile North IN");
-        SwipeRecord swipeOutGaurav = new SwipeRecord("GAURAV", "DOGRA",
+        SwipeRecord swipeOutGaurav = new SwipeRecord(new Officer("GAURAV", "DOGRA"),
                 LocalDateTime.parse("25/05/2021 06:04:21", formatter), "Thames LSI0904 - Turnstile North OUT");
-        SwipeRecord swipeInKayode = new SwipeRecord("Kayode", "Dairo",
+        SwipeRecord swipeInKayode = new SwipeRecord(new Officer("Kayode", "Dairo"),
                 LocalDateTime.parse("24/05/2021 17:52:37", formatter), "Thames LSI0901 - Turnstile South IN");
-        SwipeRecord swipeOutKayode = new SwipeRecord("Kayode", "Dairo",
+        SwipeRecord swipeOutKayode = new SwipeRecord(new Officer("Kayode", "Dairo"),
                 LocalDateTime.parse("25/05/2021 05:47:19", formatter), "Thames LSI0904 - Turnstile North OUT");
 
         assertTrue(outputData.contains(swipeInGaurav));
