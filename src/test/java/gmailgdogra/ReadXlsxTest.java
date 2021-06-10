@@ -40,7 +40,7 @@ class ReadXlsxTest {
             content = Files.readAllBytes(path);
             MultipartFile result = new MockMultipartFile(name,
                     originalFileName, contentType, content);
-            swipeRecords = ReadXlsx.parse(result.getInputStream());
+            swipeRecords = ReadXlsx.readAllRows(result.getInputStream());
         } catch (IOException e) {
             fail("Unable to read the file: " + name);
         }
