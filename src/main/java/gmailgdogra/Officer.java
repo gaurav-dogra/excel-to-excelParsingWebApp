@@ -10,16 +10,12 @@ public class Officer {
         this.lastName = lastName;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
-    public String getFullName() {
-        return getFirstName() + " " + getLastName();
+    public String getFirstName() {
+        return firstName;
     }
 
     @Override
@@ -42,7 +38,7 @@ public class Officer {
 
     @Override
     public String toString() {
-        return getFullName();
+        return firstName + " " + lastName;
     }
 
 }
