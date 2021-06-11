@@ -1,12 +1,15 @@
 package gmailgdogra;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.time.format.DateTimeFormatter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,42 +19,81 @@ public class WriteOutputToXlsx {
     private static final File templateFile =
             new File("src/main/resources/templates/Securitas Daily Report Template.xlsx");
 
-    public static byte[] write(List<SwipeRecord> outputData, List<Shift> shifts) throws IOException {
+    private static final OutputRow titleRow = OutputRow.of("Location", "First Name",
+            "Last Name", "Event Date", "Logical Device");
 
-        Workbook newWorkbook = copyFromTemplate();
-        Sheet sheet = newWorkbook.getSheetAt(0);
+    private static int rowsCreatedSoFar = 0;
+
+    public static byte[] write(List<SwipeRecord> outputData, List<Shift> shifts) {
+        System.out.println("WriteOutputToXlsx.write");
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
         List<SwipeRecord> mainGate = getSwipesForGivenLoc(outputData, shifts, Location.MAIN_GATE);
         List<SwipeRecord> epWeighbridge = getSwipesForGivenLoc(outputData, shifts, Location.EP_WEIGHBRIDGE);
         List<SwipeRecord> tlPlaistow = getSwipesForGivenLoc(outputData, shifts, Location.TL_PLAISTOW);
         List<SwipeRecord> visitorsReception = getSwipesForGivenLoc(outputData, shifts, Location.VISITORS_RECEPTION);
 
+        System.out.println("mainGate = " + mainGate.size());
+        System.out.println("epWeighbridge = " + epWeighbridge.size());
+        System.out.println("tlPlaistow = " + tlPlaistow.size());
+        System.out.println("visitorsReception = " + visitorsReception.size());
+
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            addToSheet(sheet, mainGate, Location.MAIN_GATE);
-            addToSheet(sheet, epWeighbridge, Location.EP_WEIGHBRIDGE);
-            addToSheet(sheet, tlPlaistow, Location.TL_PLAISTOW);
-            addToSheet(sheet, visitorsReception, Location.VISITORS_RECEPTION);
-            newWorkbook.close();
+            addRow(sheet, titleRow);
+            addAllRowsForALoc(sheet, mainGate, Location.MAIN_GATE);
+            addAllRowsForALoc(sheet, epWeighbridge, Location.EP_WEIGHBRIDGE);
+            addAllRowsForALoc(sheet, tlPlaistow, Location.TL_PLAISTOW);
+            addAllRowsForALoc(sheet, visitorsReception, Location.VISITORS_RECEPTION);
+            autoSizeColumns(sheet);
+            workbook.write(out);
+            workbook.close();
             return out.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException("failed to write to output file " + e.getMessage());
         }
     }
 
-    private static void addToSheet(Sheet sheet, List<SwipeRecord> rows, Location loc) {
-        Row row = sheet.createRow(rowNo);
-
-        for (int column = 0; column < 4; column++) {
-            row.createCell(column);
+    private static void addRow(Sheet sheet, OutputRow data) {
+        System.out.println("data = " + data);
+        Row row = sheet.createRow(rowsCreatedSoFar);
+        rowsCreatedSoFar++;
+        for (int col = 0; col < 5; col++) {
+            row.createCell(col);
         }
-        row.getCell(0).setCellValue(outputRow.getFirstName());
-        row.getCell(1).setCellValue(outputRow.getLastName());
-        row.getCell(2).setCellValue(outputRow.getSwipeTime());
-        row.getCell(3).setCellValue(outputRow.getDeviceName());
 
-        applyStyle(row);
+        row.getCell(0).setCellValue(data.getLocation());
+        row.getCell(1).setCellValue(data.getFirstName());
+        row.getCell(2).setCellValue(data.getLastName());
+        row.getCell(3).setCellValue(data.getEventDate());
+        row.getCell(4).setCellValue(data.getLogicalDevice());
+
+//        applyStyle(row);
     }
 
-    private static List<SwipeRecord> getSwipesForGivenLoc(List<SwipeRecord> outputData, List<Shift> shifts, Location location) {
+    private static void addAllRowsForALoc(Sheet sheet, List<SwipeRecord> records, Location loc) {
+        System.out.println("WriteOutputToXlsx.addAllRowsForALoc");
+        System.out.println("loc = " + loc);
+        for (SwipeRecord record : records) {
+            String location = loc.toString();
+            String firstName = record.getOfficer().getFirstName();
+            String lastName = record.getOfficer().getLastName();
+            String eventDate;
+            String logicalDevice;
+            LocalDateTime eventDateTime = record.getSwipeDateTime();
+            if (eventDateTime == null) {
+                eventDate = "Swipe Missing";
+                logicalDevice = "";
+            } else {
+                eventDate = eventDateTime.toString();
+                logicalDevice = record.getDeviceName();
+            }
+            OutputRow data = OutputRow.of(location, firstName, lastName, eventDate, logicalDevice);
+            addRow(sheet, data);
+        }
+    }
+
+    private static List<SwipeRecord> getSwipesForGivenLoc(List<SwipeRecord> outputData, List<Shift> shifts,
+                                                          Location location) {
         List<SwipeRecord> returnList = new ArrayList<>();
         for (Shift shift : shifts) {
             if (shift.getLocation() == location) {
@@ -64,32 +106,9 @@ public class WriteOutputToXlsx {
         return returnList;
     }
 
-    private static Workbook copyFromTemplate() throws IOException {
-        File newFile = new File("newFile.xlsx");
-        newFile.createNewFile();
-        Files.copy(templateFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        InputStream inStream = new FileInputStream(newFile);
-        return new XSSFWorkbook(inStream);
-    }
-
     private static void autoSizeColumns(Sheet sheet) {
-        for (int column = 0; column < 4; column++) {
+        for (int column = 0; column < 5; column++) {
             sheet.autoSizeColumn(column);
-        }
-    }
-
-    private static void writeData(Sheet sheet, List<SwipeRecord> outputData) {
-        int rowNo = 1;
-        for (SwipeRecord record : outputData) {
-            String swipeTime;
-            if (record.getSwipeDateTime() == null) {
-                swipeTime = "Did Not Swipe";
-            } else {
-                swipeTime = record.getSwipeDateTime()
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            }
-            addToSheet(sheet, OutputRow.of(record.getOfficer(), swipeTime, record.getDeviceName()), rowNo);
-            rowNo++;
         }
     }
 
