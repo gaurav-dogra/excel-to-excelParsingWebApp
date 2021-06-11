@@ -1,22 +1,29 @@
 package gmailgdogra;
 
-import javax.validation.constraints.NotNull;
-
 public class OutputRow {
+
+    private final String location;
     private final String firstName;
     private final String lastName;
-    private final String swipeTime;
-    private final String deviceName;
+    private final String eventDate;
+    private final String logicalDevice;
 
-    public static OutputRow of(Officer officer, String swipeTime, String deviceName) {
-        return new OutputRow(officer, swipeTime, deviceName);
+    public static OutputRow of(String location, String firstName, String lastName,
+                               String eventDate, String deviceName) {
+        return new OutputRow(location, firstName, lastName, eventDate, deviceName);
     }
 
-    public OutputRow(@NotNull Officer officer, String swipeTime, String deviceName) {
-        this.firstName = officer.getFirstName();
-        this.lastName = officer.getLastName();
-        this.swipeTime = swipeTime;
-        this.deviceName = deviceName;
+    public OutputRow(String location, String firstName, String lastName,
+                     String eventDate, String logicalDevice) {
+        this.location = location;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.eventDate = eventDate;
+        this.logicalDevice = logicalDevice;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public String getFirstName() {
@@ -27,11 +34,22 @@ public class OutputRow {
         return lastName;
     }
 
-    public String getSwipeTime() {
-        return swipeTime;
+    public String getEventDate() {
+        return eventDate;
     }
 
-    public String getDeviceName() {
-        return deviceName;
+    public String getLogicalDevice() {
+        return logicalDevice;
+    }
+
+    @Override
+    public String toString() {
+        return "OutputRow{" +
+                "location='" + location + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", eventDate='" + eventDate + '\'' +
+                ", logicalDevice='" + logicalDevice + '\'' +
+                '}';
     }
 }

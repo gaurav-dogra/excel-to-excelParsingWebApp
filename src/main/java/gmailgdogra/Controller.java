@@ -28,6 +28,7 @@ public class Controller {
 
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> upload(@RequestParam MultipartFile file) {
+        System.out.println("Controller.upload");
         String message;
 
         if (ReadXlsxService.hasExcelFormat(file)) {
