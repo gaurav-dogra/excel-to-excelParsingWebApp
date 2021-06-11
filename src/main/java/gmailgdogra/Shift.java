@@ -22,4 +22,13 @@ public class Shift {
     public boolean isDayShift() {
         return isDayShift;
     }
+
+    @Override
+    public String toString() {
+        return "Shift{" +
+                "officer=" + officer +
+                ", location=" + location +
+                ", isDayShift=" + isDayShift +
+                '}';
+    }
 }
