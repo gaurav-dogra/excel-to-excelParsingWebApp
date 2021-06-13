@@ -1,5 +1,7 @@
 package gmailgdogra;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +10,7 @@ public class SwipeProcessor {
 
     private static final List<String> allSwipeInDevices = new ArrayList<>();
     private static final List<String> allSwipeOutDevices = new ArrayList<>();
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     static {
         allSwipeInDevices.add("Thames LSI0903 - Turnstile North IN");
@@ -28,14 +31,19 @@ public class SwipeProcessor {
 
     }
 
-    public static List<SwipeRecord> getOutputDataFrom(List<SwipeRecord> allSwipes, List<Shift> shifts) {
+    public static List<OutputRow> getOutputDataFrom(List<SwipeRecord> allSwipes, List<Shift> shifts) {
 
-        List<SwipeRecord> outputData = new ArrayList<>();
+        List<OutputRow> outputData = new ArrayList<>();
         List<SwipeRecord> onlyInOutSwipes = filterInOutSwipes(allSwipes);
 
         for (Shift shift : shifts) {
-            outputData.add(getSwipeIn(shift, onlyInOutSwipes));
-            outputData.add(getSwipeOut(shift, onlyInOutSwipes));
+
+            List<SwipeRecord> swipesOfAnOfficer = onlyInOutSwipes.stream()
+                    .filter(swipe -> shift.getOfficer().equals(swipe.getOfficer()))
+                    .collect(Collectors.toList());
+
+            outputData.add(getSwipeIn(shift, swipesOfAnOfficer));
+            outputData.add(getSwipeOut(shift, swipesOfAnOfficer));
         }
         return outputData;
     }
@@ -47,9 +55,11 @@ public class SwipeProcessor {
                 .collect(Collectors.toList());
     }
 
-    private static SwipeRecord getSwipeIn(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
-        return onlyInOutSwipes.stream()
-                .filter(swipe -> swipe.getOfficer().equals(shift.getOfficer()))
+    private static OutputRow getSwipeIn(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
+
+        Officer shiftOfficer = shift.getOfficer();
+
+        SwipeRecord record = onlyInOutSwipes.stream()
                 .filter(swipe -> allSwipeInDevices.contains(swipe.getDeviceName()))
                 .filter(swipe -> {
                     if (shift.isDayShift()) {
@@ -62,12 +72,22 @@ public class SwipeProcessor {
                 })
                 .sorted()
                 .findFirst()
-                .orElse(new SwipeRecord(shift.getOfficer(), null, null));
+                .orElse(new SwipeRecord(shiftOfficer, null, null));
+
+
+        return OutputRow.of(shift.getLocation().toString(), shiftOfficer.getFirstName(), shiftOfficer.getLastName(),
+                dateTimeParse(record.getSwipeDateTime()), record.getDeviceName());
+
     }
 
-    private static SwipeRecord getSwipeOut(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
-        return onlyInOutSwipes.stream()
-                .filter(swipe -> swipe.getOfficer().equals(shift.getOfficer()))
+    private static String dateTimeParse(LocalDateTime swipeDateTime) {
+        return LocalDateTime.parse(swipeDateTime.toString(), formatter).toString();
+    }
+
+    private static OutputRow getSwipeOut(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
+        Officer shiftOfficer = shift.getOfficer();
+
+        SwipeRecord record = onlyInOutSwipes.stream()
                 .filter(swipe -> allSwipeOutDevices.contains(swipe.getDeviceName()))
                 .filter(swipe -> {
                     if (shift.isDayShift()) {
@@ -80,7 +100,11 @@ public class SwipeProcessor {
                 })
                 .sorted()
                 .reduce((first, second) -> second)
-                .orElse(new SwipeRecord(shift.getOfficer(), null, null));
-    }
+                .orElse(new SwipeRecord(shiftOfficer, null, null));
 
+
+        return OutputRow.of(shift.getLocation().toString(), shiftOfficer.getFirstName(), shiftOfficer.getLastName(),
+                dateTimeParse(record.getSwipeDateTime()), record.getDeviceName());
+
+    }
 }

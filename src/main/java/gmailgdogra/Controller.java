@@ -60,9 +60,13 @@ public class Controller {
             header.setContentType(new MediaType("application", "force-download"));
             header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
             Set<Officer> officers = ExtractOfficers.from(allSwipes);
+            System.out.println(officers);
             List<Shift> shifts = UserInput.getShiftDetails(officers);
-            List<SwipeRecord> outputData = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
-            ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData, shifts));
+            System.out.println("shifts.size() = " + shifts.size());
+            List<OutputRow> outputData = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
+            System.out.println("outputData.size() = " + outputData.size());
+            outputData.forEach(System.out::println);
+            ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
             return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
