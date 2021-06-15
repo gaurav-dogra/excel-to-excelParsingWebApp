@@ -2,7 +2,7 @@ package gmailgdogra;
 
 import javax.validation.constraints.NotNull;
 
-public class OutputRow {
+public class OutputRow implements Comparable<OutputRow> {
 
     private final String location;
     private final String firstName;
@@ -53,5 +53,10 @@ public class OutputRow {
                 ", eventDate='" + eventDate + '\'' +
                 ", logicalDevice='" + logicalDevice + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(OutputRow o) {
+        return getLocation().compareTo(o.getLocation());
     }
 }
