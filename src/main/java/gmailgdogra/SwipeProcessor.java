@@ -42,8 +42,10 @@ public class SwipeProcessor {
                     .filter(swipe -> shift.getOfficer().equals(swipe.getOfficer()))
                     .collect(Collectors.toList());
 
-            outputData.add(getSwipeIn(shift, swipesOfAnOfficer));
-            outputData.add(getSwipeOut(shift, swipesOfAnOfficer));
+            OutputRow swipeIn = getSwipeIn(shift, swipesOfAnOfficer);
+            OutputRow swipeOut = getSwipeOut(shift, swipesOfAnOfficer);
+            outputData.add(swipeIn);
+            outputData.add(swipeOut);
         }
         return outputData;
     }
@@ -56,7 +58,6 @@ public class SwipeProcessor {
     }
 
     private static OutputRow getSwipeIn(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
-
         Officer shiftOfficer = shift.getOfficer();
 
         SwipeRecord record = onlyInOutSwipes.stream()
@@ -74,14 +75,9 @@ public class SwipeProcessor {
                 .findFirst()
                 .orElse(new SwipeRecord(shiftOfficer, null, null));
 
-
         return OutputRow.of(shift.getLocation().toString(), shiftOfficer.getFirstName(), shiftOfficer.getLastName(),
-                dateTimeParse(record.getSwipeDateTime()), record.getDeviceName());
+                parseDateTime(record.getSwipeDateTime()), record.getDeviceName());
 
-    }
-
-    private static String dateTimeParse(LocalDateTime swipeDateTime) {
-        return LocalDateTime.parse(swipeDateTime.toString(), formatter).toString();
     }
 
     private static OutputRow getSwipeOut(Shift shift, List<SwipeRecord> onlyInOutSwipes) {
@@ -102,9 +98,16 @@ public class SwipeProcessor {
                 .reduce((first, second) -> second)
                 .orElse(new SwipeRecord(shiftOfficer, null, null));
 
-
         return OutputRow.of(shift.getLocation().toString(), shiftOfficer.getFirstName(), shiftOfficer.getLastName(),
-                dateTimeParse(record.getSwipeDateTime()), record.getDeviceName());
+                parseDateTime(record.getSwipeDateTime()), record.getDeviceName());
 
+    }
+
+    private static String parseDateTime(LocalDateTime swipeDateTime) {
+        if (swipeDateTime == null) {
+            return null;
+        }
+
+        return swipeDateTime.format(formatter);
     }
 }
