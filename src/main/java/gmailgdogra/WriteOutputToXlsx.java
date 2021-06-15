@@ -9,10 +9,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class WriteOutputToXlsx {
 
@@ -24,26 +22,14 @@ public class WriteOutputToXlsx {
 
     private static int rowsCreatedSoFar = 0;
 
-    public static byte[] write(List<SwipeRecord> outputData, List<Shift> shifts) {
+    public static byte[] write(List<OutputRow> outputData, List<Shift> shifts) {
         System.out.println("WriteOutputToXlsx.write");
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
-        List<SwipeRecord> mainGate = getSwipesForGivenLoc(outputData, shifts, Location.MAIN_GATE);
-        List<SwipeRecord> epWeighbridge = getSwipesForGivenLoc(outputData, shifts, Location.EP_WEIGHBRIDGE);
-        List<SwipeRecord> tlPlaistow = getSwipesForGivenLoc(outputData, shifts, Location.TL_PLAISTOW);
-        List<SwipeRecord> visitorsReception = getSwipesForGivenLoc(outputData, shifts, Location.VISITORS_RECEPTION);
-
-        System.out.println("mainGate = " + mainGate.size());
-        System.out.println("epWeighbridge = " + epWeighbridge.size());
-        System.out.println("tlPlaistow = " + tlPlaistow.size());
-        System.out.println("visitorsReception = " + visitorsReception.size());
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             addRow(sheet, titleRow);
-            addAllRowsForALoc(sheet, mainGate, Location.MAIN_GATE);
-            addAllRowsForALoc(sheet, epWeighbridge, Location.EP_WEIGHBRIDGE);
-            addAllRowsForALoc(sheet, tlPlaistow, Location.TL_PLAISTOW);
-            addAllRowsForALoc(sheet, visitorsReception, Location.VISITORS_RECEPTION);
+            addRows(sheet, outputData);
             autoSizeColumns(sheet);
             workbook.write(out);
             workbook.close();
@@ -53,8 +39,14 @@ public class WriteOutputToXlsx {
         }
     }
 
+    private static void addRows(Sheet sheet, List<OutputRow> outputData) {
+        Collections.sort(outputData);
+        for (OutputRow data : outputData) {
+            addRow(sheet, data);
+        }
+    }
+
     private static void addRow(Sheet sheet, OutputRow data) {
-        System.out.println("data = " + data);
         Row row = sheet.createRow(rowsCreatedSoFar);
         rowsCreatedSoFar++;
         for (int col = 0; col < 5; col++) {
@@ -66,44 +58,6 @@ public class WriteOutputToXlsx {
         row.getCell(2).setCellValue(data.getLastName());
         row.getCell(3).setCellValue(data.getEventDate());
         row.getCell(4).setCellValue(data.getLogicalDevice());
-
-//        applyStyle(row);
-    }
-
-    private static void addAllRowsForALoc(Sheet sheet, List<SwipeRecord> records, Location loc) {
-        System.out.println("WriteOutputToXlsx.addAllRowsForALoc");
-        System.out.println("loc = " + loc);
-        for (SwipeRecord record : records) {
-            String location = loc.toString();
-            String firstName = record.getOfficer().getFirstName();
-            String lastName = record.getOfficer().getLastName();
-            String eventDate;
-            String logicalDevice;
-            LocalDateTime eventDateTime = record.getSwipeDateTime();
-            if (eventDateTime == null) {
-                eventDate = "Swipe Missing";
-                logicalDevice = "";
-            } else {
-                eventDate = eventDateTime.toString();
-                logicalDevice = record.getDeviceName();
-            }
-            OutputRow data = OutputRow.of(location, firstName, lastName, eventDate, logicalDevice);
-            addRow(sheet, data);
-        }
-    }
-
-    private static List<SwipeRecord> getSwipesForGivenLoc(List<SwipeRecord> outputData, List<Shift> shifts,
-                                                          Location location) {
-        List<SwipeRecord> returnList = new ArrayList<>();
-        for (Shift shift : shifts) {
-            if (shift.getLocation() == location) {
-                Officer shiftOfficer = shift.getOfficer();
-                returnList.addAll(outputData.stream()
-                        .filter(swipe -> shiftOfficer.equals(swipe.getOfficer()))
-                        .collect(Collectors.toList()));
-            }
-        }
-        return returnList;
     }
 
     private static void autoSizeColumns(Sheet sheet) {
