@@ -9,7 +9,7 @@ public class UserInput {
 
         for (Officer officer : allOfficers) {
             System.out.println("==============");
-            System.out.println(officer.getFullName());
+            System.out.println(officer);
             System.out.println("==============");
             System.out.println("Please select appropriate number from below");
             System.out.println("MG Day Shift(1)");
@@ -25,6 +25,7 @@ public class UserInput {
             Optional<Shift> shiftInfo = getShiftInfo(n, officer);
             shiftInfo.ifPresent(shifts::add);
         }
+        System.out.println("All inputs recorded");
         return shifts;
     }
 

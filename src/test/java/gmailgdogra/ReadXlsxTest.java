@@ -19,13 +19,13 @@ class ReadXlsxTest {
 
     private List<SwipeRecord> swipeRecords;
 
-    private final SwipeRecord FIRST_RECORD = new SwipeRecord("Abdul",
-            "Khan",
+    private final SwipeRecord FIRST_RECORD = new SwipeRecord(new Officer("Abdul",
+            "Khan"),
             LocalDateTime.of(2021, 5, 24, 17, 42, 37),
             "PLA0101 - Barrier IN");
 
-    private final SwipeRecord LAST_RECORD = new SwipeRecord("Zubair",
-            "Patel",
+    private final SwipeRecord LAST_RECORD = new SwipeRecord(new Officer("Zubair",
+            "Patel"),
             LocalDateTime.of(2021, 5, 25, 10, 28, 27),
             "Thames LSI0306 - Reception Dr In/Out");
 

@@ -24,7 +24,7 @@ public class WebLayerForUploadTest {
     private MockMvc mockMvc;
 
     @Test
-    public void shouldReturnWelcomeMessage() throws Exception {
+    void shouldReturnWelcomeMessage() throws Exception {
         mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -33,7 +33,7 @@ public class WebLayerForUploadTest {
     }
 
     @Test
-    public void shouldReturnStatusOk() throws Exception {
+    void shouldReturnStatusOk() throws Exception {
         File file = new File("src/main/resources/testFile.xlsx");
         FileInputStream inputStream = new FileInputStream(file);
         MockMultipartFile multipartFile = new MockMultipartFile("file",
@@ -47,7 +47,7 @@ public class WebLayerForUploadTest {
     }
 
     @Test
-    public void shouldReturnBadRequest() throws Exception {
+    void shouldReturnBadRequest() throws Exception {
         File file = new File("file.txt");
 
         if (file.createNewFile()) {
@@ -64,7 +64,7 @@ public class WebLayerForUploadTest {
     }
 
     @Test
-    public void shouldReturnExpectationFailed() throws Exception {
+    void shouldReturnExpectationFailed() throws Exception {
         File nonParseableFile = new File("NonParseableFile.xlsx");
         nonParseableFile.createNewFile();
         FileInputStream inputStream = new FileInputStream(nonParseableFile);

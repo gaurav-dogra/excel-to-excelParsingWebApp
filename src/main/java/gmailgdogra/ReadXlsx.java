@@ -29,9 +29,10 @@ public class ReadXlsx {
             if (row != null) {
                 String firstName = row.getCell(COL_FIRST_NAME).getStringCellValue();
                 String lastName = row.getCell(COL_LAST_NAME).getStringCellValue();
+                Officer officer = new Officer(firstName, lastName);
                 LocalDateTime swipeDateAndTime = row.getCell(COL_SWIPE_DATE_TIME).getLocalDateTimeCellValue();
                 String deviceName = row.getCell(COL_DEVICE_NAME).getStringCellValue();
-                data.add(new SwipeRecord(firstName, lastName, swipeDateAndTime, deviceName));
+                data.add(new SwipeRecord(officer, swipeDateAndTime, deviceName));
             }
         }
         return data;

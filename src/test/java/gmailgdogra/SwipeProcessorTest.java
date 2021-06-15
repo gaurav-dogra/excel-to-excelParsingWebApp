@@ -8,8 +8,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,9 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SwipeProcessorTest {
 
-    private static List<SwipeRecord> outputData;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-
+    private static List<OutputRow> outputData;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -60,38 +56,38 @@ class SwipeProcessorTest {
 
     @Test
     void ignore_Swipeout_prev_night_shift() {
-        SwipeRecord swipeOut_prev_night = new SwipeRecord("Anthony", "Capes",
-                LocalDateTime.parse("24/05/2021 05:51:29", formatter), "PLA0103 - Turnstile West OUT");
+        OutputRow swipeOut_prev_night = OutputRow.of(Location.TL_PLAISTOW.toString(),
+                "Anthony", "Capes", "24/05/2021 05:51:29", "PLA0103 - Turnstile West OUT");
 
         assertFalse(outputData.contains(swipeOut_prev_night), "Swipe Out from prev night shift must be ignored");
     }
 
     @Test
     void ignore_SwipeIn_next_day_shift() {
-        SwipeRecord swipeIn_next_Day_shift = new SwipeRecord("Fesal", "Amin",
-                LocalDateTime.parse("25/05/2021 05:58:17", formatter), "Thames LSI0903 - Turnstile North IN");
+        OutputRow swipeIn_next_Day_shift = OutputRow.of(Location.MAIN_GATE.toString(), "Fesal","Amin",
+                "25/05/2021 05:58:17", "Thames LSI0903 - Turnstile North IN");
 
         assertFalse(outputData.contains(swipeIn_next_Day_shift), "Swipe In from next Day shift must be ignored");
     }
 
     @Test
     void forgot_swipeIn_on_nightShift() {
-        SwipeRecord missedSwipeInExpectedRepresentation = new SwipeRecord("Media", "Coulibaly",
-                null, null);
+        OutputRow missedSwipeInExpectedRepresentation = OutputRow.of(Location.EP_WEIGHBRIDGE.toString(),
+                "Media", "Coulibaly", null, null);
         assertTrue(outputData.contains(missedSwipeInExpectedRepresentation), "Missed swipe-in must be added");
     }
 
     @Test
     void swipeTimesTest() {
 
-        SwipeRecord swipeInGaurav = new SwipeRecord("GAURAV", "DOGRA",
-                LocalDateTime.parse("24/05/2021 17:47:07", formatter), "Thames LSI0903 - Turnstile North IN");
-        SwipeRecord swipeOutGaurav = new SwipeRecord("GAURAV", "DOGRA",
-                LocalDateTime.parse("25/05/2021 06:04:21", formatter), "Thames LSI0904 - Turnstile North OUT");
-        SwipeRecord swipeInKayode = new SwipeRecord("Kayode", "Dairo",
-                LocalDateTime.parse("24/05/2021 17:52:37", formatter), "Thames LSI0901 - Turnstile South IN");
-        SwipeRecord swipeOutKayode = new SwipeRecord("Kayode", "Dairo",
-                LocalDateTime.parse("25/05/2021 05:47:19", formatter), "Thames LSI0904 - Turnstile North OUT");
+        OutputRow swipeInGaurav = OutputRow.of(Location.MAIN_GATE.toString(),"GAURAV", "DOGRA",
+                "24/05/2021 17:47:07", "Thames LSI0903 - Turnstile North IN");
+        OutputRow swipeOutGaurav = OutputRow.of(Location.MAIN_GATE.toString(),"GAURAV", "DOGRA",
+                "25/05/2021 06:04:21", "Thames LSI0904 - Turnstile North OUT");
+        OutputRow swipeInKayode = OutputRow.of(Location.MAIN_GATE.toString(),"Kayode", "Dairo",
+                "24/05/2021 17:52:37", "Thames LSI0901 - Turnstile South IN");
+        OutputRow swipeOutKayode = OutputRow.of(Location.MAIN_GATE.toString(),"Kayode", "Dairo",
+                "25/05/2021 05:47:19", "Thames LSI0904 - Turnstile North OUT");
 
         assertTrue(outputData.contains(swipeInGaurav));
         assertTrue(outputData.contains(swipeOutGaurav));

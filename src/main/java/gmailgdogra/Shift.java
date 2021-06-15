@@ -1,9 +1,9 @@
 package gmailgdogra;
 
 public class Shift {
-    private Officer officer;
-    private Location location;
-    private boolean isDayShift;
+    private final Officer officer;
+    private final Location location;
+    private final boolean isDayShift;
 
     public Shift(Officer officer, Location location, boolean isDayShift) {
         this.officer = officer;
@@ -21,5 +21,14 @@ public class Shift {
 
     public boolean isDayShift() {
         return isDayShift;
+    }
+
+    @Override
+    public String toString() {
+        return "Shift{" +
+                "officer=" + officer +
+                ", location=" + location +
+                ", isDayShift=" + isDayShift +
+                '}';
     }
 }
