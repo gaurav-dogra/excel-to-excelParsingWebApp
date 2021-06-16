@@ -62,8 +62,7 @@ public class Controller {
             Set<Officer> officers = ExtractOfficers.from(allSwipes);
             List<Shift> shifts = UserInput.getShiftDetails(officers);
             List<OutputRow> outputData = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
-            outputData.forEach(System.out::println);
-            ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData, shifts));
+            ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
             return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
