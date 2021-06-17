@@ -1,6 +1,7 @@
 package gmailgdogra;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 public class OutputRow implements Comparable<OutputRow> {
 
@@ -58,5 +59,20 @@ public class OutputRow implements Comparable<OutputRow> {
     @Override
     public int compareTo(OutputRow o) {
         return getLocation().compareTo(o.getLocation());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OutputRow outputRow = (OutputRow) o;
+        return location.equals(outputRow.location) && firstName.equals(outputRow.firstName) &&
+                lastName.equals(outputRow.lastName) && Objects.equals(eventDate, outputRow.eventDate) &&
+                Objects.equals(logicalDevice, outputRow.logicalDevice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(location, firstName, lastName, eventDate, logicalDevice);
     }
 }
