@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,24 +24,26 @@ public class MyController {
     private List<SwipeRecord> allSwipes;
 
     @RequestMapping("/")
-    public String uploadPage() {
+    public String uploadPage(Model model) {
         return "uploadView";
     }
 
     @PostMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile file) {
+    public String upload(Model model, @RequestParam("file") MultipartFile file) {
         System.out.println("Controller.upload");
 
         if (ReadXlsxService.hasExcelFormat(file)) {
             try {
                 allSwipes = ReadXlsxService.readAllRows(file.getInputStream());
-                return "redirect:/shift-info";
+                model.addAttribute("msg", "Successfully Uploaded the file: " + file.getOriginalFilename());
+                return "shift-info";
             } catch (Exception e) {
-                return "failedUploadView";
+                model.addAttribute("msg", "Uploaded file is not in expected format");
             }
         } else {
-            return "failedUploadView";
+            model.addAttribute("msg", "The uploaded file is not a xlsx file");
         }
+        return "failedUploadView";
     }
 
     @GetMapping("/download")

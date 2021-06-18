@@ -5,15 +5,9 @@
     <title>Excel Parsing Web App</title>
 </head>
 <body>
-<div align="center">
-
+<div th:if="${msg}" align="center">
+<span th:text="${msg}"></span>
 <h1>Enter shift information</h1>
-<form th:action="@{/download}" method="post" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <br>
-    <br>
-    <button type="submit">Upload</button>
-</form>
 </div>
 
 </body>

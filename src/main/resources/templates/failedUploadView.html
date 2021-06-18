@@ -2,16 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>File error</title>
+    <title>Excel Parsing Web App</title>
 </head>
 <body>
-<div align="center">
-    <h1>Either uploaded file is not in xlsx or the file is not in the expected format</h1>
-    <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
-        <br>
-        <button type="submit">Go Back</button>
-    </form>
-
+<div th:if="${msg}" align="center">
+    <h1><span th:text="${msg}"></span></h1>
+    <span><a href="/">Upload again</a></span>
 </div>
 
 </body>
