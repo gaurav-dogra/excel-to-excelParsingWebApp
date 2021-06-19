@@ -7,14 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +33,15 @@ public class MyController {
         if (ReadXlsxService.hasExcelFormat(file)) {
             try {
                 allSwipes = ReadXlsxService.readAllRows(file.getInputStream());
-                model.addAttribute("msg", "Successfully Uploaded the file: " + file.getOriginalFilename());
+                Set<Officer> officers = ExtractOfficers.from(allSwipes);
+                ShiftsWrapper shiftsWrapper = new ShiftsWrapper();
+                List<Shift> shifts = new ArrayList<>();
+                for (Officer officer : officers) {
+                    shifts.add(new Shift(officer));
+                }
+                shiftsWrapper.setShifts(shifts);
+                model.addAttribute("shiftsWrapper", shiftsWrapper);
+                model.addAttribute("msg", "Successfully Uploaded: " + file.getOriginalFilename());
                 return "shift-info";
             } catch (Exception e) {
                 model.addAttribute("msg", "Uploaded file is not in expected format");
