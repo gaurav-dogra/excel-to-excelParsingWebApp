@@ -24,15 +24,6 @@ public class WebLayerForUploadTest {
     private MockMvc mockMvc;
 
     @Test
-    void shouldReturnWelcomeMessage() throws Exception {
-        mockMvc.perform(get("/"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .string(containsString("GD Welcomes you to Excel -> Excel Parsing Web App")));
-    }
-
-    @Test
     void shouldReturnStatusOk() throws Exception {
         File file = new File("src/main/resources/testFile.xlsx");
         FileInputStream inputStream = new FileInputStream(file);
@@ -61,20 +52,5 @@ public class WebLayerForUploadTest {
                     .file(multipartFile))
                     .andExpect(status().isBadRequest());
         }
-    }
-
-    @Test
-    void shouldReturnExpectationFailed() throws Exception {
-        File nonParseableFile = new File("NonParseableFile.xlsx");
-        nonParseableFile.createNewFile();
-        FileInputStream inputStream = new FileInputStream(nonParseableFile);
-        MockMultipartFile multipartFile = new MockMultipartFile("file",
-                nonParseableFile.getName(),
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                IOUtils.toByteArray(inputStream));
-
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload")
-                .file(multipartFile))
-                .andExpect(status().isExpectationFailed());
     }
 }
