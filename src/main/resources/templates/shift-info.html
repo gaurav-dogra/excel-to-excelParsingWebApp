@@ -5,49 +5,39 @@
     <title>Excel Parsing Web App</title>
 </head>
 <body>
-<div align="center">
+<div>
     <span th:text="${msg}"></span>
     <h2>Enter shift information</h2>
-
-    <form action="#" th:action="@{/download}" th:object="${shiftsWrapper}" method="post">
+    <form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="get">
         <fieldset>
-            <li th:each="shift : ${shiftsWrapper.getShifts()}">
-                <div th:with="officer=${shift.getOfficer()}">
-                    <p>
-                        <span th:text="${officer}">Default</span>>
-                    </p>
-                    <fieldset>
-                        <div>
-                            <input type="radio" name=<span th:text="${officer}"> id="ignore" value="0" checked>
-                            <label for="ignore">Ignore</label>
-                            <input type="radio" name=<span th:text="${officer}">Default</span> id="mainGateDay" value="1">
-                            <label for="mainGateDay">MG Day</label>
-                            <input type="radio" name=<span th:text="${officer}">Default</span> id="mainGateNight" value="2">
-                            <label for="mainGateNight">MG Night</label>
-                            <input type="radio" name=<span th:text="${officer}">Default</span> id="epWbDay" value="3">
-                            <label for="epWbDay">EP WB Day</label>
-                            <input type="radio" name=<span th:text="${officer}">Default</span> id="epWbNight" value="4">
-                            <label for="epWbNight">EP WB Night</label>
-                        </div>
+            <legend>Select Shift information for each officer</legend>
+            <ul>
+                <li th:each="shiftDto : ${dtoWrapper.getShifts()}">
+                    <span th:text="${shiftDto.getFullName()}"></span>
+                    <input type="radio" id="ignore" name="${shiftDto.getFullName()}" value="0" checked>
+                    <label for="ignore">Ignore</label>
+                    <input type="radio" id="mgDay" name="${shiftDto.getFullName()}" value="1">
+                    <label for="mgDay">MG Day</label>
+                    <input type="radio" id="mgNight" name="${shiftDto.getFullName()}" value="2">
+                    <label for="mgNight">MG Night</label>
+                    <input type="radio" id="epWbDay" name="${shiftDto.getFullName()}" value="3">
+                    <label for="epWbDay">EP WB Day</label>
+                    <input type="radio" id="epWbNight" name="${shiftDto.getFullName()}" value="4">
+                    <label for="epWbNight">EP WB Night</label>
 
-                        <div>
-                            <input type="radio" name=<span th:text="${officer}">Default</span> id="plaistowDay" value="5">
-                            <label for="plaistowDay">Plaistow Day</label>
-                            <input type="radio" name=<span th:text="${officer}">Default</span> id="plaistowNight" value="6">
-                            <label for="plaistowNight">Plaistow Night</label>
-                            <input type="radio" name=<span th:text="${officer}">Default</span> id="visRecep" value="7">
-                            <label for="visRecep">Visitors Reception</label>
-                        </div>
-                    </fieldset>
-                </div>
-            </li><br>
-            <input type="submit" id="submitButton" th:value="Submit">
-            <input type="reset" id="resetButton" th:value="Reset"/>
+                    <input type="radio" id="visRecep" name="${shiftDto.getFullName()}" value="5">
+                    <label for="visRecep">Visitors Recep</label>
+                    <input type="radio" id="plDay" name="${shiftDto.getFullName()}" value="6">
+                    <label for="plDay">Plaistow Day</label>
+                    <input type="radio" id="plNight" name="${shiftDto.getFullName()}" value="7">
+                    <label for="plNight">Plaistow Night</label>
+                    <br><br>
+                    <!--                    <span th:text="${officer}"></span>-->
+                </li>
+                <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
+            </ul>
         </fieldset>
-
     </form>
-
 </div>
-
 </body>
 </html>
