@@ -2,15 +2,15 @@ package gmailgdogra;
 
 import java.util.List;
 
-public class ShiftsWrapper {
+public class DtoWrapper {
 
-    private List<Shift> shifts;
+    private List<ShiftDto> shifts;
 
-    public List<Shift> getShifts() {
+    public List<ShiftDto> getShifts() {
         return shifts;
     }
 
-    public void setShifts(List<Shift> shifts) {
+    public void setShifts(List<ShiftDto> shifts) {
         this.shifts = shifts;
     }
 }
