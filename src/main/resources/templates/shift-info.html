@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Excel Parsing Web App</title>
+    <link th:href="@{main.css}" rel="stylesheet"/>
 </head>
 <body>
-<div>
-    <span th:text="${msg}"></span>
-    <h2>Enter shift information</h2>
-    <form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="get">
-        <fieldset>
-            <legend>Select Shift information for each officer</legend>
-            <ul>
-                <li th:each="shiftDto : ${dtoWrapper.getShifts()}">
-                    <span th:text="${shiftDto.getFullName()}"></span>
-                    <input type="radio" id="ignore" name="${shiftDto.getFullName()}" value="0" checked>
-                    <label for="ignore">Ignore</label>
-                    <input type="radio" id="mgDay" name="${shiftDto.getFullName()}" value="1">
-                    <label for="mgDay">MG Day</label>
-                    <input type="radio" id="mgNight" name="${shiftDto.getFullName()}" value="2">
-                    <label for="mgNight">MG Night</label>
-                    <input type="radio" id="epWbDay" name="${shiftDto.getFullName()}" value="3">
-                    <label for="epWbDay">EP WB Day</label>
-                    <input type="radio" id="epWbNight" name="${shiftDto.getFullName()}" value="4">
-                    <label for="epWbNight">EP WB Night</label>
+<span th:text="${msg}"></span>
+<h2>Select Shift information for each officer</h2>
+<form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="get">
+    <table class="center">
+        <tr>
+            <th>Officer Name</th>
+            <th>Ignore</th>
+            <th>MG Day</th>
+            <th>MG Night</th>
+            <th>Ep Wb Day</th>
+            <th>Ep Wb Night</th>
+            <th>Visitor Recep</th>
+            <th>Plaistow Day</th>
+            <th>Plaistow Night</th>
+        </tr>
 
-                    <input type="radio" id="visRecep" name="${shiftDto.getFullName()}" value="5">
-                    <label for="visRecep">Visitors Recep</label>
-                    <input type="radio" id="plDay" name="${shiftDto.getFullName()}" value="6">
-                    <label for="plDay">Plaistow Day</label>
-                    <input type="radio" id="plNight" name="${shiftDto.getFullName()}" value="7">
-                    <label for="plNight">Plaistow Night</label>
-                    <br><br>
-                    <!--                    <span th:text="${officer}"></span>-->
-                </li>
-                <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
-            </ul>
-        </fieldset>
-    </form>
-</div>
+        <p th:each="shiftDto, iterStat : ${dtoWrapper.getShifts()}">
+            <tr>
+                <td><span th:text="${shiftDto.fullName}"></span></td>
+                <td><input type="radio" th:id="'ignore_' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="0" checked></td>
+                <td><input type="radio" th:id="'mgDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="1"></td>
+                <td><input type="radio" th:id="'mgNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="2"></td>
+                <td><input type="radio" th:id="'epWbDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="3"></td>
+                <td><input type="radio" th:id="'epWbNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="4"></td>
+                <td><input type="radio" th:id="'visRecep' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="5"></td>
+                <td><input type="radio" th:id="'plDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="6"></td>
+                <td><input type="radio" th:id="'plNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="7"></td>
+            </tr>
+        </p>
+        <br>
+    </table>
+    <br><br>
+    <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
+</form>
 </body>
 </html>
