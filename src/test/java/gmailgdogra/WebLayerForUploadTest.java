@@ -33,20 +33,4 @@ public class WebLayerForUploadTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void shouldReturnBadRequest() throws Exception {
-        File file = new File("file.txt");
-
-        if (file.createNewFile()) {
-            FileInputStream inputStream = new FileInputStream(file);
-            MockMultipartFile multipartFile = new MockMultipartFile("file",
-                    file.getName(),
-                    "text/plain",
-                    IOUtils.toByteArray(inputStream));
-
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/upload")
-                    .file(multipartFile))
-                    .andExpect(status().isBadRequest());
-        }
-    }
 }
