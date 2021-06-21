@@ -12,15 +12,15 @@
     <table class="center">
         <caption>All Officers from the uploaded file</caption>
         <tr>
-            <th>Officer Name</th>
-            <th>Ignore</th>
-            <th>MG Day</th>
-            <th>MG Night</th>
-            <th>Ep Wb Day</th>
-            <th>Ep Wb Night</th>
-            <th>Visitor Recep</th>
-            <th>Plaistow Day</th>
-            <th>Plaistow Night</th>
+            <th scope="col">Officer Name</th>
+            <th scope="col">Ignore</th>
+            <th scope="col">MG Day</th>
+            <th scope="col">MG Night</th>
+            <th scope="col">Ep Wb Day</th>
+            <th scope="col">Ep Wb Night</th>
+            <th scope="col">Visitor Recep</th>
+            <th scope="col">Plaistow Day</th>
+            <th scope="col">Plaistow Night</th>
         </tr>
 
         <p th:each="shiftDto, iterStat : ${dtoWrapper.getShifts()}">
