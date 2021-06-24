@@ -6,11 +6,11 @@
     <link th:href="@{main.css}" rel="stylesheet"/>
 </head>
 <body>
-<span th:text="${msg}"></span>
-<h2>Select Shift information for each officer</h2>
-<form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="get">
+<div th:text="${msg}"></div><br><br>
+<div class="heading">Select Shift information for each officer</div>
+<form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="post">
     <table class="center">
-        <caption>All Officers from the uploaded file</caption>
+        <caption>Below Officers are from the uploaded file</caption>
         <tr>
             <th scope="col">Officer Name</th>
             <th scope="col">Ignore</th>
@@ -23,9 +23,8 @@
             <th scope="col">Plaistow Night</th>
         </tr>
 
-        <p th:each="shiftDto, iterStat : ${dtoWrapper.getShifts()}">
-            <tr>
-                <td><span th:text="${shiftDto.fullName}"></span></td>
+            <tr th:each="shiftDto, iterStat : ${dtoWrapper.getShifts()}">
+                <td th:text="${shiftDto.fullName}"></td>
                 <td><input type="radio" th:id="'ignore_' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="0" checked></td>
                 <td><input type="radio" th:id="'mgDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="1"></td>
                 <td><input type="radio" th:id="'mgNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="2"></td>
@@ -35,8 +34,6 @@
                 <td><input type="radio" th:id="'plDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="6"></td>
                 <td><input type="radio" th:id="'plNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="7"></td>
             </tr>
-        </p>
-        <br>
     </table>
     <br><br>
     <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
