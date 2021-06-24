@@ -8,3 +8,7 @@ body {text-align:center;}
 table, th, td {
     border: 2px dotted #999;
 }
+
+div.heading {
+    font-size: 150%;
+}
