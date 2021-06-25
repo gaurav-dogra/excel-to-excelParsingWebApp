@@ -1,31 +1,52 @@
 package gmailgdogra;
 
-public class ShiftDto {
+import javax.validation.constraints.NotNull;
 
-    private String fullName;
+public class UserInputDto {
+
+    private String firstName;
+    private String lastName;
     private int shiftCode;
 
-    public ShiftDto(String fullName, int shiftCode) {
-        this.fullName = fullName;
+    public UserInputDto() {
+    }
+
+    public UserInputDto(@NotNull String firstName, @NotNull String lastName, @NotNull int shiftCode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.shiftCode = shiftCode;
     }
 
-    public ShiftDto() {
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public String getLastName() {
+        return lastName;
     }
 
     public int getShiftCode() {
         return shiftCode;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public void setShiftCode(int shiftCode) {
         this.shiftCode = shiftCode;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInputDto{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", shiftCode=" + shiftCode +
+                '}';
     }
 }
