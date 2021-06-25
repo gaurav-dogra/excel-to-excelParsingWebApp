@@ -23,20 +23,22 @@
             <th scope="col">Plaistow Night</th>
         </tr>
 
-            <tr th:each="shiftDto, iterStat : ${dtoWrapper.getShifts()}">
-                <td th:text="${shiftDto.fullName}"></td>
-                <td><input type="radio" th:id="'ignore_' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="0" checked></td>
-                <td><input type="radio" th:id="'mgDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="1"></td>
-                <td><input type="radio" th:id="'mgNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="2"></td>
-                <td><input type="radio" th:id="'epWbDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="3"></td>
-                <td><input type="radio" th:id="'epWbNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="4"></td>
-                <td><input type="radio" th:id="'visRecep' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="5"></td>
-                <td><input type="radio" th:id="'plDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="6"></td>
-                <td><input type="radio" th:id="'plNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="7"></td>
+            <tr th:each="shiftDto, iterStat : *{shifts}">
+                <td><span th:text="${shiftDto.fullName}"></span></td>
+                <input type="hidden" th:field="*{shifts[__${iterStat.index}__].fullName}" th:value="${shiftDto.fullName}">
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'ignore_' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="0" checked></td>
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'mgDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="1"></td>
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'mgNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="2"></td>
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'epWbDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="3"></td>
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'epWbNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="4"></td>
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'visRecep' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="5"></td>
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'plDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="6"></td>
+                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'plNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="7"></td>
             </tr>
     </table>
     <br><br>
     <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
+
 </form>
 </body>
 </html>
