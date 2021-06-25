@@ -10,6 +10,9 @@ public class ShiftDto {
         this.shiftCode = shiftCode;
     }
 
+    public ShiftDto() {
+    }
+
     public String getFullName() {
         return fullName;
     }
