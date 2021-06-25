@@ -11,10 +11,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.io.File;
 import java.io.FileInputStream;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -22,15 +18,6 @@ public class WebLayerForUploadTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Test
-    void shouldReturnWelcomeMessage() throws Exception {
-        mockMvc.perform(get("/"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .string(containsString("GD Welcomes you to Excel -> Excel Parsing Web App")));
-    }
 
     @Test
     void shouldReturnStatusOk() throws Exception {
@@ -46,35 +33,4 @@ public class WebLayerForUploadTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void shouldReturnBadRequest() throws Exception {
-        File file = new File("file.txt");
-
-        if (file.createNewFile()) {
-            FileInputStream inputStream = new FileInputStream(file);
-            MockMultipartFile multipartFile = new MockMultipartFile("file",
-                    file.getName(),
-                    "text/plain",
-                    IOUtils.toByteArray(inputStream));
-
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/upload")
-                    .file(multipartFile))
-                    .andExpect(status().isBadRequest());
-        }
-    }
-
-    @Test
-    void shouldReturnExpectationFailed() throws Exception {
-        File nonParseableFile = new File("NonParseableFile.xlsx");
-        nonParseableFile.createNewFile();
-        FileInputStream inputStream = new FileInputStream(nonParseableFile);
-        MockMultipartFile multipartFile = new MockMultipartFile("file",
-                nonParseableFile.getName(),
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                IOUtils.toByteArray(inputStream));
-
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload")
-                .file(multipartFile))
-                .andExpect(status().isExpectationFailed());
-    }
 }

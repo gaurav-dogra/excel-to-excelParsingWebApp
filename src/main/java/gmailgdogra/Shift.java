@@ -1,11 +1,17 @@
 package gmailgdogra;
 
+import javax.validation.constraints.NotNull;
+
 public class Shift {
     private final Officer officer;
-    private final Location location;
-    private final boolean isDayShift;
+    private Location location;
+    private boolean isDayShift;
 
-    public Shift(Officer officer, Location location, boolean isDayShift) {
+    public Shift(Officer officer) {
+        this.officer = officer;
+    }
+
+    public Shift(@NotNull Officer officer, Location location, boolean isDayShift) {
         this.officer = officer;
         this.location = location;
         this.isDayShift = isDayShift;

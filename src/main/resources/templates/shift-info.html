@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel Parsing Web App</title>
+    <link th:href="@{main.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:text="${msg}"></div><br><br>
+<div class="heading">Select Shift information for each officer</div>
+<form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="post">
+    <table class="center">
+        <caption>Below Officers are from the uploaded file</caption>
+        <tr>
+            <th scope="col">Officer Name</th>
+            <th scope="col">Ignore</th>
+            <th scope="col">MG Day</th>
+            <th scope="col">MG Night</th>
+            <th scope="col">Ep Wb Day</th>
+            <th scope="col">Ep Wb Night</th>
+            <th scope="col">Visitor Recep</th>
+            <th scope="col">Plaistow Day</th>
+            <th scope="col">Plaistow Night</th>
+        </tr>
+
+            <tr th:each="shiftDto, iterStat : ${dtoWrapper.getShifts()}">
+                <td th:text="${shiftDto.fullName}"></td>
+                <td><input type="radio" th:id="'ignore_' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="0" checked></td>
+                <td><input type="radio" th:id="'mgDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="1"></td>
+                <td><input type="radio" th:id="'mgNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="2"></td>
+                <td><input type="radio" th:id="'epWbDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="3"></td>
+                <td><input type="radio" th:id="'epWbNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="4"></td>
+                <td><input type="radio" th:id="'visRecep' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="5"></td>
+                <td><input type="radio" th:id="'plDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="6"></td>
+                <td><input type="radio" th:id="'plNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" value="7"></td>
+            </tr>
+    </table>
+    <br><br>
+    <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
+</form>
+</body>
+</html>
