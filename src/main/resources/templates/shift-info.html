@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +7,8 @@
     <link th:href="@{main.css}" rel="stylesheet"/>
 </head>
 <body>
-<div th:text="${msg}"></div><br><br>
+<div th:text="${msg}"></div>
+<br><br>
 <div class="heading">Select Shift information for each officer</div>
 <form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="post">
     <table class="center">
@@ -23,18 +25,29 @@
             <th scope="col">Plaistow Night</th>
         </tr>
 
-            <tr th:each="shiftDto, iterStat : *{shifts}">
-                <td><span th:text="${shiftDto.fullName}"></span></td>
-                <input type="hidden" th:field="*{shifts[__${iterStat.index}__].fullName}" th:value="${shiftDto.fullName}">
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'ignore_' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="0" checked></td>
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'mgDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="1"></td>
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'mgNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="2"></td>
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'epWbDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="3"></td>
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'epWbNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="4"></td>
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'visRecep' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="5"></td>
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'plDay' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="6"></td>
-                <td><input type="radio" th:field="*{shifts[__${iterStat.index}__].shiftCode}" th:id="'plNight' + ${iterStat.count}" th:name="${shiftDto.fullName}" th:value="7"></td>
-            </tr>
+        <tr th:each="dto, iterStat : *{userInputDtoList}">
+            <td><span th:text="|${dto.firstName} ${dto.lastName}|"></span></td>
+            <input type="hidden" th:field="*{userInputDtoList[__${iterStat.index}__].firstName}"
+                   th:value="${dto.firstName}">
+            <input type="hidden" th:field="*{userInputDtoList[__${iterStat.index}__].lastName}"
+                   th:value="${dto.lastName}">
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="0" checked></td>
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="1"></td>
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="2"></td>
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="3"></td>
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="4"></td>
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="5"></td>
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="6"></td>
+            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="7"></td>
+        </tr>
     </table>
     <br><br>
     <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
