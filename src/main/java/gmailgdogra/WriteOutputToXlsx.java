@@ -47,14 +47,28 @@ public class WriteOutputToXlsx {
 
     private static void addRows(Sheet sheet, List<OutputRow> outputData) {
         Collections.sort(outputData);
-        for (OutputRow data : outputData) {
-            addRow(sheet, data);
+        for (int i = 2; i < outputData.size(); i++) {
+            if (!outputData.get(i).getLocation().equals(outputData.get(i - 1).getLocation())) {
+                addEmptyRow(sheet);
+            }
+            addRow(sheet, outputData.get(i));
         }
     }
 
+    private static void addEmptyRow(Sheet sheet) {
+        Row row = getNewRow(sheet);
+        for (int col = 0; col < 5; col++) {
+            row.createCell(col);
+        }
+    }
+
+    private static Row getNewRow(Sheet sheet) {
+        return sheet.createRow(rowsCreatedSoFar++);
+    }
+
     private static void addRow(Sheet sheet, OutputRow data) {
-        Row row = sheet.createRow(rowsCreatedSoFar);
-        rowsCreatedSoFar++;
+        Row row = getNewRow(sheet);
+
         for (int col = 0; col < 5; col++) {
             row.createCell(col);
         }
@@ -79,7 +93,13 @@ public class WriteOutputToXlsx {
                 continue;
             }
 
+            String locationCellValue = row.getCell(LOCATION_COL_NO).getStringCellValue();
             String swipeEventCellValue = row.getCell(EVENT_DATE_COL_NO).getStringCellValue();
+            if ("".equals(locationCellValue)) {
+                applyStyle(currentRowNo, titleRowStyle);
+                continue;
+            }
+
             if ("No Swipe Found".equals(swipeEventCellValue) ||
                     isLateSwipeIn(currentRowNo)) {
                 applyStyle(currentRowNo, highlightedRowStyle);
@@ -115,7 +135,6 @@ public class WriteOutputToXlsx {
     private static XSSFCellStyle createHighlightedRowStyle() {
         XSSFCellStyle style = workbook.createCellStyle();
         Font font = workbook.createFont();
-        font.setBold(true);
         font.setColor(IndexedColors.DARK_RED.index);
         style.setFont(font);
         setBorder(style);
