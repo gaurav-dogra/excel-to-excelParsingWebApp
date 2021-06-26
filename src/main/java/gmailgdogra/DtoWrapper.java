@@ -4,13 +4,13 @@ import java.util.List;
 
 public class DtoWrapper {
 
-    private List<ShiftDto> shifts;
+    private List<UserInputDto> userInputDtoList;
 
-    public List<ShiftDto> getShifts() {
-        return shifts;
+    public List<UserInputDto> getUserInputDtoList() {
+        return userInputDtoList;
     }
 
-    public void setShifts(List<ShiftDto> shifts) {
-        this.shifts = shifts;
+    public void setUserInputDtoList(List<UserInputDto> userInputDtoList) {
+        this.userInputDtoList = userInputDtoList;
     }
 }
