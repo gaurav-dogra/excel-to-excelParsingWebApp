@@ -144,6 +144,7 @@ public class WriteOutputToXlsx {
         Font font = workbook.createFont();
         font.setBold(true);
         style.setFont(font);
+        setBorder(style);
         return style;
     }
 
