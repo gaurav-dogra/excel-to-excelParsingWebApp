@@ -8,6 +8,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -41,7 +42,7 @@ class SwipeProcessorTest {
         Officer reehad = new Officer("Reehad", "Ali");
         Officer tahiru = new Officer("Tahiru", "Haruna");
         Officer zubair = new Officer("Zubair", "Patel");
-        return List.of(
+        return Arrays.asList(
                 new Shift(abdul, Location.TL_PLAISTOW, false),
                 new Shift(dean, Location.MAIN_GATE, true),
                 new Shift(derek, Location.TL_PLAISTOW, true),
