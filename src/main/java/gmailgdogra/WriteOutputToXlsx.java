@@ -47,8 +47,18 @@ public class WriteOutputToXlsx {
 
     private static void addRows(Sheet sheet, List<OutputRow> outputData) {
         Collections.sort(outputData);
-        for (int i = 2; i < outputData.size(); i++) {
-            if (!outputData.get(i).getLocation().equals(outputData.get(i - 1).getLocation())) {
+        outputData.forEach(System.out::println);
+        for (int i = 0; i < outputData.size(); i++) {
+            if (i == 0) {
+                addRow(sheet, outputData.get(i));
+                continue;
+            }
+
+            String currentRowLocation = outputData.get(i).getLocation();
+            String previousRowLocation = outputData.get(i - 1).getLocation();
+            System.out.println("previousRowLocation = " + previousRowLocation);
+            System.out.println("currentRowLocation = " + currentRowLocation);
+            if (!currentRowLocation.equals(previousRowLocation)) {
                 addEmptyRow(sheet);
             }
             addRow(sheet, outputData.get(i));
