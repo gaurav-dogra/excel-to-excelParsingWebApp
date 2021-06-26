@@ -139,7 +139,7 @@ public class WriteOutputToXlsx {
 
     private static XSSFCellStyle createTitleRowStyle() {
         XSSFCellStyle style = workbook.createCellStyle();
-        style.setFillForegroundColor(IndexedColors.DARK_RED.index);
+        style.setFillForegroundColor(IndexedColors.YELLOW.index);
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         Font font = workbook.createFont();
         font.setBold(true);
