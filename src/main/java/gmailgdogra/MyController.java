@@ -54,21 +54,18 @@ public class MyController {
                 .map(officer -> new UserInputDto(officer.getFirstName(), officer.getLastName(), 0))
                 .collect(Collectors.toList());
         dtoWrapper.setUserInputDtoList(dtoList);
-        dtoList.forEach(System.out::println);
         return dtoWrapper;
     }
 
     @PostMapping("/download")
     public ResponseEntity<ByteArrayResource> download(@ModelAttribute DtoWrapper dtoWrapper) {
         System.out.println("Controller.download");
-        dtoWrapper.getUserInputDtoList().forEach(System.out::println);
         try {
             String downloadFileName = createFileName();
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
             header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileName);
             List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
-            shifts.forEach(System.out::println);
             List<OutputRow> outputData = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
             ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
             return new ResponseEntity<>(resource, header, HttpStatus.CREATED);

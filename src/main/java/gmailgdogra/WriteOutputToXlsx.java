@@ -28,9 +28,8 @@ public class WriteOutputToXlsx {
     private static XSSFWorkbook workbook;
 
     public static byte[] write(List<OutputRow> outputData) {
-        System.out.println("WriteOutputToXlsx.write");
         workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet();
+        Sheet sheet = workbook.createSheet("Securitas Daily Report");
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             addRow(sheet, titleRow);
@@ -47,7 +46,6 @@ public class WriteOutputToXlsx {
 
     private static void addRows(Sheet sheet, List<OutputRow> outputData) {
         Collections.sort(outputData);
-        outputData.forEach(System.out::println);
         for (int i = 0; i < outputData.size(); i++) {
             if (i == 0) {
                 addRow(sheet, outputData.get(i));
@@ -56,8 +54,6 @@ public class WriteOutputToXlsx {
 
             String currentRowLocation = outputData.get(i).getLocation();
             String previousRowLocation = outputData.get(i - 1).getLocation();
-            System.out.println("previousRowLocation = " + previousRowLocation);
-            System.out.println("currentRowLocation = " + currentRowLocation);
             if (!currentRowLocation.equals(previousRowLocation)) {
                 addEmptyRow(sheet);
             }
