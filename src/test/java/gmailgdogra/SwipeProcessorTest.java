@@ -32,98 +32,98 @@ class SwipeProcessorTest {
     private static List<OutputRow> resultsOfTestFile1() {
         return Arrays.asList(
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
-                        "03/06/2021 17:54:13", "PLA0102 - Turnstile West IN"),
+                        "03/06/2021 17:54", "PLA0102 - Turnstile West IN"),
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
-                        "04/06/2021 05:55:12", "PLA0103 - Turnstile West OUT"),
+                        "04/06/2021 05:55", "PLA0103 - Turnstile West OUT"),
 
                 new OutputRow("Main Gate", "Officer 3", "Officer 3",
-                        "03/06/2021 05:57:57", "Thames LSI0903 - Turnstile North IN"),
+                        "03/06/2021 05:57", "Thames LSI0903 - Turnstile North IN"),
                 new OutputRow("Main Gate", "Officer 3", "Officer 3",
-                        "03/06/2021 18:08:05", "Thames LSI0904 - Turnstile North OUT"),
+                        "03/06/2021 18:08", "Thames LSI0904 - Turnstile North OUT"),
 
                 new OutputRow("Plaistow", "Officer 4", "Officer 4",
-                        "03/06/2021 05:41:20", "PLA0102 - Turnstile West IN"),
+                        "03/06/2021 05:41", "PLA0102 - Turnstile West IN"),
                 new OutputRow("Plaistow", "Officer 4", "Officer 4",
-                        "03/06/2021 18:01:06", "PLA0103 - Turnstile West OUT"),
+                        "03/06/2021 18:01", "PLA0103 - Turnstile West OUT"),
 
                 new OutputRow("Main Gate", "Officer 5", "Officer 5",
-                        "03/06/2021 18:04:44", "Thames LSI0903 - Turnstile North IN"),
+                        "03/06/2021 18:04", "Thames LSI0903 - Turnstile North IN"),
                 new OutputRow("Main Gate", "Officer 5", "Officer 5",
                         null, null),
 
                 new OutputRow("Main Gate", "Officer 7", "Officer 7",
-                        "03/06/2021 17:56:02", "Thames LSI0901 - Turnstile South IN"),
+                        "03/06/2021 17:56", "Thames LSI0901 - Turnstile South IN"),
                 new OutputRow("Main Gate", "Officer 7", "Officer 7",
-                        "04/06/2021 05:55:28", "Thames LSI0904 - Turnstile North OUT"),
+                        "04/06/2021 05:55", "Thames LSI0904 - Turnstile North OUT"),
 
                 new OutputRow("Main Gate", "Officer 8", "Officer 8",
-                        "03/06/2021 05:54:49", "Thames LSI0901 - Turnstile South IN"),
+                        "03/06/2021 05:54", "Thames LSI0901 - Turnstile South IN"),
                 new OutputRow("Main Gate", "Officer 8", "Officer 8",
-                        "03/06/2021 17:55:49", "Thames LSI0904 - Turnstile North OUT"),
+                        "03/06/2021 17:55", "Thames LSI0904 - Turnstile North OUT"),
 
                 new OutputRow("EP Weighbridge", "Officer 10", "Officer 10",
-                        "03/06/2021 17:59:57", "Thames LSI0701 - Weighbridge IN"),
+                        "03/06/2021 17:59", "Thames LSI0701 - Weighbridge IN"),
                 new OutputRow("EP Weighbridge", "Officer 10", "Officer 10",
-                        "04/06/2021 05:54:37", "Thames LSI0702 - Weighbridge OUT"),
+                        "04/06/2021 05:54", "Thames LSI0702 - Weighbridge OUT"),
 
                 new OutputRow("EP Weighbridge", "Officer 11", "Officer 11",
-                        "03/06/2021 06:01:37", "Thames LSI0701 - Weighbridge IN"),
+                        "03/06/2021 06:01", "Thames LSI0701 - Weighbridge IN"),
                 new OutputRow("EP Weighbridge", "Officer 11", "Officer 11",
-                        "03/06/2021 18:01:33", "Thames LSI0702 - Weighbridge OUT"),
+                        "03/06/2021 18:01", "Thames LSI0702 - Weighbridge OUT"),
 
                 new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
-                        "03/06/2021 06:46:43", "Thames LSI0303 - Empl East Turnstile IN"),
+                        "03/06/2021 06:46", "Thames LSI0303 - Empl East Turnstile IN"),
                 new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
-                        "03/06/2021 17:30:15", "Thames LSI0302 - Empl W Turnstile OUT")
+                        "03/06/2021 17:30", "Thames LSI0302 - Empl W Turnstile OUT")
                 );
     }
 
     private static List<OutputRow> resultOfTestFile2() {
         return Arrays.asList(
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
-                        "24/05/2021 17:44:20", "PLA0102 - Turnstile West IN"),
+                        "24/05/2021 17:44", "PLA0102 - Turnstile West IN"),
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
-                        "25/05/2021 05:49:48", "PLA0103 - Turnstile West OUT"),
+                        "25/05/2021 05:49", "PLA0103 - Turnstile West OUT"),
 
                 new OutputRow("Main Gate", "Officer 3", "Officer 3",
-                        "24/05/2021 05:59:58", "Thames LSI0901 - Turnstile South IN"),
+                        "24/05/2021 05:59", "Thames LSI0901 - Turnstile South IN"),
                 new OutputRow("Main Gate", "Officer 3", "Officer 3",
-                        "24/05/2021 18:15:46", "Thames LSI0904 - Turnstile North OUT"),
+                        "24/05/2021 18:15", "Thames LSI0904 - Turnstile North OUT"),
 
                 new OutputRow("Plaistow", "Officer 4", "Officer 4",
                         null, null),
                 new OutputRow("Plaistow", "Officer 4", "Officer 4",
-                        "24/05/2021 17:56:23", "PLA0103 - Turnstile West OUT"),
+                        "24/05/2021 17:56", "PLA0103 - Turnstile West OUT"),
 
                 new OutputRow("Main Gate", "Officer 6", "Officer 6",
-                        "24/05/2021 17:47:07", "Thames LSI0903 - Turnstile North IN"),
+                        "24/05/2021 17:47", "Thames LSI0903 - Turnstile North IN"),
                 new OutputRow("Main Gate", "Officer 6", "Officer 6",
-                        "25/05/2021 06:04:21", "Thames LSI0904 - Turnstile North OUT"),
+                        "25/05/2021 06:04", "Thames LSI0904 - Turnstile North OUT"),
 
                 new OutputRow("Main Gate", "Officer 7", "Officer 7",
-                        "24/05/2021 17:52:37", "Thames LSI0901 - Turnstile South IN"),
+                        "24/05/2021 17:52", "Thames LSI0901 - Turnstile South IN"),
                 new OutputRow("Main Gate", "Officer 7", "Officer 7",
-                        "25/05/2021 05:47:19", "Thames LSI0904 - Turnstile North OUT"),
+                        "25/05/2021 05:47", "Thames LSI0904 - Turnstile North OUT"),
 
                 new OutputRow("EP Weighbridge", "Officer 8", "Officer 8",
-                        "24/05/2021 17:51:14", "Thames LSI0701 - Weighbridge IN"),
+                        "24/05/2021 17:51", "Thames LSI0701 - Weighbridge IN"),
                 new OutputRow("EP Weighbridge", "Officer 8", "Officer 8",
-                        "25/05/2021 05:55:15", "Thames LSI0702 - Weighbridge OUT"),
+                        "25/05/2021 05:55", "Thames LSI0702 - Weighbridge OUT"),
 
                 new OutputRow("EP Weighbridge", "Officer 10", "Officer 10",
-                        "24/05/2021 06:03:18", "Thames LSI0701 - Weighbridge IN"),
+                        "24/05/2021 06:03", "Thames LSI0701 - Weighbridge IN"),
                 new OutputRow("EP Weighbridge", "Officer 10", "Officer 10",
-                        "24/05/2021 17:54:22", "Thames LSI0702 - Weighbridge OUT"),
+                        "24/05/2021 17:54", "Thames LSI0702 - Weighbridge OUT"),
 
                 new OutputRow("Main Gate", "Officer 11", "Officer 11",
-                        "24/05/2021 05:29:23", "Thames LSI0901 - Turnstile South IN"),
+                        "24/05/2021 05:29", "Thames LSI0901 - Turnstile South IN"),
                 new OutputRow("Main Gate", "Officer 11", "Officer 11",
-                        "24/05/2021 17:52:39", "Thames LSI0904 - Turnstile North OUT"),
+                        "24/05/2021 17:52", "Thames LSI0904 - Turnstile North OUT"),
 
                 new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
-                        "24/05/2021 06:47:11", "Thames LSI0303 - Empl East Turnstile IN"),
+                        "24/05/2021 06:47", "Thames LSI0303 - Empl East Turnstile IN"),
                 new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
-                        "24/05/2021 17:31:33", "Thames LSI0302 - Empl W Turnstile OUT")
+                        "24/05/2021 17:31", "Thames LSI0302 - Empl W Turnstile OUT")
         );
     }
 

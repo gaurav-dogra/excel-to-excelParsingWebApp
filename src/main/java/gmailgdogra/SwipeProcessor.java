@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class SwipeProcessor {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     public static final Map<String, Location> swipeInDevices;
     public static final Map<String, Location> swipeOutDevices;
     private static LocalDate swipeInDay;
