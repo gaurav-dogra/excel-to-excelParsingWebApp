@@ -7,49 +7,81 @@
     <link th:href="@{main.css}" rel="stylesheet"/>
 </head>
 <body>
-<div th:text="${msg}"></div>
-<br><br>
 <div class="heading">Select Shift information for each officer</div>
 <form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="post">
-    <table class="center">
-        <caption>Below Officers are from the uploaded file</caption>
-        <tr>
-            <th scope="col">Officer Name</th>
-            <th scope="col">Ignore</th>
-            <th scope="col">MG Day</th>
-            <th scope="col">MG Night</th>
-            <th scope="col">Ep Wb Day</th>
-            <th scope="col">Ep Wb Night</th>
-            <th scope="col">Visitor Recep</th>
-            <th scope="col">Plaistow Day</th>
-            <th scope="col">Plaistow Night</th>
-        </tr>
 
-        <tr th:each="dto, iterStat : *{userInputDtoList}">
-            <td><span th:text="|${dto.firstName} ${dto.lastName}|"></span></td>
-            <input type="hidden" th:field="*{userInputDtoList[__${iterStat.index}__].firstName}"
-                   th:value="${dto.firstName}">
-            <input type="hidden" th:field="*{userInputDtoList[__${iterStat.index}__].lastName}"
-                   th:value="${dto.lastName}">
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="0" checked></td>
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="1"></td>
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="2"></td>
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="3"></td>
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="4"></td>
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="5"></td>
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="6"></td>
-            <td><input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
-                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="7"></td>
-        </tr>
-    </table>
-    <br><br>
+    <fieldset th:each="dto, iterStat : *{userInputDtoList}">
+        <legend><span th:text="|${dto.firstName} ${dto.lastName}|"/></legend>
+        <input type="hidden" th:field="*{userInputDtoList[__${iterStat.index}__].firstName}"
+               th:value="${dto.firstName}">
+        <input type="hidden" th:field="*{userInputDtoList[__${iterStat.index}__].lastName}"
+               th:value="${dto.lastName}">
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="0" checked/>
+                Ignore
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="1"/>
+                MG Day
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="2">
+                MG Night
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="3">
+                EP WB Day
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="4">
+                EP WB Night
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="5">
+                Visitors Reception
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="6">
+                Plaistow Day
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" th:field="*{userInputDtoList[__${iterStat.index}__].shiftCode}"
+                       th:name="|${dto.firstName} ${dto.lastName}|" th:value="7">
+                Plaistow Night
+            </label>
+        </div>
+
+    </fieldset>
+    <br><br><br>
     <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
 
 </form>

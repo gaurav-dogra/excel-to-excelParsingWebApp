@@ -24,7 +24,7 @@ class ExtractOfficersTest {
             new Officer("Dean", "Colquhoun"),
             new Officer("Derek", "Devlin"),
             new Officer("Fesal", "Amin"),
-            new Officer("GAURAV", "DOGRA"),
+            new Officer("Gaurav", "Dogra"),
             new Officer("Kayode", "Dairo"),
             new Officer("Media", "Coulibaly"),
             new Officer("Omoogbolahan", "Adeola"),
