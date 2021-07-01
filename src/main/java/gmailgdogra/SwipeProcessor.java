@@ -40,7 +40,6 @@ public class SwipeProcessor {
                 .map(swipe -> swipe.getSwipeDateTime().toLocalDate())
                 .collect(Collectors.toSet());
         swipeInDay = Collections.min(allDates);
-        System.out.println("swipeInDay = " + swipeInDay);
 
         for (Shift shift : shifts) {
             OutputRow swipeIn = getSwipeIn(shift, allSwipes);
