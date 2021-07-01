@@ -34,7 +34,6 @@ public class MyController {
         System.out.println("Controller.upload");
         if (ReadXlsxService.hasExcelFormat(file)) {
             try {
-                model.addAttribute("msg", "Successfully Uploaded: " + file.getOriginalFilename());
                 allSwipes = ReadXlsxService.readAllRows(file.getInputStream());
                 DtoWrapper dtoWrapper = createUserInputDtoWrapper(allSwipes);
                 model.addAttribute("dtoWrapper", dtoWrapper);
