@@ -28,7 +28,9 @@ public class ReadXlsx {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String firstName = row.getCell(COL_FIRST_NAME).getStringCellValue();
+                firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1).toLowerCase();
                 String lastName = row.getCell(COL_LAST_NAME).getStringCellValue();
+                lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1).toLowerCase();
                 Officer officer = new Officer(firstName, lastName);
                 LocalDateTime swipeDateAndTime = row.getCell(COL_SWIPE_DATE_TIME).getLocalDateTimeCellValue();
                 String deviceName = row.getCell(COL_DEVICE_NAME).getStringCellValue();
