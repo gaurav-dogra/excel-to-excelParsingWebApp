@@ -30,7 +30,7 @@ public class WriteOutputToXlsx {
     public static byte[] write(List<OutputRow> outputData) {
         System.out.println("WriteOutputToXlsx.write");
         workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet();
+        Sheet sheet = workbook.createSheet("Securitas Daily Report");
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             addRow(sheet, titleRow);
