@@ -11,7 +11,7 @@ public class SwipeProcessor {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     public static final Map<String, Location> swipeInDevices;
     public static final Map<String, Location> swipeOutDevices;
-    private static LocalDate swipeInDay;
+    private static LocalDate dayOne;
 
 
     static {
@@ -39,7 +39,7 @@ public class SwipeProcessor {
         Set<LocalDate> allDates = allSwipes.stream()
                 .map(swipe -> swipe.getSwipeDateTime().toLocalDate())
                 .collect(Collectors.toSet());
-        swipeInDay = Collections.min(allDates);
+        dayOne = Collections.min(allDates);
 
         for (Shift shift : shifts) {
             OutputRow swipeIn = getSwipeIn(shift, allSwipes);
@@ -58,7 +58,7 @@ public class SwipeProcessor {
                 .filter(swipe -> officer.equals(swipe.getOfficer()))
                 .filter(swipe -> swipeInDevices.containsKey(swipe.getDeviceName()))
                 .filter(swipe -> location == swipeInDevices.get(swipe.getDeviceName()))
-                .filter(swipe -> swipe.getSwipeDateTime().toLocalDate().isEqual(swipeInDay))
+                .filter(swipe -> swipe.getSwipeDateTime().toLocalDate().isEqual(dayOne))
                 .filter(swipe -> {
                     if (shift.isDayShift()) {
                         return swipe.getSwipeDateTime().getHour() >= 4 &&
@@ -90,7 +90,8 @@ public class SwipeProcessor {
                                 swipe.getSwipeDateTime().getHour() <= 19;
                     } else {
                         return swipe.getSwipeDateTime().getHour() >= 4 &&
-                                swipe.getSwipeDateTime().getHour() <= 7;
+                                swipe.getSwipeDateTime().getHour() <= 7 &&
+                                swipe.getSwipeDateTime().toLocalDate().isEqual(dayOne.plusDays(1));
                     }
                 })
                 .sorted()
