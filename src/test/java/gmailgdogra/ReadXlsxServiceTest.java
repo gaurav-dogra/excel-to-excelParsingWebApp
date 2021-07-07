@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ReadXlsxServiceTest {
 
     @Test
-    void hasExcelFormat_FailCase() throws IOException {
+    void hasExcelFormat_FailCase() throws Exception {
         File file = new File("file.txt");
 
         file.createNewFile();
@@ -28,7 +28,7 @@ class ReadXlsxServiceTest {
     }
 
     @Test
-    void hasExcelFormat_PassCase() throws IOException {
+    void hasExcelFormat_PassCase() throws Exception {
         File file = new File("testFile.xlsx");
 
         file.createNewFile();

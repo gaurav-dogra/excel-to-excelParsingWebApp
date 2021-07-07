@@ -46,7 +46,7 @@ class ExtractOfficersTest {
                     originalFileName, contentType, content);
             swipeRecords = ReadXlsx.readAllRows(result.getInputStream());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Assertions.fail("Unable to read file at " + path);
         }
 

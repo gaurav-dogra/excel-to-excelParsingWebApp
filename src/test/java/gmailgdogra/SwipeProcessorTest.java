@@ -151,7 +151,7 @@ class SwipeProcessorTest {
     }
 
     @Test
-    void testFile1() throws IOException {
+    void testFile1() throws Exception {
         MockMultipartFile testFile1 = getFile("src/main/resources/test file 1.xlsx");
         List<SwipeRecord> allSwipes = ReadXlsxService.readAllRows(testFile1.getInputStream());
         List<Shift> shifts = getShiftsForTestFile1();
@@ -160,7 +160,7 @@ class SwipeProcessorTest {
     }
 
     @Test
-    void testFile2() throws IOException {
+    void testFile2() throws Exception {
         MockMultipartFile testFile2 = getFile("src/main/resources/test file 2.xlsx");
         List<SwipeRecord> allSwipes = ReadXlsxService.readAllRows(testFile2.getInputStream());
         List<Shift> shifts = getShiftsForTestFile2();
