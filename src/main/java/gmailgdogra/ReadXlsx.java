@@ -18,11 +18,11 @@ public class ReadXlsx {
     private static final int COL_SWIPE_DATE_TIME = 2;
     private static final int COL_DEVICE_NAME = 5;
 
-    public static List<SwipeRecord> readAllRows(InputStream inputStream) throws IOException {
+    public static List<SwipeRecord> readAllRows(InputStream inputStream) throws Exception {
         return collectDataFrom(new XSSFWorkbook(inputStream).getSheetAt(0));
     }
 
-    private static List<SwipeRecord> collectDataFrom(Sheet sheet) {
+    private static List<SwipeRecord> collectDataFrom(Sheet sheet) throws Exception {
         List<SwipeRecord> data = new ArrayList<>();
         for (int rowIndex = DATA_START_ROW; rowIndex <= sheet.getPhysicalNumberOfRows(); rowIndex++) {
             Row row = sheet.getRow(rowIndex);
@@ -36,6 +36,9 @@ public class ReadXlsx {
                 String deviceName = row.getCell(COL_DEVICE_NAME).getStringCellValue();
                 data.add(new SwipeRecord(officer, swipeDateAndTime, deviceName));
             }
+        }
+        if (data.size() == 0) {
+            throw new Exception();
         }
         return data;
     }
