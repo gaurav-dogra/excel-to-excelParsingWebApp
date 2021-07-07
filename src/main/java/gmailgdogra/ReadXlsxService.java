@@ -12,7 +12,7 @@ public class ReadXlsxService {
 
     public static String EXCEL_FILE_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-    public static List<SwipeRecord> readAllRows(InputStream inputStream) throws IOException {
+    public static List<SwipeRecord> readAllRows(InputStream inputStream) throws Exception {
         return ReadXlsx.readAllRows(inputStream);
     }
 
