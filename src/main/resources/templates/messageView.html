@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <title>Excel Parsing Web App</title>
 </head>
+
 <body>
-    <h1><span th:text="${msg}"></span></h1>
-    <span><a href="/">Upload again</a></span>
+<h1><span th:text="${msg}"></span></h1>
+
+<form action="#" method="get" th:action="@{/download-file}">
+    <button>Download File</button>
+</form>
 
 </body>
 </html>
