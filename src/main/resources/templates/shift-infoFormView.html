@@ -2,9 +2,8 @@
 <!--suppress ALL -->
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Excel Parsing Web App</title>
-    <link th:href="@{main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
 </head>
 <body>
 <div class="heading">Select Shift information for each officer</div>
@@ -81,9 +80,13 @@
         </div>
 
     </fieldset>
-    <br><br><br>
-    <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
-
+    <br><br>
+    <input type="submit" value="Download Report"/>
 </form>
+<br>
+<form action="#" th:action="@{/restart}" method="get">
+    <input type="submit" value="Go to Home"/>
+</form>
+
 </body>
 </html>
