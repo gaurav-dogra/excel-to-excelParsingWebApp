@@ -1,5 +1,10 @@
-package gmailgdogra;
+package gmailgdogra.controller;
 
+import gmailgdogra.pojo.*;
+import gmailgdogra.service.ExtractOfficersService;
+import gmailgdogra.service.ReadXlsxService;
+import gmailgdogra.service.SwipeProcessorService;
+import gmailgdogra.service.WriteOutputToXlsx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.devtools.restart.Restarter;
 import org.springframework.core.io.ByteArrayResource;
@@ -26,12 +31,12 @@ public class MyController {
 
     private List<SwipeRecord> allSwipes;
     private final ReadXlsxService readXlsxService;
-    private final SwipeProcessor swipeProcessor;
+    private final SwipeProcessorService swipeProcessorService;
 
     @Autowired
-    public MyController(ReadXlsxService readXlsxService, SwipeProcessor swipeProcessor) {
+    public MyController(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
         this.readXlsxService = readXlsxService;
-        this.swipeProcessor = swipeProcessor;
+        this.swipeProcessorService = swipeProcessorService;
     }
 
     @GetMapping("/")
@@ -59,7 +64,7 @@ public class MyController {
     }
 
     private DtoWrapper createUserInputDtoWrapper(List<SwipeRecord> allSwipes) {
-        Set<Officer> officers = ExtractOfficers.from(allSwipes);
+        Set<Officer> officers = ExtractOfficersService.from(allSwipes);
         DtoWrapper dtoWrapper = new DtoWrapper();
         List<UserInputDto> dtoList = officers.stream()
                 .map(officer -> new UserInputDto(officer.getFirstName(), officer.getLastName(), 0))
@@ -76,7 +81,7 @@ public class MyController {
         header.setContentType(new MediaType("application", "force-download"));
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileName);
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
-        List<OutputRow> outputData = swipeProcessor.getOutputDataFrom(allSwipes, shifts);
+        List<OutputRow> outputData = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
         ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
         return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
     }

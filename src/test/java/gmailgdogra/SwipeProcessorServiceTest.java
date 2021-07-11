@@ -1,5 +1,8 @@
 package gmailgdogra;
 
+import gmailgdogra.pojo.*;
+import gmailgdogra.service.ReadXlsxService;
+import gmailgdogra.service.SwipeProcessorService;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-class SwipeProcessorTest {
+class SwipeProcessorServiceTest {
 
     private static final List<OutputRow> expectedResultsTestFile1 = resultsOfTestFile1();
     private static final List<OutputRow> expectedResultsTestFile2 = resultOfTestFile2();
@@ -32,12 +35,12 @@ class SwipeProcessorTest {
     private static final Officer officer11 = new Officer("Officer 11", "Officer 11");
     private static final Officer officer12 = new Officer("Officer 12", "Officer 12");
     private final ReadXlsxService readXlsxService;
-    private final SwipeProcessor swipeProcessor;
+    private final SwipeProcessorService swipeProcessorService;
 
     @Autowired
-    public SwipeProcessorTest(ReadXlsxService readXlsxService, SwipeProcessor swipeProcessor) {
+    public SwipeProcessorServiceTest(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
         this.readXlsxService = readXlsxService;
-        this.swipeProcessor = swipeProcessor;
+        this.swipeProcessorService = swipeProcessorService;
     }
 
     private static List<OutputRow> resultsOfTestFile1() {
@@ -166,7 +169,7 @@ class SwipeProcessorTest {
         MockMultipartFile testFile1 = getFile("src/main/resources/test file 1.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile1.getInputStream());
         List<Shift> shifts = getShiftsForTestFile1();
-        List<OutputRow> results = swipeProcessor.getOutputDataFrom(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
         assertTrue(results.containsAll(expectedResultsTestFile1));
     }
 
@@ -175,7 +178,7 @@ class SwipeProcessorTest {
         MockMultipartFile testFile2 = getFile("src/main/resources/test file 2.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile2.getInputStream());
         List<Shift> shifts = getShiftsForTestFile2();
-        List<OutputRow> results = swipeProcessor.getOutputDataFrom(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
         assertTrue(results.containsAll(expectedResultsTestFile2));
     }
 

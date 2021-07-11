@@ -1,4 +1,4 @@
-package gmailgdogra;
+package gmailgdogra.pojo;
 
 public enum Location {
     MAIN_GATE {

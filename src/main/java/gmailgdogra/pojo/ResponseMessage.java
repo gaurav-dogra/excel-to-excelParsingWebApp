@@ -1,4 +1,4 @@
-package gmailgdogra;
+package gmailgdogra.pojo;
 
 public class ResponseMessage {
     private String message;
