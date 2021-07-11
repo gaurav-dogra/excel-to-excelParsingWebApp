@@ -1,5 +1,6 @@
 package gmailgdogra;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.devtools.restart.Restarter;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,12 @@ import java.util.stream.Collectors;
 public class MyController {
 
     private List<SwipeRecord> allSwipes;
+    private final ReadXlsxService readXlsxService;
+
+    @Autowired
+    public MyController(ReadXlsxService readXlsxService) {
+        this.readXlsxService = readXlsxService;
+    }
 
     @GetMapping("/")
     public String uploadPage() {
@@ -34,9 +41,9 @@ public class MyController {
     @PostMapping("/")
     public String upload(Model model, @RequestParam("file") MultipartFile file) {
         System.out.println("Controller.upload");
-        if (ReadXlsxService.hasExcelFormat(file)) {
+        if (readXlsxService.hasExcelFormat(file)) {
             try {
-                allSwipes = ReadXlsxService.readAllRows(file.getInputStream());
+                allSwipes = readXlsxService.readAllRows(file.getInputStream());
                 DtoWrapper dtoWrapper = createUserInputDtoWrapper(allSwipes);
                 model.addAttribute("dtoWrapper", dtoWrapper);
                 return "shift-infoFormView";

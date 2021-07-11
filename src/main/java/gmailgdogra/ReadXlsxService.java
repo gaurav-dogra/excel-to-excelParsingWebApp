@@ -4,7 +4,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,15 +20,13 @@ public class ReadXlsxService {
     private static final int COL_LAST_NAME = 1;
     private static final int COL_SWIPE_DATE_TIME = 2;
     private static final int COL_DEVICE_NAME = 5;
+    public static String EXCEL_FILE_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-    public ReadXlsxService() {
-    }
-
-    public List<SwipeRecord> readAllRows(InputStream inputStream) throws Exception {
+    public List<SwipeRecord> readAllRows(InputStream inputStream) throws IOException {
         return collectDataFrom(new XSSFWorkbook(inputStream).getSheetAt(0));
     }
 
-    private List<SwipeRecord> collectDataFrom(Sheet sheet) throws Exception {
+    private List<SwipeRecord> collectDataFrom(Sheet sheet) throws IOException {
         List<SwipeRecord> data = new ArrayList<>();
         for (int rowIndex = DATA_START_ROW; rowIndex <= sheet.getPhysicalNumberOfRows(); rowIndex++) {
             Row row = sheet.getRow(rowIndex);
@@ -42,8 +42,12 @@ public class ReadXlsxService {
             }
         }
         if (data.size() == 0) {
-            throw new Exception();
+            throw new IOException();
         }
         return data;
+    }
+
+    public boolean hasExcelFormat(MultipartFile file) {
+        return EXCEL_FILE_TYPE.equals(file.getContentType());
     }
 }
