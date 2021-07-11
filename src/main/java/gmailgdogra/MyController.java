@@ -26,10 +26,12 @@ public class MyController {
 
     private List<SwipeRecord> allSwipes;
     private final ReadXlsxService readXlsxService;
+    private final SwipeProcessor swipeProcessor;
 
     @Autowired
-    public MyController(ReadXlsxService readXlsxService) {
+    public MyController(ReadXlsxService readXlsxService, SwipeProcessor swipeProcessor) {
         this.readXlsxService = readXlsxService;
+        this.swipeProcessor = swipeProcessor;
     }
 
     @GetMapping("/")
@@ -74,7 +76,7 @@ public class MyController {
         header.setContentType(new MediaType("application", "force-download"));
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileName);
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
-        List<OutputRow> outputData = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
+        List<OutputRow> outputData = swipeProcessor.getOutputDataFrom(allSwipes, shifts);
         ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
         return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
     }

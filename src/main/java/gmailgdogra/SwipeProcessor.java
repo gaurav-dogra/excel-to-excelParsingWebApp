@@ -1,18 +1,20 @@
 package gmailgdogra;
 
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class SwipeProcessor {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     public static final Map<String, Location> swipeInDevices;
     public static final Map<String, Location> swipeOutDevices;
     private static LocalDate dayOne;
-
 
     static {
         swipeInDevices = new HashMap<>();
@@ -34,7 +36,7 @@ public class SwipeProcessor {
         swipeOutDevices.put("PLA0105 - Turnstile East OUT", Location.TL_PLAISTOW);
     }
 
-    public static List<OutputRow> getOutputDataFrom(List<SwipeRecord> allSwipes, List<Shift> shifts) {
+    public List<OutputRow> getOutputDataFrom(List<SwipeRecord> allSwipes, List<Shift> shifts) {
         List<OutputRow> outputData = new ArrayList<>();
         Set<LocalDate> allDates = allSwipes.stream()
                 .map(swipe -> swipe.getSwipeDateTime().toLocalDate())
@@ -50,7 +52,7 @@ public class SwipeProcessor {
         return outputData;
     }
 
-    private static OutputRow getSwipeIn(Shift shift, List<SwipeRecord> allSwipes) {
+    private OutputRow getSwipeIn(Shift shift, List<SwipeRecord> allSwipes) {
         Officer officer = shift.getOfficer();
         Location location = shift.getLocation();
 
@@ -76,7 +78,7 @@ public class SwipeProcessor {
                 parseDateTime(record.getSwipeDateTime()), record.getDeviceName());
     }
 
-    private static OutputRow getSwipeOut(Shift shift, List<SwipeRecord> allSwipes) {
+    private OutputRow getSwipeOut(Shift shift, List<SwipeRecord> allSwipes) {
         Officer officer = shift.getOfficer();
         Location location = shift.getLocation();
 
@@ -102,7 +104,7 @@ public class SwipeProcessor {
                 parseDateTime(record.getSwipeDateTime()), record.getDeviceName());
     }
 
-    private static String parseDateTime(LocalDateTime swipeDateTime) {
+    private String parseDateTime(LocalDateTime swipeDateTime) {
         if (swipeDateTime == null) {
             return null;
         }

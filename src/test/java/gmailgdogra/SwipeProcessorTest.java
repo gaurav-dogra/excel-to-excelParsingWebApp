@@ -32,10 +32,12 @@ class SwipeProcessorTest {
     private static final Officer officer11 = new Officer("Officer 11", "Officer 11");
     private static final Officer officer12 = new Officer("Officer 12", "Officer 12");
     private final ReadXlsxService readXlsxService;
+    private final SwipeProcessor swipeProcessor;
 
     @Autowired
-    public SwipeProcessorTest(ReadXlsxService readXlsxService) {
+    public SwipeProcessorTest(ReadXlsxService readXlsxService, SwipeProcessor swipeProcessor) {
         this.readXlsxService = readXlsxService;
+        this.swipeProcessor = swipeProcessor;
     }
 
     private static List<OutputRow> resultsOfTestFile1() {
@@ -164,7 +166,7 @@ class SwipeProcessorTest {
         MockMultipartFile testFile1 = getFile("src/main/resources/test file 1.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile1.getInputStream());
         List<Shift> shifts = getShiftsForTestFile1();
-        List<OutputRow> results = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessor.getOutputDataFrom(allSwipes, shifts);
         assertTrue(results.containsAll(expectedResultsTestFile1));
     }
 
@@ -173,7 +175,7 @@ class SwipeProcessorTest {
         MockMultipartFile testFile2 = getFile("src/main/resources/test file 2.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile2.getInputStream());
         List<Shift> shifts = getShiftsForTestFile2();
-        List<OutputRow> results = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessor.getOutputDataFrom(allSwipes, shifts);
         assertTrue(results.containsAll(expectedResultsTestFile2));
     }
 
