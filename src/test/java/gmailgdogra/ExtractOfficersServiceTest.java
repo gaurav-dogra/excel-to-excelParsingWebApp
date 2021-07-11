@@ -1,5 +1,9 @@
 package gmailgdogra;
 
+import gmailgdogra.pojo.Officer;
+import gmailgdogra.pojo.SwipeRecord;
+import gmailgdogra.service.ExtractOfficersService;
+import gmailgdogra.service.ReadXlsxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +22,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class ExtractOfficersTest {
+class ExtractOfficersServiceTest {
 
     private final ReadXlsxService readXlsxService;
 
     @Autowired
-    public ExtractOfficersTest(ReadXlsxService readXlsxService) {
+    public ExtractOfficersServiceTest(ReadXlsxService readXlsxService) {
         this.readXlsxService = readXlsxService;
     }
 
@@ -59,7 +63,7 @@ class ExtractOfficersTest {
             Assertions.fail("Unable to read file at " + path);
         }
 
-        Set<Officer> officers = ExtractOfficers.from(swipeRecords);
+        Set<Officer> officers = ExtractOfficersService.from(swipeRecords);
         assertEquals(officers, expectedOfficers);
     }
 }

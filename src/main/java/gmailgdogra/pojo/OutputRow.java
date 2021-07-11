@@ -1,4 +1,4 @@
-package gmailgdogra;
+package gmailgdogra.pojo;
 
 import javax.validation.constraints.NotNull;
 import java.util.Objects;

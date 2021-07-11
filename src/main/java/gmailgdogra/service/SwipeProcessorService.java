@@ -1,5 +1,6 @@
-package gmailgdogra;
+package gmailgdogra.service;
 
+import gmailgdogra.pojo.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class SwipeProcessor {
+public class SwipeProcessorService {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     public static final Map<String, Location> swipeInDevices;

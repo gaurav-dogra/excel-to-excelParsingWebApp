@@ -1,4 +1,4 @@
-package gmailgdogra;
+package gmailgdogra.pojo;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

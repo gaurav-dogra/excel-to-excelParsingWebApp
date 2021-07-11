@@ -1,4 +1,4 @@
-package gmailgdogra;
+package gmailgdogra.pojo;
 
 import java.util.List;
 

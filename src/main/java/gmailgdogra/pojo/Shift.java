@@ -1,4 +1,7 @@
-package gmailgdogra;
+package gmailgdogra.pojo;
+
+import gmailgdogra.pojo.Location;
+import gmailgdogra.pojo.Officer;
 
 import javax.validation.constraints.NotNull;
 
