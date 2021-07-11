@@ -2,6 +2,8 @@ package gmailgdogra;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.File;
@@ -11,7 +13,15 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 class ReadXlsxServiceTest {
+
+    private final ReadXlsxService readXlsxService;
+
+    @Autowired
+    public ReadXlsxServiceTest(ReadXlsxService readXlsxService) {
+        this.readXlsxService = readXlsxService;
+    }
 
     @Test
     void hasExcelFormat_FailCase() throws IOException {
@@ -23,7 +33,7 @@ class ReadXlsxServiceTest {
                 file.getName(),
                 "text/plain",
                 IOUtils.toByteArray(inputStream));
-        boolean result = ReadXlsxService.hasExcelFormat(multipartFile);
+        boolean result = readXlsxService.hasExcelFormat(multipartFile);
         assertFalse(result);
     }
 
@@ -37,7 +47,7 @@ class ReadXlsxServiceTest {
                 file.getName(),
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 IOUtils.toByteArray(inputStream));
-        boolean result = ReadXlsxService.hasExcelFormat(multipartFile);
+        boolean result = readXlsxService.hasExcelFormat(multipartFile);
         assertTrue(result);
     }
 }

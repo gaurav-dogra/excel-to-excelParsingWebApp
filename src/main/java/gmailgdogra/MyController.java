@@ -1,5 +1,7 @@
 package gmailgdogra;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.devtools.restart.Restarter;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -7,9 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,28 +25,37 @@ import java.util.stream.Collectors;
 public class MyController {
 
     private List<SwipeRecord> allSwipes;
+    private final ReadXlsxService readXlsxService;
+    private final SwipeProcessor swipeProcessor;
 
-    @RequestMapping("/")
+    @Autowired
+    public MyController(ReadXlsxService readXlsxService, SwipeProcessor swipeProcessor) {
+        this.readXlsxService = readXlsxService;
+        this.swipeProcessor = swipeProcessor;
+    }
+
+    @GetMapping("/")
     public String uploadPage() {
+        System.out.println("MyController.uploadPage");
         return "uploadView";
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/")
     public String upload(Model model, @RequestParam("file") MultipartFile file) {
         System.out.println("Controller.upload");
-        if (ReadXlsxService.hasExcelFormat(file)) {
+        if (readXlsxService.hasExcelFormat(file)) {
             try {
-                allSwipes = ReadXlsxService.readAllRows(file.getInputStream());
+                allSwipes = readXlsxService.readAllRows(file.getInputStream());
                 DtoWrapper dtoWrapper = createUserInputDtoWrapper(allSwipes);
                 model.addAttribute("dtoWrapper", dtoWrapper);
-                return "shift-info";
+                return "shift-infoFormView";
             } catch (Exception e) {
                 model.addAttribute("msg", "Uploaded file is not in expected format");
             }
         } else {
             model.addAttribute("msg", "The uploaded file is not a xlsx file");
         }
-        return "failedUploadView";
+        return "messageView";
     }
 
     private DtoWrapper createUserInputDtoWrapper(List<SwipeRecord> allSwipes) {
@@ -60,18 +71,14 @@ public class MyController {
     @PostMapping("/download")
     public ResponseEntity<ByteArrayResource> download(@ModelAttribute DtoWrapper dtoWrapper) {
         System.out.println("Controller.download");
-        try {
-            String downloadFileName = createFileName();
-            HttpHeaders header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileName);
-            List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
-            List<OutputRow> outputData = SwipeProcessor.getOutputDataFrom(allSwipes, shifts);
-            ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
-            return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
+        String downloadFileName = createFileName();
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "force-download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileName);
+        List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
+        List<OutputRow> outputData = swipeProcessor.getOutputDataFrom(allSwipes, shifts);
+        ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
+        return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
     }
 
     private String createFileName() {
@@ -106,5 +113,11 @@ public class MyController {
             default:
                 throw new RuntimeException("Unable to understand user Input: " + dtoObj);
         }
+    }
+
+    @GetMapping("/restart")
+    public String restart() {
+        Restarter.getInstance().restart();
+        return "uploadView";
     }
 }

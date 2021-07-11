@@ -116,7 +116,6 @@ public class WriteOutputToXlsx {
     }
 
     private static boolean isLateSwipeIn(int rowNo) {
-
         Row row = workbook.getSheetAt(SHEET_INDEX).getRow(rowNo);
         String locationCellVal = row.getCell(LOCATION_COL_NO).getStringCellValue();
         String timeInfo = row.getCell(EVENT_DATE_COL_NO).getStringCellValue().substring(TIME_INFO_START_INDEX);

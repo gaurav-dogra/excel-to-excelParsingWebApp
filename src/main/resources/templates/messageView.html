@@ -5,10 +5,11 @@
     <title>Excel Parsing Web App</title>
 </head>
 <body>
-<div th:if="${msg}">
-    <h1><span th:text="${msg}"></span></h1>
-    <span><a href="/">Upload again</a></span>
-</div>
+<h1><span th:text="${msg}"></span></h1>
+
+<form action="#" th:action="@{/restart}" method="get">
+    <input type="submit" value="Go to Home"/>
+</form>
 
 </body>
 </html>

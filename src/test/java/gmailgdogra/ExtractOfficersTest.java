@@ -2,10 +2,11 @@ package gmailgdogra;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +17,15 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 class ExtractOfficersTest {
+
+    private final ReadXlsxService readXlsxService;
+
+    @Autowired
+    public ExtractOfficersTest(ReadXlsxService readXlsxService) {
+        this.readXlsxService = readXlsxService;
+    }
 
     private final Set<Officer> expectedOfficers = new HashSet<>(Arrays.asList(
             new Officer("Abdul", "Khan"),
@@ -44,9 +53,9 @@ class ExtractOfficersTest {
             byte[] content = Files.readAllBytes(path);
             MultipartFile result = new MockMultipartFile(name,
                     originalFileName, contentType, content);
-            swipeRecords = ReadXlsx.readAllRows(result.getInputStream());
+            swipeRecords = readXlsxService.readAllRows(result.getInputStream());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Assertions.fail("Unable to read file at " + path);
         }
 
