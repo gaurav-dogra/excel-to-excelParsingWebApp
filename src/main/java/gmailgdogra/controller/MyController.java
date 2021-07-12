@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public class MyController {
 
     private List<SwipeRecord> allSwipes;
+    private List<OutputRow> outputData;
     private final ReadXlsxService readXlsxService;
     private final SwipeProcessorService swipeProcessorService;
 
@@ -73,17 +74,25 @@ public class MyController {
         return dtoWrapper;
     }
 
-    @PostMapping("/download")
-    public ResponseEntity<ByteArrayResource> download(@ModelAttribute DtoWrapper dtoWrapper) throws IOException {
+    @PostMapping("/preview")
+    public String preview(@ModelAttribute DtoWrapper dtoWrapper, Model model) {
         System.out.println("Controller.download");
-        String downloadFileName = createFileName();
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileName);
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
-        List<OutputRow> outputData = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
+        outputData = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
+        model.addAttribute("outputData", outputData);
+        return "report_preview";
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<ByteArrayResource> download() throws IOException {
+        System.out.println("MyController.download");
         XSSFWorkbook plainXlsx = WriteToXlsxService.write(outputData);
         XSSFWorkbook formattedXlsx = FormatXlsxService.of(plainXlsx);
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "force-download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + createFileName());
+
         try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             formattedXlsx.write(outputStream);
             ByteArrayResource resource = new ByteArrayResource(outputStream.toByteArray());
@@ -129,6 +138,7 @@ public class MyController {
 
     @GetMapping("/restart")
     public String restart() {
+        System.out.println("MyController.restart");
         Restarter.getInstance().restart();
         return "uploadView";
     }
