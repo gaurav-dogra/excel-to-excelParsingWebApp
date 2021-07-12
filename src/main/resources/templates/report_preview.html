@@ -5,14 +5,14 @@
     <title>Excel Parsing Web App</title>
 </head>
 <body>
-<p>Preview of the report</p>
 <table>
+    <caption>Preview of the report</caption>
     <tr>
-        <th>Location</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Event Date</th>
-        <th>Logical Device</th>
+        <th scope="col">Location</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Event Date</th>
+        <th scope="col">Logical Device</thscope>
     </tr>
     <tr th:each="row : ${outputData}">
         <td><span th:text="${row.location}"></span></td>
