@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="heading">Select Shift information for each officer</div>
-<form action="#" th:action="@{/download}" th:object="${dtoWrapper}" method="post">
+<form action="#" th:action="@{/preview}" th:object="${dtoWrapper}" method="post">
 
     <fieldset th:each="dto, iterStat : *{userInputDtoList}">
         <legend><span th:text="|${dto.firstName} ${dto.lastName}|"/></legend>
@@ -81,7 +81,7 @@
 
     </fieldset>
     <br><br>
-    <input type="submit" value="Download Report"/>
+    <input type="submit" value="Generate Report"/>
 </form>
 <br>
 <form action="#" th:action="@{/restart}" method="get">
