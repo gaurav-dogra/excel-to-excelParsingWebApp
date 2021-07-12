@@ -50,6 +50,7 @@ public class SwipeProcessorService {
             outputData.add(swipeIn);
             outputData.add(swipeOut);
         }
+        Collections.sort(outputData);
         return outputData;
     }
 

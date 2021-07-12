@@ -4,14 +4,17 @@ import javax.validation.constraints.NotNull;
 
 public class UserInputDto {
 
-    private final String firstName;
-    private final String lastName;
-    private final int shiftCode;
+    private String firstName;
+    private String lastName;
+    private int shiftCode;
 
     public UserInputDto(@NotNull String firstName, @NotNull String lastName, @NotNull int shiftCode) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.shiftCode = shiftCode;
+    }
+
+    public UserInputDto() {
     }
 
     public String getFirstName() {
@@ -24,6 +27,18 @@ public class UserInputDto {
 
     public int getShiftCode() {
         return shiftCode;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setShiftCode(int shiftCode) {
+        this.shiftCode = shiftCode;
     }
 
     @Override

@@ -1,10 +1,8 @@
 package gmailgdogra.controller;
 
 import gmailgdogra.pojo.*;
-import gmailgdogra.service.ExtractOfficersService;
-import gmailgdogra.service.ReadXlsxService;
-import gmailgdogra.service.SwipeProcessorService;
-import gmailgdogra.service.WriteOutputToXlsx;
+import gmailgdogra.service.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.devtools.restart.Restarter;
 import org.springframework.core.io.ByteArrayResource;
@@ -20,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -74,7 +74,7 @@ public class MyController {
     }
 
     @PostMapping("/download")
-    public ResponseEntity<ByteArrayResource> download(@ModelAttribute DtoWrapper dtoWrapper) {
+    public ResponseEntity<ByteArrayResource> download(@ModelAttribute DtoWrapper dtoWrapper) throws IOException {
         System.out.println("Controller.download");
         String downloadFileName = createFileName();
         HttpHeaders header = new HttpHeaders();
@@ -82,8 +82,15 @@ public class MyController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileName);
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
         List<OutputRow> outputData = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
-        ByteArrayResource resource = new ByteArrayResource(WriteOutputToXlsx.write(outputData));
-        return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
+        XSSFWorkbook plainXlsx = WriteToXlsxService.write(outputData);
+        XSSFWorkbook formattedXlsx = FormatXlsxService.of(plainXlsx);
+        try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            formattedXlsx.write(outputStream);
+            ByteArrayResource resource = new ByteArrayResource(outputStream.toByteArray());
+            return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
+        } catch (IOException e) {
+            throw new IOException("Failed to write output to file");
+        }
     }
 
     private String createFileName() {
