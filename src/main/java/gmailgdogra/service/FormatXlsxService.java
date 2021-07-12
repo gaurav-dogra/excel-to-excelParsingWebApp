@@ -7,7 +7,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.time.LocalTime;
 
-import static gmailgdogra.AppConstants.*;
+import static gmailgdogra.AppConstants.EVENT_DATE_COL_NO;
+import static gmailgdogra.AppConstants.FIRST_NAME_COL_NO;
+import static gmailgdogra.AppConstants.LOCATION_COL_NO;
+import static gmailgdogra.AppConstants.LOGICAL_DEVICE_COL_NO;
+import static gmailgdogra.AppConstants.TIME_INFO_START_INDEX;
+import static gmailgdogra.AppConstants.TITLE_ROW_NO;
+
 
 public class FormatXlsxService {
 
