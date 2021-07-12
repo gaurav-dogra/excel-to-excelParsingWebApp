@@ -60,12 +60,8 @@ public class FormatXlsxService {
 
             int currentRowNo = row.getRowNum();
 
-            if (currentRowNo == TITLE_ROW_NO) {
-                applyStyle(currentRowNo, titleRowStyle);
-                continue;
-            }
-
-            if (rowIsEmpty(currentRowNo)) {
+            if (currentRowNo == TITLE_ROW_NO ||
+                    rowIsEmpty(currentRowNo)) {
                 applyStyle(currentRowNo, titleRowStyle);
                 continue;
             }
