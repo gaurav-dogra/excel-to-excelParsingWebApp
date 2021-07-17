@@ -32,12 +32,14 @@
 </nav>
 
 <section class="bg-success">
-<br>
+    <br>
 </section>
 
 <!-- form -->
 <section>
     <div class="container">
+        <h3>Below officer names come from your file. Please select their respective shift
+            and press Generate Report button.</h3>
         <form action="#" th:action="@{/preview}" th:object="${dtoWrapper}" method="post">
 
             <fieldset th:each="dto, iterStat : *{userInputDtoList}">
