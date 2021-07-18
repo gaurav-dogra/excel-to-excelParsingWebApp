@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
 <body>
-$END$
+
+<div th:fragment="nav-bar">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div class="container">
+            <a href="/" class="navbar-brand">Excel Parsing Web App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav-menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/about" class="nav-link">About</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div th:fragment="colorbar">
+    <section class="bg-success"><br></section>
+</div>
+
 </body>
+
 </html>

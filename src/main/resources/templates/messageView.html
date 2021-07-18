@@ -9,33 +9,14 @@
 <body>
 
 <!--Nav bar-->
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-    <div class="container">
-        <a href="/" class="navbar-brand">Excel Parsing Web App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="nav-menu">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">Home</a>
-                </li>
+<div th:insert="nav :: nav-bar"></div>
+<div th:insert="nav :: colorbar"></div>
 
-                <li class="nav-item">
-                    <a href="/about" class="nav-link">About</a>
-                </li>
-
-            </ul>
-        </div>
-    </div>
-
-</nav>
-
-<div class="container">
+<div class="container mt-3">
     <h3><span th:text="${msg}"></span></h3>
 
     <form action="#" th:action="@{/}" method="get">
-        <input type="submit" class="btn btn-primary m-5 d-grid gap-2 col-6" value="Go Back"/>
+        <input type="submit" class="btn btn-primary d-grid gap-2 col-6" value="Go Back"/>
     </form>
 
 </div>

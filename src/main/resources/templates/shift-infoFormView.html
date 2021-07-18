@@ -9,36 +9,16 @@
 </head>
 
 <body>
+
 <!--Nav bar-->
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-    <div class="container">
-        <a href="/" class="navbar-brand">Excel Parsing Web App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="nav-menu">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">Home</a>
-                </li>
+<div th:insert="nav :: nav-bar"></div>
+<div th:insert="nav :: colorbar"></div>
 
-                <li class="nav-item">
-                    <a href="/about" class="nav-link">About</a>
-                </li>
-
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<section class="bg-success">
-    <br>
-</section>
 
 <!-- form -->
 <section>
     <div class="container">
-        <h3>Below officer names come from your file. Please select their respective shift
+        <h3>Below officer names come from the file. Please select their respective shift
             and press Generate Report button.</h3>
         <form action="#" th:action="@{/preview}" th:object="${dtoWrapper}" method="post">
 
