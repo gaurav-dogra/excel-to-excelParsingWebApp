@@ -14,9 +14,11 @@ public class WriteToXlsxService {
     private static final OutputRow titleRow = OutputRow.of("Location", "First Name",
             "Last Name", "Event Date", "Logical Device");
 
-    private static int rowsCreatedSoFar = 0;
+    private static int rowsCreatedSoFar;
 
     public static XSSFWorkbook write(List<OutputRow> outputData) {
+        rowsCreatedSoFar = 0;
+        System.out.println("rowsCreatedSoFar = " + rowsCreatedSoFar);
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Securitas Daily Report");
         writeRow(sheet, titleRow);
