@@ -59,7 +59,7 @@ public class MyController {
                 model.addAttribute("msg", "Uploaded file is not in expected format");
             }
         } else {
-            model.addAttribute("msg", "The uploaded file is not a xlsx file");
+            model.addAttribute("msg", "The uploaded file is not an xlsx");
         }
         return "messageView";
     }
