@@ -30,7 +30,8 @@ import java.util.stream.Collectors;
 public class MyController {
 
     private List<SwipeRecord> allSwipes;
-    private List<OutputRow> outputData;
+    private List<OutputRow> inOutSwipesPrevTwoShifts;
+    private List<OutputRow> inSwipesCurrentShift;
     private final ReadXlsxService readXlsxService;
     private final SwipeProcessorService swipeProcessorService;
 
@@ -78,15 +79,18 @@ public class MyController {
     public String preview(@ModelAttribute DtoWrapper dtoWrapper, Model model) {
         System.out.println("Controller.download");
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
-        outputData = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
-        model.addAttribute("outputData", outputData);
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        inOutSwipesPrevTwoShifts = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+        inSwipesCurrentShift = swipeProcessorService.getInSwipesCurrentShift();
+        model.addAttribute("dailyReportData", inOutSwipesPrevTwoShifts);
+        model.addAttribute("shiftReportData", inSwipesCurrentShift);
         return "report_preview";
     }
 
     @GetMapping("/download")
     public ResponseEntity<ByteArrayResource> download() throws IOException {
         System.out.println("MyController.download");
-        XSSFWorkbook plainXlsx = WriteToXlsxService.write(outputData);
+        XSSFWorkbook plainXlsx = WriteToXlsxService.write(inOutSwipesPrevTwoShifts);
         XSSFWorkbook formattedXlsx = FormatXlsxService.of(plainXlsx);
 
         HttpHeaders header = new HttpHeaders();
