@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class SwipeProcessorServiceTest {
 
-    private static final List<OutputRow> expectedResultsTestFile1 = resultsOfTestFile1();
-    private static final List<OutputRow> expectedResultsTestFile2 = resultOfTestFile2();
+    private static final List<OutputRow> inOutSwipesPrevTwoShiftsFromFile1 = getInOutSwipesPrevTwoShiftsFromFile1();
+    private static final List<OutputRow> inOutSwipesPrevTwoShiftsFromFile2 = getInOutSwipesPrevTwoShiftsFromFile2();
     private static final Officer officer1 = new Officer("Officer 1", "Officer 1");
     private static final Officer officer2 = new Officer("Officer 2", "Officer 2");
     private static final Officer officer3 = new Officer("Officer 3", "Officer 3");
@@ -43,7 +43,7 @@ class SwipeProcessorServiceTest {
         this.swipeProcessorService = swipeProcessorService;
     }
 
-    private static List<OutputRow> resultsOfTestFile1() {
+    private static List<OutputRow> getInOutSwipesPrevTwoShiftsFromFile1() {
         return Arrays.asList(
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
                         "03/06/2021 17:54", "PLA0102 - Turnstile West IN"),
@@ -89,10 +89,10 @@ class SwipeProcessorServiceTest {
                         "03/06/2021 06:46", "Thames LSI0303 - Empl East Turnstile IN"),
                 new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
                         "03/06/2021 17:30", "Thames LSI0302 - Empl W Turnstile OUT")
-                );
+        );
     }
 
-    private static List<OutputRow> resultOfTestFile2() {
+    private static List<OutputRow> getInOutSwipesPrevTwoShiftsFromFile2() {
         return Arrays.asList(
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
                         "24/05/2021 17:44", "PLA0102 - Turnstile West IN"),
@@ -165,21 +165,38 @@ class SwipeProcessorServiceTest {
     }
 
     @Test
-    void testFile1() throws IOException {
+    void testInOutSwipesPrevTwoShiftsForFile1() throws IOException {
         MockMultipartFile testFile1 = getFile("src/main/resources/test file 1.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile1.getInputStream());
         List<Shift> shifts = getShiftsForTestFile1();
-        List<OutputRow> results = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
-        assertTrue(results.containsAll(expectedResultsTestFile1));
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+        assertTrue(results.containsAll(inOutSwipesPrevTwoShiftsFromFile1), "Daily report not as expected");
     }
 
     @Test
-    void testFile2() throws IOException {
+    void testInOutSwipesPrevTwoShiftsForFile2() throws IOException {
         MockMultipartFile testFile2 = getFile("src/main/resources/test file 2.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile2.getInputStream());
         List<Shift> shifts = getShiftsForTestFile2();
-        List<OutputRow> results = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
-        assertTrue(results.containsAll(expectedResultsTestFile2));
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+        assertTrue(results.containsAll(inOutSwipesPrevTwoShiftsFromFile2), "Daily report not as expected");
+    }
+
+    @Test
+    void testCurrentShiftSwipeInsForFile1() throws IOException {
+//        MockMultipartFile testFile1 = getFile("src/main/resources/test file 1.xlsx");
+//        List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile1.getInputStream());
+//        List<Shift> shifts = getShiftsForTestFile1();
+//        swipeProcessorService.prepareData(allSwipes, shifts);
+//        List<OutputRow> results = swipeProcessorService.getInSwipesCurrentShift();
+//        assertTrue(results.containsAll(inOutSwipesPrevTwoShiftsFromFile1), "Daily report not as expected");
+    }
+
+    @Test
+    void testCurrentShiftSwipeInsForFile2() {
+
     }
 
     private List<Shift> getShiftsForTestFile1() {
