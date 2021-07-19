@@ -43,7 +43,6 @@ public class SwipeProcessorService {
         dayOne = getDayOneFromSwipes(allSwipes);
         inOutSwipesPrevTwoShifts = getPrevShiftInOutSwipes(allSwipes, shifts);
         inSwipesCurrentShift = getCurrentShiftInSwipes(allSwipes, shifts);
-        System.out.println("swipeInsCurrentShift = " + inSwipesCurrentShift);
     }
 
     private List<OutputRow> getCurrentShiftInSwipes(List<SwipeRecord> allSwipes, List<Shift> shifts) {
