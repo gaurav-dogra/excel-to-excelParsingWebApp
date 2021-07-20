@@ -197,6 +197,7 @@ class SwipeProcessorServiceTest {
         List<Shift> shifts = getShiftsForTestFile1();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+
         assertTrue(results.containsAll(inOutSwipesPrevTwoShiftsFromFile1), "Daily report not as expected");
     }
 
@@ -207,6 +208,7 @@ class SwipeProcessorServiceTest {
         List<Shift> shifts = getShiftsForTestFile2();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+
         assertTrue(results.containsAll(inOutSwipesPrevTwoShiftsFromFile2), "Daily report not as expected");
     }
 
@@ -217,6 +219,7 @@ class SwipeProcessorServiceTest {
         List<Shift> shifts = getShiftsForTestFile1();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInSwipesCurrentShift();
+
         assertTrue(results.containsAll(inSwipesCurrentShiftFromFile1), "Current Shift Swipe-in not as expected");
     }
 
@@ -227,6 +230,7 @@ class SwipeProcessorServiceTest {
         List<Shift> shifts = getShiftsForTestFile2();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInSwipesCurrentShift();
+
         assertTrue(results.containsAll(inSwipesCurrentShiftFromFile2), "Current Shift Swipe-in not as expected");
     }
 
