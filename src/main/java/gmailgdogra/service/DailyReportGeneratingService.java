@@ -9,7 +9,7 @@ import java.util.List;
 
 import static gmailgdogra.AppConstants.*;
 
-public class WriteToXlsxService {
+public class DailyReportGeneratingService {
 
     private static final OutputRow titleRow = OutputRow.of("Location", "First Name",
             "Last Name", "Event Date", "Logical Device");
