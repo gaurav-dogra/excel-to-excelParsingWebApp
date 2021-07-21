@@ -1,15 +1,22 @@
 package gmailgdogra.controller;
 
-import gmailgdogra.pojo.*;
-import gmailgdogra.service.*;
+import gmailgdogra.pojo.DtoWrapper;
+import gmailgdogra.pojo.Location;
+import gmailgdogra.pojo.Officer;
+import gmailgdogra.pojo.OutputRow;
+import gmailgdogra.pojo.Shift;
+import gmailgdogra.pojo.SwipeRecord;
+import gmailgdogra.pojo.UserInputDto;
+import gmailgdogra.service.DailyReportFormattingService;
+import gmailgdogra.service.DailyReportGeneratingService;
+import gmailgdogra.service.ExtractOfficersService;
+import gmailgdogra.service.ReadXlsxService;
+import gmailgdogra.service.ShiftReportGeneratingService;
+import gmailgdogra.service.SwipeProcessorService;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.devtools.restart.Restarter;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,24 +25,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Controller
-public class MyController {
+public class AppController {
 
     private List<SwipeRecord> allSwipes;
-    private List<OutputRow> outputData;
+    private List<OutputRow> inOutSwipesPrevTwoShifts;
+    private List<OutputRow> inSwipesCurrentShift;
     private final ReadXlsxService readXlsxService;
     private final SwipeProcessorService swipeProcessorService;
 
     @Autowired
-    public MyController(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
+    public AppController(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
         this.readXlsxService = readXlsxService;
         this.swipeProcessorService = swipeProcessorService;
     }
@@ -78,33 +92,60 @@ public class MyController {
     public String preview(@ModelAttribute DtoWrapper dtoWrapper, Model model) {
         System.out.println("Controller.download");
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
-        outputData = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
-        model.addAttribute("outputData", outputData);
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        inOutSwipesPrevTwoShifts = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+        inSwipesCurrentShift = swipeProcessorService.getInSwipesCurrentShift();
+        model.addAttribute("dailyReportData", inOutSwipesPrevTwoShifts);
+        model.addAttribute("shiftReportData", inSwipesCurrentShift);
         return "report_preview";
     }
 
-    @GetMapping("/download")
-    public ResponseEntity<ByteArrayResource> download() throws IOException {
+    @GetMapping(value = "/download", produces = "application/zip")
+    public void download(HttpServletResponse response) throws IOException {
         System.out.println("MyController.download");
-        XSSFWorkbook plainXlsx = WriteToXlsxService.write(outputData);
-        XSSFWorkbook formattedXlsx = FormatXlsxService.of(plainXlsx);
+        XSSFWorkbook dailyReport = DailyReportGeneratingService.write(inOutSwipesPrevTwoShifts);
+        XSSFWorkbook formattedDailyReport = DailyReportFormattingService.of(dailyReport);
+        XSSFWorkbook shiftReport = ShiftReportGeneratingService.write(inSwipesCurrentShift);
+        File dailyReportFile = convertWorkbookToFile(formattedDailyReport, createDailyReportFileName());
+        File shiftReportFile = convertWorkbookToFile(shiftReport, createShiftReportFileName());
 
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "force-download"));
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + createFileName());
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/force-download");
+        response.addHeader("Content-Disposition", "attachment; filename=\"reports.zip\"");
 
-        try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            formattedXlsx.write(outputStream);
-            ByteArrayResource resource = new ByteArrayResource(outputStream.toByteArray());
-            return new ResponseEntity<>(resource, header, HttpStatus.CREATED);
-        } catch (IOException e) {
-            throw new IOException("Failed to write output to file");
+        ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
+
+        List<File> files = new ArrayList<>();
+        files.add(dailyReportFile);
+        files.add(shiftReportFile);
+
+        for (File file : files) {
+            zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            IOUtils.copy(fileInputStream, zipOutputStream);
+            fileInputStream.close();
+            zipOutputStream.closeEntry();
         }
+
+        zipOutputStream.close();
     }
 
-    private String createFileName() {
+    private String createShiftReportFileName() {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return String.format("Securitas Report %s.xlsx", date);
+        return String.format("Shift Report Day %s.xlsx", date);
+    }
+
+    private File convertWorkbookToFile(XSSFWorkbook formattedDailyReport, String fileName) throws IOException {
+        File file = new File(fileName);
+        FileOutputStream outputStream = new FileOutputStream(file);
+        formattedDailyReport.write(outputStream);
+        return file;
+    }
+
+    private String createDailyReportFileName() {
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return String.format("Securitas Daily Report %s.xlsx", date);
     }
 
     private List<Shift> getShiftsListFromWrapper(DtoWrapper dtoWrapper) {

@@ -15,7 +15,7 @@ import static gmailgdogra.AppConstants.TIME_INFO_START_INDEX;
 import static gmailgdogra.AppConstants.TITLE_ROW_NO;
 
 
-public class FormatXlsxService {
+public class DailyReportFormattingService {
 
     private static XSSFWorkbook workbook;
     private static XSSFSheet sheet;

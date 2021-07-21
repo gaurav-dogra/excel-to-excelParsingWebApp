@@ -9,7 +9,7 @@ import java.util.List;
 
 import static gmailgdogra.AppConstants.*;
 
-public class WriteToXlsxService {
+public class DailyReportGeneratingService {
 
     private static final OutputRow titleRow = OutputRow.of("Location", "First Name",
             "Last Name", "Event Date", "Logical Device");
@@ -18,7 +18,6 @@ public class WriteToXlsxService {
 
     public static XSSFWorkbook write(List<OutputRow> outputData) {
         rowsCreatedSoFar = 0;
-        System.out.println("rowsCreatedSoFar = " + rowsCreatedSoFar);
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Securitas Daily Report");
         writeRow(sheet, titleRow);

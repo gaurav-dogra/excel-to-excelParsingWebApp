@@ -20,17 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class SwipeProcessorServiceTest {
 
-    private static final List<OutputRow> expectedResultsTestFile1 = resultsOfTestFile1();
-    private static final List<OutputRow> expectedResultsTestFile2 = resultOfTestFile2();
+    private static final List<OutputRow> inOutSwipesPrevTwoShiftsFromFile1 = getInOutSwipesPrevTwoShiftsFromFile1();
+    private static final List<OutputRow> inOutSwipesPrevTwoShiftsFromFile2 = getInOutSwipesPrevTwoShiftsFromFile2();
+    private static final List<OutputRow> inSwipesCurrentShiftFromFile1 = getInSwipesCurrentShiftsFromFile1();
+    private static final List<OutputRow> inSwipesCurrentShiftFromFile2 = getInSwipesCurrentShiftsFromFile2();
     private static final Officer officer1 = new Officer("Officer 1", "Officer 1");
-    private static final Officer officer2 = new Officer("Officer 2", "Officer 2");
     private static final Officer officer3 = new Officer("Officer 3", "Officer 3");
     private static final Officer officer4 = new Officer("Officer 4", "Officer 4");
     private static final Officer officer5 = new Officer("Officer 5", "Officer 5");
     private static final Officer officer6 = new Officer("Officer 6", "Officer 6");
     private static final Officer officer7 = new Officer("Officer 7", "Officer 7");
     private static final Officer officer8 = new Officer("Officer 8", "Officer 8");
-    private static final Officer officer9 = new Officer("Officer 9", "Officer 9");
     private static final Officer officer10 = new Officer("Officer 10", "Officer 10");
     private static final Officer officer11 = new Officer("Officer 11", "Officer 11");
     private static final Officer officer12 = new Officer("Officer 12", "Officer 12");
@@ -43,7 +43,7 @@ class SwipeProcessorServiceTest {
         this.swipeProcessorService = swipeProcessorService;
     }
 
-    private static List<OutputRow> resultsOfTestFile1() {
+    private static List<OutputRow> getInOutSwipesPrevTwoShiftsFromFile1() {
         return Arrays.asList(
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
                         "03/06/2021 17:54", "PLA0102 - Turnstile West IN"),
@@ -89,10 +89,10 @@ class SwipeProcessorServiceTest {
                         "03/06/2021 06:46", "Thames LSI0303 - Empl East Turnstile IN"),
                 new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
                         "03/06/2021 17:30", "Thames LSI0302 - Empl W Turnstile OUT")
-                );
+        );
     }
 
-    private static List<OutputRow> resultOfTestFile2() {
+    private static List<OutputRow> getInOutSwipesPrevTwoShiftsFromFile2() {
         return Arrays.asList(
                 new OutputRow("Plaistow", "Officer 1", "Officer 1",
                         "24/05/2021 17:44", "PLA0102 - Turnstile West IN"),
@@ -141,6 +141,32 @@ class SwipeProcessorServiceTest {
         );
     }
 
+    private static List<OutputRow> getInSwipesCurrentShiftsFromFile1() {
+        return Arrays.asList(
+                new OutputRow("Main Gate", "Officer 3", "Officer 3",
+                        "04/06/2021 06:00", "Thames LSI0901 - Turnstile South IN"),
+                new OutputRow("EP Weighbridge", "Officer 6", "Officer 6",
+                        "04/06/2021 05:53", "Thames LSI0701 - Weighbridge IN"),
+                new OutputRow("Main Gate", "Officer 8", "Officer 8",
+                        "04/06/2021 05:53", "Thames LSI0901 - Turnstile South IN"),
+                new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
+                        "04/06/2021 06:55", "Thames LSI0303 - Empl East Turnstile IN"));
+    }
+
+    private static List<OutputRow> getInSwipesCurrentShiftsFromFile2() {
+        return Arrays.asList(
+                new OutputRow("Main Gate", "Officer 5", "Officer 5",
+                        "25/05/2021 05:58", "Thames LSI0903 - Turnstile North IN"),
+                new OutputRow("Main Gate", "Officer 11", "Officer 11",
+                        "25/05/2021 05:46", "Thames LSI0901 - Turnstile South IN"),
+                new OutputRow("Visitors Reception", "Officer 12", "Officer 12",
+                        "25/05/2021 06:48", "Thames LSI0303 - Empl East Turnstile IN"),
+                new OutputRow("EP Weighbridge", "Officer 10", "Officer 10",
+                        "25/05/2021 05:55", "Thames LSI0701 - Weighbridge IN"),
+                new OutputRow("Plaistow", "Officer 4", "Officer 4",
+                        "25/05/2021 05:42", "PLA0102 - Turnstile West IN"));
+    }
+
     private List<Shift> getShiftsForTestFile2() {
         return Arrays.asList(
                 new Shift(officer1, Location.TL_PLAISTOW, false),
@@ -165,21 +191,47 @@ class SwipeProcessorServiceTest {
     }
 
     @Test
-    void testFile1() throws IOException {
+    void testInOutSwipesPrevTwoShiftsForFile1() throws IOException {
         MockMultipartFile testFile1 = getFile("src/main/resources/test file 1.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile1.getInputStream());
         List<Shift> shifts = getShiftsForTestFile1();
-        List<OutputRow> results = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
-        assertTrue(results.containsAll(expectedResultsTestFile1));
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+
+        assertTrue(results.containsAll(inOutSwipesPrevTwoShiftsFromFile1), "Daily report not as expected");
     }
 
     @Test
-    void testFile2() throws IOException {
+    void testInOutSwipesPrevTwoShiftsForFile2() throws IOException {
         MockMultipartFile testFile2 = getFile("src/main/resources/test file 2.xlsx");
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile2.getInputStream());
         List<Shift> shifts = getShiftsForTestFile2();
-        List<OutputRow> results = swipeProcessorService.getOutputDataFrom(allSwipes, shifts);
-        assertTrue(results.containsAll(expectedResultsTestFile2));
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
+
+        assertTrue(results.containsAll(inOutSwipesPrevTwoShiftsFromFile2), "Daily report not as expected");
+    }
+
+    @Test
+    void testCurrentShiftSwipeInsForFile1() throws IOException {
+        MockMultipartFile testFile2 = getFile("src/main/resources/test file 1.xlsx");
+        List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile2.getInputStream());
+        List<Shift> shifts = getShiftsForTestFile1();
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getInSwipesCurrentShift();
+
+        assertTrue(results.containsAll(inSwipesCurrentShiftFromFile1), "Current Shift Swipe-in not as expected");
+    }
+
+    @Test
+    void testCurrentShiftSwipeInsForFile2() throws IOException {
+        MockMultipartFile testFile2 = getFile("src/main/resources/test file 2.xlsx");
+        List<SwipeRecord> allSwipes = readXlsxService.readAllRows(testFile2.getInputStream());
+        List<Shift> shifts = getShiftsForTestFile2();
+        swipeProcessorService.prepareData(allSwipes, shifts);
+        List<OutputRow> results = swipeProcessorService.getInSwipesCurrentShift();
+
+        assertTrue(results.containsAll(inSwipesCurrentShiftFromFile2), "Current Shift Swipe-in not as expected");
     }
 
     private List<Shift> getShiftsForTestFile1() {
