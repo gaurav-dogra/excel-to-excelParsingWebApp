@@ -106,11 +106,11 @@ public class AppController {
         XSSFWorkbook dailyReport = DailyReportGeneratingService.write(inOutSwipesPrevTwoShifts);
         XSSFWorkbook formattedDailyReport = DailyReportFormattingService.of(dailyReport);
         XSSFWorkbook shiftReport = ShiftReportGeneratingService.write(inSwipesCurrentShift);
-
         File dailyReportFile = convertWorkbookToFile(formattedDailyReport, createDailyReportFileName());
         File shiftReportFile = convertWorkbookToFile(shiftReport, createShiftReportFileName());
 
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/force-download");
         response.addHeader("Content-Disposition", "attachment; filename=\"reports.zip\"");
 
         ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
