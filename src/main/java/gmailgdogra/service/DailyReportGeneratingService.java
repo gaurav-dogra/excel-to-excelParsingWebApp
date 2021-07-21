@@ -18,7 +18,6 @@ public class DailyReportGeneratingService {
 
     public static XSSFWorkbook write(List<OutputRow> outputData) {
         rowsCreatedSoFar = 0;
-        System.out.println("rowsCreatedSoFar = " + rowsCreatedSoFar);
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Securitas Daily Report");
         writeRow(sheet, titleRow);

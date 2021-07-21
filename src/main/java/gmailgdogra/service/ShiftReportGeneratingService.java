@@ -14,8 +14,8 @@ import java.time.format.FormatStyle;
 import java.util.Collections;
 import java.util.List;
 
-import static gmailgdogra.AppConstants.DATA_ROW;
-import static gmailgdogra.AppConstants.FIRST_NAME_COL_NO;
+import static gmailgdogra.AppConstants.DATA_ROWS_START;
+import static gmailgdogra.AppConstants.FULL_NAME_COL;
 import static gmailgdogra.AppConstants.HOURS_COMPLETED_COL;
 import static gmailgdogra.AppConstants.LOCATION_COL_NO;
 import static gmailgdogra.AppConstants.TIME_INFO_START_INDEX;
@@ -36,18 +36,16 @@ public class ShiftReportGeneratingService {
 
     private static void insertData(XSSFSheet sheet, List<OutputRow> inSwipesCurrentShift) {
         Collections.sort(inSwipesCurrentShift);
-        sheet.shiftRows(DATA_ROW, sheet.getLastRowNum(), inSwipesCurrentShift.size());
-        int counter = 0;
+        int currentRowNo = DATA_ROWS_START;
         for (OutputRow data : inSwipesCurrentShift) {
-            Row row = sheet.createRow(DATA_ROW + counter);
-            counter++;
-            row.createCell(LOCATION_COL_NO).setCellValue(data.getLocation());
-            row.createCell(FIRST_NAME_COL_NO).setCellValue(data.getFirstName() + " " + data.getLastName());
-            row.createCell(TIME_ON_COL).setCellValue(data.getEventDate().substring(TIME_INFO_START_INDEX));
+            Row row = sheet.getRow(currentRowNo++);
+            row.getCell(LOCATION_COL_NO).setCellValue(data.getLocation());
+            row.getCell(FULL_NAME_COL).setCellValue(data.getFirstName() + " " + data.getLastName());
+            row.getCell(TIME_ON_COL).setCellValue(data.getEventDate().substring(TIME_INFO_START_INDEX));
             String timeOff = "Visitors Reception".equals(data.getLocation()) ? "17:30" : "18:00";
-            row.createCell(TIME_OFF_COL).setCellValue(timeOff);
+            row.getCell(TIME_OFF_COL).setCellValue(timeOff);
             String hoursCompleted = "Visitors Reception".equals(data.getLocation()) ? "10:5" : "12";
-            row.createCell(HOURS_COMPLETED_COL).setCellValue(hoursCompleted);
+            row.getCell(HOURS_COMPLETED_COL).setCellValue(hoursCompleted);
         }
     }
 
