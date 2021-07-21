@@ -16,7 +16,6 @@ import gmailgdogra.service.SwipeProcessorService;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.devtools.restart.Restarter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,13 +55,13 @@ public class AppController {
 
     @GetMapping("/")
     public String uploadPage() {
-        System.out.println("MyController.uploadPage");
+        System.out.println("AppController.uploadPage");
         return "uploadView";
     }
 
     @PostMapping("/")
     public String upload(Model model, @RequestParam("file") MultipartFile file) {
-        System.out.println("Controller.upload");
+        System.out.println("AppController.upload");
         if (readXlsxService.hasExcelFormat(file)) {
             try {
                 allSwipes = readXlsxService.readAllRows(file.getInputStream());
@@ -90,7 +89,7 @@ public class AppController {
 
     @PostMapping("/preview")
     public String preview(@ModelAttribute DtoWrapper dtoWrapper, Model model) {
-        System.out.println("Controller.download");
+        System.out.println("AppController.preview");
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
         swipeProcessorService.prepareData(allSwipes, shifts);
         inOutSwipesPrevTwoShifts = swipeProcessorService.getInOutSwipesPrevTwoShifts();
@@ -102,7 +101,7 @@ public class AppController {
 
     @GetMapping(value = "/download", produces = "application/zip")
     public void download(HttpServletResponse response) throws IOException {
-        System.out.println("MyController.download");
+        System.out.println("AppController.download");
         XSSFWorkbook dailyReport = DailyReportGeneratingService.write(inOutSwipesPrevTwoShifts);
         XSSFWorkbook formattedDailyReport = DailyReportFormattingService.of(dailyReport);
         XSSFWorkbook shiftReport = ShiftReportGeneratingService.write(inSwipesCurrentShift);
@@ -177,10 +176,11 @@ public class AppController {
         }
     }
 
-    @GetMapping("/restart")
-    public String restart() {
-        System.out.println("MyController.restart");
-        Restarter.getInstance().restart();
-        return "uploadView";
+    @GetMapping("/errorInReport")
+    public String error(Model model) {
+        System.out.println("AppController.error");
+        model.addAttribute("msg", "Thanks for reporting.\nIt helps us improve the app.");
+        return "messageView";
     }
 }
+
