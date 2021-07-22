@@ -14,15 +14,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static gmailgdogra.AppConstants.DATA_START_ROW;
+import static gmailgdogra.AppConstants.EXCEL_FILE_TYPE;
+
 @Service
 public class ReadXlsxService {
 
-    private static final int DATA_START_ROW = 7;
     private static final int COL_FIRST_NAME = 0;
     private static final int COL_LAST_NAME = 1;
     private static final int COL_SWIPE_DATE_TIME = 2;
     private static final int COL_DEVICE_NAME = 5;
-    public static String EXCEL_FILE_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     public List<SwipeRecord> readAllRows(InputStream inputStream) throws IOException {
         return collectDataFrom(new XSSFWorkbook(inputStream).getSheetAt(0));
