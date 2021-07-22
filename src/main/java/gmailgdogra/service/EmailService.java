@@ -18,7 +18,7 @@ import java.util.Properties;
 
 import static gmailgdogra.AppConstants.EXCEL_FILE_TYPE;
 
-public class EmailServiceImpl {
+public class EmailService {
 
     private final String user = "gaurav.dogra.fullstack@gmail.com";
     private final String password = "8F6nrKV66H8Vn";
