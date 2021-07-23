@@ -14,7 +14,6 @@ import gmailgdogra.service.ExtractOfficersService;
 import gmailgdogra.service.ReadXlsxService;
 import gmailgdogra.service.ShiftReportGeneratingService;
 import gmailgdogra.service.SwipeProcessorService;
-import gmailgdogra.utilities.MultipartToFile;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +31,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -214,6 +210,11 @@ public class AppController {
         emailService.sendmail(Arrays.asList(dailyReportFile, shiftReportFile));
         model.addAttribute("msg", "Thanks for reporting.\nIt helps us improve the app.");
         return "messageView";
+    }
+
+    @GetMapping("/about")
+    public String about() {
+        return "aboutView";
     }
 }
 
