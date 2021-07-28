@@ -164,7 +164,7 @@ public class AppController {
 
     private String createDailyReportFileName() {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return String.format("Securitas Daily Report %s.xlsx", date);
+        return String.format("Daily Report %s.xlsx", date);
     }
 
     private List<Shift> getShiftsListFromWrapper(DtoWrapper dtoWrapper) {

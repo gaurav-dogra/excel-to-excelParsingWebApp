@@ -19,7 +19,7 @@ public class DailyReportGeneratingService {
     public static XSSFWorkbook write(List<OutputRow> outputData) {
         rowsCreatedSoFar = 0;
         XSSFWorkbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Securitas Daily Report");
+        Sheet sheet = workbook.createSheet("Daily Report");
         writeRow(sheet, titleRow);
         writeDataRows(sheet, outputData);
         autoSizeColumns(sheet);
