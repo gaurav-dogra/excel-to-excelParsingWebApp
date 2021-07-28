@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static gmailgdogra.AppConstants.DATA_START_ROW;
-import static gmailgdogra.AppConstants.EXCEL_FILE_TYPE;
 
 @Service
 public class ReadXlsxService {
@@ -48,9 +46,5 @@ public class ReadXlsxService {
             throw new IOException();
         }
         return data;
-    }
-
-    public boolean hasExcelFormat(MultipartFile file) {
-        return EXCEL_FILE_TYPE.equals(file.getContentType());
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,21 +51,14 @@ class ExtractOfficersServiceTest {
     @Test
     void from() {
         Path path = Paths.get("src/main/resources/test file 1.xlsx");
-        String name = "test file 1.xlsx";
-        String originalFileName = "test file 1.xlsx";
-        String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        List<SwipeRecord> swipeRecords = null;
-        try {
-            byte[] content = Files.readAllBytes(path);
-            MultipartFile result = new MockMultipartFile(name,
-                    originalFileName, contentType, content);
-            swipeRecords = readXlsxService.readAllRows(result.getInputStream());
+        Set<Officer> officers = null;
 
+        try {
+            List<SwipeRecord> swipeRecords = readXlsxService.readAllRows(new FileInputStream(path.toFile()));
+            officers = ExtractOfficersService.from(swipeRecords);
         } catch (Exception e) {
             Assertions.fail("Unable to read file at " + path);
         }
-
-        Set<Officer> officers = ExtractOfficersService.from(swipeRecords);
 
         assertTrue(officers.containsAll(expectedOfficers));
     }

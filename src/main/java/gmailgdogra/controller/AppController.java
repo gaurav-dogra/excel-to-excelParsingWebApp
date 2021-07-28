@@ -14,7 +14,6 @@ import gmailgdogra.service.ExtractOfficersService;
 import gmailgdogra.service.ReadXlsxService;
 import gmailgdogra.service.ShiftReportGeneratingService;
 import gmailgdogra.service.SwipeProcessorService;
-import gmailgdogra.utilities.MultipartToFile;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +31,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -50,7 +46,7 @@ public class AppController {
 
     private List<SwipeRecord> allSwipes;
 
-    private MultipartFile multipartFile;
+    private File convertedFile;
     private File dailyReportFile;
     private File shiftReportFile;
 
@@ -70,22 +66,26 @@ public class AppController {
     }
 
     @PostMapping("/")
-    public String upload(Model model, @RequestParam("file") MultipartFile file) {
+    public String upload(Model model, @RequestParam("file") MultipartFile file) throws IOException {
         System.out.println("AppController.upload");
 
-        this.multipartFile = file;
-        if (readXlsxService.hasExcelFormat(file)) {
-            try {
-                allSwipes = readXlsxService.readAllRows(file.getInputStream());
-                DtoWrapper dtoWrapper = createUserInputDtoWrapper(allSwipes);
-                model.addAttribute("dtoWrapper", dtoWrapper);
-                return "shift-infoFormView";
-            } catch (Exception e) {
-                model.addAttribute("msg", "Uploaded file is not in expected format");
-            }
-        } else {
-            model.addAttribute("msg", "The uploaded file is not an xlsx");
+        try {
+
+            convertedFile = new File(System.getProperty("java.io.tmpdir") + "/" +
+                    file.getOriginalFilename());
+            file.transferTo(convertedFile);
+
+            allSwipes = readXlsxService.readAllRows(new FileInputStream(convertedFile));
+            DtoWrapper dtoWrapper = createUserInputDtoWrapper(allSwipes);
+            model.addAttribute("dtoWrapper", dtoWrapper);
+
+            return "shift-infoFormView";
+
+        } catch (Exception e) {
+            model.addAttribute("msg", "The uploaded file is not an xlsx OR " +
+                    "not in required format");
         }
+
         return "messageView";
     }
 
@@ -197,22 +197,13 @@ public class AppController {
     }
 
     @GetMapping("/reportError")
-    public String error(Model model) throws MessagingException, IOException {
+    public String error(Model model) throws MessagingException {
         System.out.println("AppController.error");
 
-//        InputStream initialStream = multipartFile.getInputStream();
-//        byte[] buffer = new byte[initialStream.available()];
-//        initialStream.read(buffer);
-
-//        File targetFile = new File("src/main/resources/targetFile.tmp");
-
-//        try (OutputStream outStream = new FileOutputStream(targetFile)) {
-//            outStream.write(buffer);
-//        }
-
         EmailService emailService = new EmailService();
-        emailService.sendmail(Arrays.asList(dailyReportFile, shiftReportFile));
+        emailService.sendmail(Arrays.asList(convertedFile, dailyReportFile, shiftReportFile));
         model.addAttribute("msg", "Thanks for reporting.\nIt helps us improve the app.");
+
         return "messageView";
     }
 }
