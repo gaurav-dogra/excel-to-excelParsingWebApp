@@ -8,12 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -34,22 +30,22 @@ class ExtractOfficersServiceTest {
     }
 
     private final Set<Officer> expectedOfficers = new HashSet<>(Arrays.asList(
-            new Officer("Officer 1", "Officer 1"),
-            new Officer("Officer 2", "Officer 2"),
-            new Officer("Officer 3", "Officer 3"),
-            new Officer("Officer 4", "Officer 4"),
-            new Officer("Officer 5", "Officer 5"),
-            new Officer("Officer 6", "Officer 6"),
-            new Officer("Officer 7", "Officer 7"),
-            new Officer("Officer 8", "Officer 8"),
-            new Officer("Officer 9", "Officer 9"),
-            new Officer("Officer 10", "Officer 10"),
-            new Officer("Officer 11", "Officer 11"),
-            new Officer("Officer 12", "Officer 12")
+            new Officer("Officer", "One"),
+            new Officer("Officer", "Two"),
+            new Officer("Officer", "Three"),
+            new Officer("Officer", "Four"),
+            new Officer("Officer", "Five"),
+            new Officer("Officer", "Six"),
+            new Officer("Officer", "Seven"),
+            new Officer("Officer", "Eight"),
+            new Officer("Officer", "Nine"),
+            new Officer("Officer", "Ten"),
+            new Officer("Officer", "Eleven"),
+            new Officer("Officer", "Twelve")
     ));
 
     @Test
-    void from() {
+    void test_from() {
         Path path = Paths.get("src/main/resources/test file 1.xlsx");
         Set<Officer> officers = null;
 
@@ -57,6 +53,7 @@ class ExtractOfficersServiceTest {
             List<SwipeRecord> swipeRecords = readXlsxService.readAllRows(new FileInputStream(path.toFile()));
             officers = ExtractOfficersService.from(swipeRecords);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             Assertions.fail("Unable to read file at " + path);
         }
 

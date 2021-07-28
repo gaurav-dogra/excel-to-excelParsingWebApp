@@ -1,18 +1,21 @@
 package gmailgdogra;
 
+import gmailgdogra.pojo.SwipeRecord;
 import gmailgdogra.service.ReadXlsxService;
-import org.apache.commons.compress.utils.IOUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static gmailgdogra.AppConstants.ROW_COUNT_TEST_FILE_1;
 
 @SpringBootTest
 class ReadXlsxServiceTest {
@@ -24,4 +27,18 @@ class ReadXlsxServiceTest {
         this.readXlsxService = readXlsxService;
     }
 
+    @Test
+    public void test_readAllRows() {
+        List<SwipeRecord> rows = new ArrayList<>();
+        Path path = Paths.get("src/main/resources/test file 1.xlsx");
+
+        try {
+            InputStream stream = new FileInputStream(path.toFile());
+            rows = readXlsxService.readAllRows(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Assertions.assertEquals(rows.size(), ROW_COUNT_TEST_FILE_1, "Rows count does not match");
+    }
 }

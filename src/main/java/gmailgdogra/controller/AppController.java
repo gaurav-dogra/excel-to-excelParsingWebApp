@@ -66,7 +66,7 @@ public class AppController {
     }
 
     @PostMapping("/")
-    public String upload(Model model, @RequestParam("file") MultipartFile file) throws IOException {
+    public String upload(Model model, @RequestParam("file") MultipartFile file) {
         System.out.println("AppController.upload");
 
         try {

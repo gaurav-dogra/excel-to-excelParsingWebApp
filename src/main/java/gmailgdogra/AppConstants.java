@@ -18,6 +18,8 @@ public class AppConstants {
     public static final int TIME_OFF_COL = 3;
     public static final int HOURS_COMPLETED_COL = 4;
 
+    public static final int ROW_COUNT_TEST_FILE_1 = 170;
+
     public static String EXCEL_FILE_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     private AppConstants() {}
