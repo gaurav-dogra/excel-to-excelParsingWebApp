@@ -14,7 +14,7 @@ import java.time.format.FormatStyle;
 import java.util.Collections;
 import java.util.List;
 
-import static gmailgdogra.AppConstants.DATA_ROWS_START;
+import static gmailgdogra.AppConstants.DATA_START_ROW;
 import static gmailgdogra.AppConstants.FULL_NAME_COL;
 import static gmailgdogra.AppConstants.HOURS_COMPLETED_COL;
 import static gmailgdogra.AppConstants.LOCATION_COL_NO;
@@ -36,7 +36,7 @@ public class ShiftReportGeneratingService {
 
     private static void insertData(XSSFSheet sheet, List<OutputRow> inSwipesCurrentShift) {
         Collections.sort(inSwipesCurrentShift);
-        int currentRowNo = DATA_ROWS_START;
+        int currentRowNo = DATA_START_ROW;
         for (OutputRow data : inSwipesCurrentShift) {
             Row row = sheet.getRow(currentRowNo++);
             row.getCell(LOCATION_COL_NO).setCellValue(data.getLocation());
