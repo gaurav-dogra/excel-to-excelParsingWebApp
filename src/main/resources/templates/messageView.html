@@ -9,8 +9,9 @@
 <body>
 
 <!--Nav bar-->
-<div th:insert="nav :: nav-bar"></div>
-<div th:insert="nav :: colorbar"></div>
+<header class="site-header sticky-top">
+    <div th:insert="nav :: nav-bar"></div>
+</header>
 
 <div class="container mt-3">
     <h3><span th:text="${msg}"></span></h3>
