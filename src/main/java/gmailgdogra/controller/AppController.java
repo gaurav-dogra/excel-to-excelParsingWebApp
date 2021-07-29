@@ -206,5 +206,10 @@ public class AppController {
 
         return "messageView";
     }
+
+    @GetMapping("/about")
+    public String about() {
+        return "aboutView";
+    }
 }
 
