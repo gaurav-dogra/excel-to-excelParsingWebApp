@@ -2,10 +2,6 @@ input[type='radio'] {
     transform: scale(1.25);
 }
 
-table {
-    caption-side: top;
-}
-
 footer {
     height: 100px;
 }
