@@ -17,8 +17,9 @@
 
 <!-- form -->
 <section>
-    <div class="container">
-        <h3>Below names come from the uploaded file. Please select one shift for each and press Generate Report button.</h3>
+    <div class="container py-3">
+        <h3>Please provide below information.</h3>
+        <hr>
         <form action="#" th:action="@{/preview}" th:object="${dtoWrapper}" method="post">
 
             <fieldset th:each="dto, iterStat : *{userInputDtoList}">
