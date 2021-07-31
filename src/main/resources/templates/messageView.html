@@ -14,13 +14,9 @@
     <div th:insert="nav :: nav-bar"></div>
 </header>
 
-<div class="container mt-3">
+<div class="container mt-3 text-center">
     <h3><span th:text="${msg}"></span></h3>
-
-    <form action="#" th:action="@{/}" method="get">
-        <input type="submit" class="btn btn-primary d-grid gap-2 col-6" value="Home"/>
-    </form>
-
+    <h4>Select home from nav menu to start again</h4>
 </div>
 
 <footer class="mt-auto">

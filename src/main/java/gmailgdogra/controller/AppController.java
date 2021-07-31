@@ -82,8 +82,7 @@ public class AppController {
             return "shift-infoFormView";
 
         } catch (Exception e) {
-            model.addAttribute("msg", "The uploaded file is not an xlsx OR " +
-                    "not in required format");
+            model.addAttribute("msg", "Please upload an xlsx in mandatory format only");
         }
 
         return "messageView";
@@ -212,4 +211,3 @@ public class AppController {
         return "aboutView";
     }
 }
-
