@@ -5,3 +5,7 @@ input[type='radio'] {
 table {
     caption-side: top;
 }
+
+footer {
+    height: 100px;
+}
