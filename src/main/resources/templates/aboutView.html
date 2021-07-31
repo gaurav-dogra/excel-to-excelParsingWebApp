@@ -8,21 +8,6 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/product/">
     <link rel="stylesheet" href="/static/css/main.css">
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -33,25 +18,56 @@
 </header>
 
 <main>
-    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 bg-light">
+    <div class="position-relative overflow-hidden p-md-5 m-md-3 bg-light">
         <div class="col-md-8 p-lg-5 mx-auto my-5 py-5">
-            <h1 class="display-8 fw-normal">App Flow</h1>
-            <ul class="list-group list-group-flush">
-                <li>Upload a file -> Provide information asked -> Preview both Reports -> Download</li>
-                <li>Daily Report is ready to be emailed to the client after the download.</li>
-                <li>Shift Report requires further inputs from the user before it can be emailed to the client</li>
-            </ul>
+            <h3 class="display-8 fw-normal">App Flow</h3>
+            <h4><a href="#uploadFile">Upload file</a> ->
+                <a href="#provideInformation">Provide information</a> ->
+                <a href="#previewReports">Preview Reports</a> ->
+                <a href="#reports">Download</a></h4>
+            <hr>
         </div>
         <div class="product-device shadow-sm d-none d-md-block"></div>
         <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
     </div>
 
-    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+    <div id="uploadFile" class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
         <div class="bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
             <div class="my-3 py-3">
-                <h2 class="display-5">Home Page</h2>
-                <p class="lead">Requesting user to upload an xlsx file</p>
-                <img class="img-fluid" src="/images/Upload page.png" alt="home page pic">
+                <h4 class="display-5">Upload File</h4>
+                <img class="img-fluid" src="/images/upload view.png" alt="home page pic">
+            </div>
+        </div>
+    </div>
+
+    <div id="provideInformation" class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+        <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+            <div class="my-3 p-3">
+                <h4 class="display-5">Provide information</h4>
+                <img class="img-fluid" src="/images/form view.png" alt="requesting user input pic">
+            </div>
+        </div>
+    </div>
+
+    <div id="previewReports" class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+        <div class="bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+            <div class="my-3 py-3">
+                <h4 class="display-5">Preview Reports</h4>
+                <p>Clicking 'Report incorrect results' emails reports
+                    and uploaded file to gaurav.dogra.fullstack@gmail.com</p>
+                <img class="img-fluid" src="/images/preview view.png" alt="report preview pic">
+            </div>
+        </div>
+    </div>
+
+    <div id="reports" class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+        <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+            <div class="my-3 p-3">
+                <h4 class="display-5">Downloaded Reports</h4>
+                <p>Daily report is ready to be emailed to client. Shift report requires more input
+                before it can be emailed</p>
+                <img class="img-fluid" src="/images/daily report.png" alt="daily report pic">
+                <img class="img-fluid" src="/images/shift report.png" alt="shift report pic">
             </div>
         </div>
     </div>
@@ -59,29 +75,8 @@
     <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 p-3">
-                <h2 class="display-5">Requesting User Input</h2>
-                <p class="lead">Choose one option for each officer</p>
-                <img class="img-fluid" src="/images/Receive input from User.png" alt="requesting user input pic">
-            </div>
-        </div>
-    </div>
-
-<div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
-        <div class="bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
-            <div class="my-3 py-3">
-                <h2 class="display-5">Report Preview</h2>
-                <p class="lead">Download the reports or report an error</p>
-                <img class="img-fluid" src="/images/report preview.png" alt="report preview pic">
-            </div>
-        </div>
-    </div>
-
-    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
-        <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-            <div class="my-3 p-3">
-                <h2 class="display-5">Wrong file uploaded</h2>
-                <p class="lead">Error message if file is not in correct format</p>
-                <img class="img-fluid" src="/images/incorrect file upload.png" alt="error message pic">
+                <h4 class="display-5">Wrong file uploaded</h4>
+                <img class="img-fluid" src="/images/error view.png" alt="error message pic">
             </div>
         </div>
     </div>
@@ -91,11 +86,6 @@
 <footer class="mt-auto">
     <div th:insert="nav :: footer"></div>
 </footer>
-
-<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-
 
 </body>
 </html>
