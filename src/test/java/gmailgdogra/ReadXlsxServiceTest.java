@@ -30,7 +30,7 @@ class ReadXlsxServiceTest {
     @Test
     public void test_readAllRows() {
         List<SwipeRecord> rows = new ArrayList<>();
-        Path path = Paths.get("src/main/resources/test file 1.xlsx");
+        Path path = Paths.get("src/test/resources/test file 1.xlsx");
 
         try {
             InputStream stream = new FileInputStream(path.toFile());

@@ -187,7 +187,7 @@ class SwipeProcessorServiceTest {
 
     @Test
     void testInOutSwipesPrevTwoShiftsForFile1() throws IOException {
-        Path path = Paths.get("src/main/resources/test file 1.xlsx");
+        Path path = Paths.get("src/test/resources/test file 1.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);
@@ -200,7 +200,7 @@ class SwipeProcessorServiceTest {
 
     @Test
     void testInOutSwipesPrevTwoShiftsForFile2() throws IOException {
-        Path path = Paths.get("src/main/resources/test file 2.xlsx");
+        Path path = Paths.get("src/test/resources/test file 2.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);
@@ -213,7 +213,7 @@ class SwipeProcessorServiceTest {
 
     @Test
     void testCurrentShiftSwipeInsForFile1() throws IOException {
-        Path path = Paths.get("src/main/resources/test file 1.xlsx");
+        Path path = Paths.get("src/test/resources/test file 1.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);
@@ -226,7 +226,7 @@ class SwipeProcessorServiceTest {
 
     @Test
     void testCurrentShiftSwipeInsForFile2() throws IOException {
-        Path path = Paths.get("src/main/resources/test file 2.xlsx");
+        Path path = Paths.get("src/test/resources/test file 2.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
         List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);

@@ -18,9 +18,9 @@ class ExtractOfficersServiceTest {
     private final Officer officerTwo = new Officer("Officer", "Two");
 
     private final Set<Officer> expected = new HashSet<>(Arrays.asList(
-            officerOne,
-            officerTwo
-    ));
+            officerTwo,
+            officerOne
+            ));
 
     private final List<SwipeRecord> inputList = Arrays.asList(
             new SwipeRecord(officerOne, null, null),
