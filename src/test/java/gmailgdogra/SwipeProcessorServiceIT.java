@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-class SwipeProcessorServiceTest {
+class SwipeProcessorServiceIT {
 
     private static final List<OutputRow> inOutSwipesPrevTwoShiftsFromFile1 = getInOutSwipesPrevTwoShiftsFromFile1();
     private static final List<OutputRow> inOutSwipesPrevTwoShiftsFromFile2 = getInOutSwipesPrevTwoShiftsFromFile2();
@@ -42,7 +42,7 @@ class SwipeProcessorServiceTest {
     private final SwipeProcessorService swipeProcessorService;
 
     @Autowired
-    public SwipeProcessorServiceTest(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
+    public SwipeProcessorServiceIT(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
         this.readXlsxService = readXlsxService;
         this.swipeProcessorService = swipeProcessorService;
     }

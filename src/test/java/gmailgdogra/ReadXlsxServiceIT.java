@@ -18,12 +18,12 @@ import java.util.List;
 import static gmailgdogra.AppConstants.ROW_COUNT_TEST_FILE_1;
 
 @SpringBootTest
-class ReadXlsxServiceTest {
+class ReadXlsxServiceIT {
 
     private final ReadXlsxService readXlsxService;
 
     @Autowired
-    public ReadXlsxServiceTest(ReadXlsxService readXlsxService) {
+    public ReadXlsxServiceIT(ReadXlsxService readXlsxService) {
         this.readXlsxService = readXlsxService;
     }
 
