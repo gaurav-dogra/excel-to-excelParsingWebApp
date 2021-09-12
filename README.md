@@ -23,7 +23,7 @@ I created this app to help in report generation at my current job.
 #### Home page/Upload file
 
 
-![Home page view](https://github.com/gaurav-dogra/excel-to-excelParsingWebApp/blob/85a08941e57b4a29c0ed0767d2d11c987bc6d4b3/src/main/resources/static/images/upload%20view.png)
+![Home page view](https://github.com/gaurav-dogra/excel-to-excelParsingWebApp/blob/main/src/main/resources/static/images/upload%20view.png)
 
 
 #### Provide information
