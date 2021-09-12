@@ -1,5 +1,5 @@
 # excel-to-excelParsingWebApp
-This app is currently live [here](http://maingate.herokuapp.com/about)
+This app is currently live [here](https://maingate.herokuapp.com/about)
 
 I created this app to help in report generation at my current job.
 
