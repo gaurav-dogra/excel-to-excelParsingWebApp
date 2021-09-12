@@ -19,10 +19,10 @@
     <!--input section -->
     <section class="text-dark p-5 text-center">
         <div class="container">
-                <form th:action="@{/}" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" class="btn btn-secondary">
-                    <button type="submit" class="btn btn-primary m-3">Upload File</button>
-                </form>
+            <div>
+                <input class="form-control form-control-lg" id="formFileLg" type="file">
+                <button type="submit" class="btn btn-light m-3">Upload</button>
+            </div>
         </div>
     </section>
 
