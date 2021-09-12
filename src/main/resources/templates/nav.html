@@ -9,27 +9,21 @@
 
 <div th:fragment="nav-bar">
 
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-        <div class="container">
-            <a href="/" class="navbar-brand">Excel Parsing Web App</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="nav-menu">
-                <ul class="navbar-nav ms-auto">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Excel Parsing Web App</a>
+            <div id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a href="/" class="nav-link">Home</a>
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
                     </li>
-
                     <li class="nav-item">
-                        <a href="/about" class="nav-link">About</a>
+                        <a class="nav-link" href="/about">About</a>
                     </li>
-
                 </ul>
             </div>
         </div>
     </nav>
-
     <section class="bg-success"><br></section>
 </div>
 
