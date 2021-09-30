@@ -1,9 +1,9 @@
-package gmailgdogra;
+package net.gdogra;
 
-import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.Swipe;
-import gmailgdogra.service.ExtractOfficersService;
-import gmailgdogra.service.ReadXlsxService;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.Swipe;
+import net.gdogra.service.ExtractOfficersService;
+import net.gdogra.service.ReadXlsxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

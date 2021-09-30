@@ -1,13 +1,12 @@
-package gmailgdogra.service;
+package net.gdogra.service;
 
-import gmailgdogra.pojo.OutputRow;
+import net.gdogra.pojo.OutputRow;
+import net.gdogra.AppConstants;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.List;
-
-import static gmailgdogra.AppConstants.*;
 
 public class DailyReportGeneratingService {
 
@@ -43,12 +42,12 @@ public class DailyReportGeneratingService {
             row.createCell(col);
         }
 
-        row.getCell(LOCATION_COL_NO).setCellValue(rowData.getLocation());
-        row.getCell(FIRST_NAME_COL_NO).setCellValue(rowData.getFirstName());
-        row.getCell(LAST_NAME_COL_NO).setCellValue(rowData.getLastName());
+        row.getCell(AppConstants.LOCATION_COL_NO).setCellValue(rowData.getLocation());
+        row.getCell(AppConstants.FIRST_NAME_COL_NO).setCellValue(rowData.getFirstName());
+        row.getCell(AppConstants.LAST_NAME_COL_NO).setCellValue(rowData.getLastName());
         String swipeEvent = rowData.getEventDate() == null ? "No Swipe Found" : rowData.getEventDate();
-        row.getCell(EVENT_DATE_COL_NO).setCellValue(swipeEvent);
-        row.getCell(LOGICAL_DEVICE_COL_NO).setCellValue(rowData.getLogicalDevice());
+        row.getCell(AppConstants.EVENT_DATE_COL_NO).setCellValue(swipeEvent);
+        row.getCell(AppConstants.LOGICAL_DEVICE_COL_NO).setCellValue(rowData.getLogicalDevice());
     }
 
     private static void autoSizeColumns(Sheet sheet) {

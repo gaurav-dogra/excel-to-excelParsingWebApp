@@ -1,12 +1,12 @@
-package gmailgdogra;
+package net.gdogra;
 
-import gmailgdogra.pojo.Location;
-import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.OutputRow;
-import gmailgdogra.pojo.Shift;
-import gmailgdogra.pojo.Swipe;
-import gmailgdogra.service.ReadXlsxService;
-import gmailgdogra.service.SwipeProcessorService;
+import net.gdogra.pojo.Location;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.OutputRow;
+import net.gdogra.pojo.Shift;
+import net.gdogra.pojo.Swipe;
+import net.gdogra.service.ReadXlsxService;
+import net.gdogra.service.SwipeProcessorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

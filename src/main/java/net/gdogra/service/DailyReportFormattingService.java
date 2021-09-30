@@ -1,4 +1,4 @@
-package gmailgdogra.service;
+package net.gdogra.service;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -7,12 +7,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.time.LocalTime;
 
-import static gmailgdogra.AppConstants.EVENT_DATE_COL_NO;
-import static gmailgdogra.AppConstants.FIRST_NAME_COL_NO;
-import static gmailgdogra.AppConstants.LOCATION_COL_NO;
-import static gmailgdogra.AppConstants.LOGICAL_DEVICE_COL_NO;
-import static gmailgdogra.AppConstants.TIME_INFO_START_INDEX;
-import static gmailgdogra.AppConstants.TITLE_ROW_NO;
+import static net.gdogra.AppConstants.EVENT_DATE_COL_NO;
+import static net.gdogra.AppConstants.FIRST_NAME_COL_NO;
+import static net.gdogra.AppConstants.LOCATION_COL_NO;
+import static net.gdogra.AppConstants.LOGICAL_DEVICE_COL_NO;
+import static net.gdogra.AppConstants.TIME_INFO_START_INDEX;
+import static net.gdogra.AppConstants.TITLE_ROW_NO;
 
 
 public class DailyReportFormattingService {

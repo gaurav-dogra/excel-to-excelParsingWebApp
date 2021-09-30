@@ -1,6 +1,7 @@
-package gmailgdogra.service;
+package net.gdogra.service;
 
 import lombok.RequiredArgsConstructor;
+import net.gdogra.AppConstants;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -8,8 +9,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-
-import static gmailgdogra.AppConstants.EMAIL_ADD;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +21,8 @@ public class EmailSenderService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper =
                 new MimeMessageHelper(mimeMessage, true);
-        mimeMessageHelper.setFrom(EMAIL_ADD);
-        mimeMessageHelper.setTo(EMAIL_ADD);
+        mimeMessageHelper.setFrom(AppConstants.EMAIL_ADD);
+        mimeMessageHelper.setTo(AppConstants.EMAIL_ADD);
         mimeMessageHelper.setText("Error reported by the user of Spring parsing app. ");
         mimeMessageHelper.setSubject("Error! Spring Parsing app");
         for (File file : files) {

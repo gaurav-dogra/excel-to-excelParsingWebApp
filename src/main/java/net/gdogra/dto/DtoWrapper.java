@@ -1,4 +1,4 @@
-package gmailgdogra.dto;
+package net.gdogra.dto;
 
 import lombok.Getter;
 import lombok.Setter;

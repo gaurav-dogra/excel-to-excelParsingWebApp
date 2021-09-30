@@ -1,7 +1,8 @@
-package gmailgdogra.service;
+package net.gdogra.service;
 
-import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.Swipe;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.Swipe;
+import net.gdogra.AppConstants;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -12,8 +13,6 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static gmailgdogra.AppConstants.DATA_START_ROW;
 
 @Service
 public class ReadXlsxService {
@@ -29,7 +28,7 @@ public class ReadXlsxService {
 
     private List<Swipe> collectDataFrom(Sheet sheet) throws IOException {
         List<Swipe> data = new ArrayList<>();
-        for (int rowIndex = DATA_START_ROW; rowIndex <= sheet.getPhysicalNumberOfRows(); rowIndex++) {
+        for (int rowIndex = AppConstants.DATA_START_ROW; rowIndex <= sheet.getPhysicalNumberOfRows(); rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
                 String firstName = row.getCell(COL_FIRST_NAME).getStringCellValue();

@@ -1,6 +1,11 @@
-package gmailgdogra.service;
+package net.gdogra.service;
 
 import gmailgdogra.pojo.*;
+import net.gdogra.pojo.Location;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.OutputRow;
+import net.gdogra.pojo.Shift;
+import net.gdogra.pojo.Swipe;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

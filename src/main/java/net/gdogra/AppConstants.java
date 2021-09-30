@@ -1,4 +1,4 @@
-package gmailgdogra;
+package net.gdogra;
 
 public class AppConstants {
 
