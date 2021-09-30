@@ -1,43 +1,18 @@
 package gmailgdogra.pojo;
 
-import gmailgdogra.pojo.Location;
-import gmailgdogra.pojo.Officer;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
+@EqualsAndHashCode
 public class Shift {
     private final Officer officer;
     private Location location;
     private boolean isDayShift;
-
-    public Shift(Officer officer) {
-        this.officer = officer;
-    }
-
-    public Shift(@NotNull Officer officer, Location location, boolean isDayShift) {
-        this.officer = officer;
-        this.location = location;
-        this.isDayShift = isDayShift;
-    }
-
-    public Officer getOfficer() {
-        return officer;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public boolean isDayShift() {
-        return isDayShift;
-    }
-
-    @Override
-    public String toString() {
-        return "Shift{" +
-                "officer=" + officer +
-                ", location=" + location +
-                ", isDayShift=" + isDayShift +
-                '}';
-    }
 }

@@ -1,12 +1,12 @@
 package gmailgdogra.controller;
 
-import gmailgdogra.pojo.DtoWrapper;
+import gmailgdogra.dto.DtoWrapper;
 import gmailgdogra.pojo.Location;
 import gmailgdogra.pojo.Officer;
 import gmailgdogra.pojo.OutputRow;
 import gmailgdogra.pojo.Shift;
-import gmailgdogra.pojo.SwipeRecord;
-import gmailgdogra.pojo.UserInputDto;
+import gmailgdogra.pojo.Swipe;
+import gmailgdogra.dto.UserInputDto;
 import gmailgdogra.service.DailyReportFormattingService;
 import gmailgdogra.service.DailyReportGeneratingService;
 import gmailgdogra.service.EmailService;
@@ -14,10 +14,10 @@ import gmailgdogra.service.ExtractOfficersService;
 import gmailgdogra.service.ReadXlsxService;
 import gmailgdogra.service.ShiftReportGeneratingService;
 import gmailgdogra.service.SwipeProcessorService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,9 +44,10 @@ import java.util.zip.ZipOutputStream;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class AppController {
 
-    private List<SwipeRecord> allSwipes;
+    private List<Swipe> allSwipes;
 
     private File convertedFile;
     private File dailyReportFile;
@@ -54,12 +55,6 @@ public class AppController {
 
     private final ReadXlsxService readXlsxService;
     private final SwipeProcessorService swipeProcessorService;
-
-    @Autowired
-    public AppController(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
-        this.readXlsxService = readXlsxService;
-        this.swipeProcessorService = swipeProcessorService;
-    }
 
     @GetMapping("/")
     public String uploadPage() {
@@ -90,7 +85,7 @@ public class AppController {
         return "messageView";
     }
 
-    private DtoWrapper createUserInputDtoWrapper(List<SwipeRecord> allSwipes) {
+    private DtoWrapper createUserInputDtoWrapper(List<Swipe> allSwipes) {
 
         Set<Officer> officers = ExtractOfficersService.from(allSwipes);
         DtoWrapper dtoWrapper = new DtoWrapper();
@@ -177,24 +172,40 @@ public class AppController {
 
     private Shift convertDtoToShift(UserInputDto dtoObj) {
         Officer officer = new Officer(dtoObj.getFirstName(), dtoObj.getLastName());
+        Shift shift = new Shift(officer);
+
         switch (dtoObj.getShiftCode()) {
             case 1:
-                return new Shift(officer, Location.MAIN_GATE, true);
+                shift.setLocation(Location.MAIN_GATE);
+                shift.setDayShift(true);
+                break;
             case 2:
-                return new Shift(officer, Location.MAIN_GATE, false);
+                shift.setLocation(Location.MAIN_GATE);
+                shift.setDayShift(false);
+                break;
             case 3:
-                return new Shift(officer, Location.EP_WEIGHBRIDGE, true);
+                shift.setLocation(Location.EP_WEIGHBRIDGE);
+                shift.setDayShift(true);
+                break;
             case 4:
-                return new Shift(officer, Location.EP_WEIGHBRIDGE, false);
+                shift.setLocation(Location.EP_WEIGHBRIDGE);
+                shift.setDayShift(false);
+                break;
             case 5:
-                return new Shift(officer, Location.VISITORS_RECEPTION, true);
+                shift.setLocation(Location.VISITORS_RECEPTION);
+                shift.setDayShift(true);
+                break;
             case 6:
-                return new Shift(officer, Location.TL_PLAISTOW, true);
+                shift.setLocation(Location.TL_PLAISTOW);
+                shift.setDayShift(true);
+                break;
             case 7:
-                return new Shift(officer, Location.TL_PLAISTOW, false);
             default:
-                throw new RuntimeException("Unable to understand user Input: " + dtoObj);
+                shift.setLocation(Location.TL_PLAISTOW);
+                shift.setDayShift(false);
+                break;
         }
+        return shift;
     }
 
     @GetMapping("/reportError")

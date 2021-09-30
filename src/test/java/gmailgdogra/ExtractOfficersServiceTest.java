@@ -1,7 +1,7 @@
 package gmailgdogra;
 
 import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.SwipeRecord;
+import gmailgdogra.pojo.Swipe;
 import gmailgdogra.service.ExtractOfficersService;
 import gmailgdogra.service.ReadXlsxService;
 import org.junit.jupiter.api.Assertions;
@@ -50,8 +50,8 @@ class ExtractOfficersServiceTest {
         Set<Officer> officers = null;
 
         try {
-            List<SwipeRecord> swipeRecords = readXlsxService.readAllRows(new FileInputStream(path.toFile()));
-            officers = ExtractOfficersService.from(swipeRecords);
+            List<Swipe> swipes = readXlsxService.readAllRows(new FileInputStream(path.toFile()));
+            officers = ExtractOfficersService.from(swipes);
         } catch (Exception e) {
             Assertions.fail("Unable to read file at " + path);
         }

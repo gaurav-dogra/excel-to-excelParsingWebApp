@@ -1,6 +1,6 @@
 package gmailgdogra;
 
-import gmailgdogra.pojo.SwipeRecord;
+import gmailgdogra.pojo.Swipe;
 import gmailgdogra.service.ReadXlsxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class ReadXlsxServiceTest {
 
     @Test
     public void test_readAllRows() {
-        List<SwipeRecord> rows = new ArrayList<>();
+        List<Swipe> rows = new ArrayList<>();
         Path path = Paths.get("src/main/resources/test file 1.xlsx");
 
         try {
