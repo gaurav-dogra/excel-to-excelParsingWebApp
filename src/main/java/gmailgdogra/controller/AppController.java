@@ -14,6 +14,7 @@ import gmailgdogra.service.ExtractOfficersService;
 import gmailgdogra.service.ReadXlsxService;
 import gmailgdogra.service.ShiftReportGeneratingService;
 import gmailgdogra.service.SwipeProcessorService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Controller
+@Slf4j
 public class AppController {
 
     private List<SwipeRecord> allSwipes;
@@ -61,13 +63,13 @@ public class AppController {
 
     @GetMapping("/")
     public String uploadPage() {
-        System.out.println("AppController.uploadPage");
+        log.error("AppController.uploadPage");
         return "uploadView";
     }
 
     @PostMapping("/")
     public String upload(Model model, @RequestParam("file") MultipartFile file) {
-        System.out.println("AppController.upload");
+        log.error("AppController.upload");
 
         try {
 
@@ -103,7 +105,7 @@ public class AppController {
 
     @PostMapping("/preview")
     public String preview(@ModelAttribute DtoWrapper dtoWrapper, Model model) throws IOException {
-        System.out.println("AppController.preview");
+        log.error("AppController.preview");
 
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
 
@@ -125,7 +127,7 @@ public class AppController {
 
     @GetMapping(value = "/download", produces = "application/zip")
     public void download(HttpServletResponse response) throws IOException {
-        System.out.println("AppController.download");
+        log.error("AppController.download");
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/force-download");
@@ -197,7 +199,7 @@ public class AppController {
 
     @GetMapping("/reportError")
     public String error(Model model) throws MessagingException {
-        System.out.println("AppController.error");
+        log.error("AppController.error");
 
         EmailService emailService = new EmailService();
         emailService.sendmail(Arrays.asList(convertedFile, dailyReportFile, shiftReportFile));

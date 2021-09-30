@@ -53,7 +53,6 @@ class ExtractOfficersServiceTest {
             List<SwipeRecord> swipeRecords = readXlsxService.readAllRows(new FileInputStream(path.toFile()));
             officers = ExtractOfficersService.from(swipeRecords);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             Assertions.fail("Unable to read file at " + path);
         }
 
