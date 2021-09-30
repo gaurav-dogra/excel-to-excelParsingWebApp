@@ -63,13 +63,13 @@ public class AppController {
 
     @GetMapping("/")
     public String uploadPage() {
-        log.error("AppController.uploadPage");
+        log.info("AppController.uploadPage");
         return "uploadView";
     }
 
     @PostMapping("/")
     public String upload(Model model, @RequestParam("file") MultipartFile file) {
-        log.error("AppController.upload");
+        log.info("AppController.upload");
 
         try {
 
@@ -105,7 +105,7 @@ public class AppController {
 
     @PostMapping("/preview")
     public String preview(@ModelAttribute DtoWrapper dtoWrapper, Model model) throws IOException {
-        log.error("AppController.preview");
+        log.info("AppController.preview");
 
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
 
@@ -127,7 +127,7 @@ public class AppController {
 
     @GetMapping(value = "/download", produces = "application/zip")
     public void download(HttpServletResponse response) throws IOException {
-        log.error("AppController.download");
+        log.info("AppController.download");
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/force-download");
@@ -199,7 +199,7 @@ public class AppController {
 
     @GetMapping("/reportError")
     public String error(Model model) throws MessagingException {
-        log.error("AppController.error");
+        log.info("AppController.error");
 
         EmailService emailService = new EmailService();
         emailService.sendmail(Arrays.asList(convertedFile, dailyReportFile, shiftReportFile));
