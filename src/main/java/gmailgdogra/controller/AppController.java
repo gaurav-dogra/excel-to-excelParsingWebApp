@@ -136,13 +136,11 @@ public class AppController {
 
         for (File file : files) {
             zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
-            FileInputStream fileInputStream = new FileInputStream(file);
-
-            IOUtils.copy(fileInputStream, zipOutputStream);
-            fileInputStream.close();
+            try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                IOUtils.copy(fileInputStream, zipOutputStream);
+            }
             zipOutputStream.closeEntry();
         }
-
         zipOutputStream.close();
     }
 
