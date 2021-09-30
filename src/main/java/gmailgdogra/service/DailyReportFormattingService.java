@@ -20,6 +20,8 @@ public class DailyReportFormattingService {
     private static XSSFWorkbook workbook;
     private static XSSFSheet sheet;
 
+    private DailyReportFormattingService() {}
+
     public static XSSFWorkbook of(XSSFWorkbook plainXlsx) {
         workbook = plainXlsx;
         sheet = workbook.getSheetAt(0);
@@ -32,14 +34,16 @@ public class DailyReportFormattingService {
         for (int rowNo = 2; rowNo < sheet.getPhysicalNumberOfRows(); rowNo++) {
             String previousRowLocation = sheet.getRow(rowNo - 1).getCell(0).getStringCellValue();
             String currentRowLocation = sheet.getRow(rowNo).getCell(0).getStringCellValue();
+            if (previousRowLocation.isEmpty()) {
+                continue;
+            }
             if (!previousRowLocation.equals(currentRowLocation)) {
-                insertEmptyRowBefore(rowNo);
-                rowNo++;
+                insertEmptyRowAt(rowNo);
             }
         }
     }
 
-    private static void insertEmptyRowBefore(int rowNo) {
+    private static void insertEmptyRowAt(int rowNo) {
         shiftRowsDownByOneFrom(rowNo);
         Row row = sheet.createRow(rowNo);
         for (int col = LOCATION_COL_NO; col <= LOGICAL_DEVICE_COL_NO; col++) {

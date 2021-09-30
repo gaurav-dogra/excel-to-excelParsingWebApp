@@ -1,12 +1,17 @@
 package gmailgdogra.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserInputDto {
 
-    private final String firstName;
-    private final String lastName;
-    private final int shiftCode;
-
+    private String firstName;
+    private String lastName;
+    private int shiftCode;
 }
