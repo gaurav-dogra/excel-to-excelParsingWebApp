@@ -73,7 +73,7 @@ public class AppController {
 
         try {
 
-            convertedFile = new File(System.getProperty("java.io.tmpdir") + "/" +
+            convertedFile = new File(System.getProperty("java.io.tmpdir") + File.separator +
                     file.getOriginalFilename());
             file.transferTo(convertedFile);
 
