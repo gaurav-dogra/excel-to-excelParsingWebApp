@@ -18,14 +18,14 @@
 </header>
 
 <!--input section -->
-    <section class="text-dark p-5 text-center">
-        <div class="container">
-            <div class="mb-3">
-                <input class="form-control" type="file" id="formFile">
-                <button type="submit" class="btn btn-light m-3">Upload</button>
-            </div>
-        </div>
-    </section>
+<section class="text-dark p-5 text-center">
+    <div class="container">
+        <form th:action="@{/}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" class="form-control">
+            <button type="submit" class="btn btn-primary m-3">Upload File</button>
+        </form>
+    </div>
+</section>
 
 <footer class="mt-auto">
     <div th:insert="nav :: footer"></div>
