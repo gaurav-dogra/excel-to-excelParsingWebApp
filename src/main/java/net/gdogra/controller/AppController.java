@@ -7,12 +7,12 @@ import net.gdogra.pojo.Officer;
 import net.gdogra.pojo.OutputRow;
 import net.gdogra.pojo.Shift;
 import net.gdogra.pojo.Swipe;
-import net.gdogra.service.DailyReportFormattingService;
+import net.gdogra.service.DailyReportService;
 import net.gdogra.service.DailyReportGeneratingService;
 import net.gdogra.service.EmailSenderService;
 import net.gdogra.service.ExtractOfficersService;
 import net.gdogra.service.ReadXlsxService;
-import net.gdogra.service.ShiftReportGeneratingService;
+import net.gdogra.service.ShiftReportService;
 import net.gdogra.service.SwipeProcessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,8 +109,8 @@ public class AppController {
         List<OutputRow> inSwipesCurrentShift = swipeProcessorService.getInSwipesCurrentShift();
 
         XSSFWorkbook dailyReport = DailyReportGeneratingService.write(inOutSwipesPrevTwoShifts);
-        XSSFWorkbook formattedDailyReport = DailyReportFormattingService.of(dailyReport);
-        XSSFWorkbook shiftReport = ShiftReportGeneratingService.write(inSwipesCurrentShift);
+        XSSFWorkbook formattedDailyReport = DailyReportService.format(dailyReport);
+        XSSFWorkbook shiftReport = ShiftReportService.generate(inSwipesCurrentShift);
 
         dailyReportFile = convertWorkbookToFile(formattedDailyReport, createDailyReportFileName());
         shiftReportFile = convertWorkbookToFile(shiftReport, createShiftReportFileName());

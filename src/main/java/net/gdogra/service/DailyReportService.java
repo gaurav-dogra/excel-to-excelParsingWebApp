@@ -15,14 +15,14 @@ import static net.gdogra.AppConstants.TIME_INFO_START_INDEX;
 import static net.gdogra.AppConstants.TITLE_ROW_NO;
 
 
-public class DailyReportFormattingService {
+public class DailyReportService {
 
     private static XSSFWorkbook workbook;
     private static XSSFSheet sheet;
 
-    private DailyReportFormattingService() {}
+    private DailyReportService() {}
 
-    public static XSSFWorkbook of(XSSFWorkbook plainXlsx) {
+    public static XSSFWorkbook format(XSSFWorkbook plainXlsx) {
         workbook = plainXlsx;
         sheet = workbook.getSheetAt(0);
         insertEmptyRowAfterEachLocation();

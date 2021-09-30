@@ -14,15 +14,17 @@ import java.time.format.FormatStyle;
 import java.util.Collections;
 import java.util.List;
 
-public class ShiftReportGeneratingService {
+public class ShiftReportService {
 
-    public static XSSFWorkbook write(List<OutputRow> inSwipesCurrentShift) throws IOException {
-        FileInputStream templateFile = new FileInputStream("src/main/resources/Shift Report Template.xlsx");
-        XSSFWorkbook workbook = new XSSFWorkbook(templateFile);
-        XSSFSheet sheet = workbook.getSheetAt(0);
-        insertShiftDate(sheet);
-        insertData(sheet, inSwipesCurrentShift);
-        templateFile.close();
+    private ShiftReportService() {}
+    public static XSSFWorkbook generate(List<OutputRow> inSwipesCurrentShift) throws IOException {
+        XSSFWorkbook workbook;
+        try (FileInputStream templateFile = new FileInputStream("src/main/resources/Shift Report Template.xlsx")) {
+            workbook = new XSSFWorkbook(templateFile);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            insertShiftDate(sheet);
+            insertData(sheet, inSwipesCurrentShift);
+        }
         return workbook;
     }
 
