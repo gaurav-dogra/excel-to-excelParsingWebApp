@@ -1,15 +1,15 @@
 package gmailgdogra.controller;
 
 import gmailgdogra.dto.DtoWrapper;
+import gmailgdogra.dto.UserInputDto;
 import gmailgdogra.pojo.Location;
 import gmailgdogra.pojo.Officer;
 import gmailgdogra.pojo.OutputRow;
 import gmailgdogra.pojo.Shift;
 import gmailgdogra.pojo.Swipe;
-import gmailgdogra.dto.UserInputDto;
 import gmailgdogra.service.DailyReportFormattingService;
 import gmailgdogra.service.DailyReportGeneratingService;
-import gmailgdogra.service.EmailService;
+import gmailgdogra.service.EmailSenderService;
 import gmailgdogra.service.ExtractOfficersService;
 import gmailgdogra.service.ReadXlsxService;
 import gmailgdogra.service.ShiftReportGeneratingService;
@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,12 +48,13 @@ public class AppController {
 
     private List<Swipe> allSwipes;
 
-    private File convertedFile;
+    private File uploadedFile;
     private File dailyReportFile;
     private File shiftReportFile;
 
     private final ReadXlsxService readXlsxService;
     private final SwipeProcessorService swipeProcessorService;
+    private final EmailSenderService emailService;
 
     @GetMapping("/")
     public String uploadPage() {
@@ -68,11 +68,11 @@ public class AppController {
 
         try {
 
-            convertedFile = new File(System.getProperty("java.io.tmpdir") + File.separator +
+            uploadedFile = new File(System.getProperty("java.io.tmpdir") + File.separator +
                     file.getOriginalFilename());
-            file.transferTo(convertedFile);
+            file.transferTo(uploadedFile);
 
-            allSwipes = readXlsxService.readAllRows(new FileInputStream(convertedFile));
+            allSwipes = readXlsxService.readAllRows(new FileInputStream(uploadedFile));
             DtoWrapper dtoWrapper = createUserInputDtoWrapper(allSwipes);
             model.addAttribute("dtoWrapper", dtoWrapper);
 
@@ -206,14 +206,13 @@ public class AppController {
         return shift;
     }
 
-    @GetMapping("/reportError")
-    public String error(Model model) throws MessagingException {
-        log.info("AppController.error");
-
-        EmailService emailService = new EmailService();
-        emailService.sendmail(Arrays.asList(convertedFile, dailyReportFile, shiftReportFile));
-        model.addAttribute("msg", "Thanks for reporting.\nIt helps us improve the app.");
-
+    @GetMapping("/emailFiles")
+    public String emailFiles(Model model) throws MessagingException {
+        log.info("AppController.email Files");
+        File[] files = {uploadedFile, dailyReportFile, shiftReportFile};
+        emailService.sendEmailWithAttachment(files);
+        model.addAttribute("msg", "Thanks for reporting an error in the reports, " +
+                "it would help us improve the app");
         return "messageView";
     }
 
