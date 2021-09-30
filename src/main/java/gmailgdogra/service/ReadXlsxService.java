@@ -1,7 +1,7 @@
 package gmailgdogra.service;
 
 import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.SwipeRecord;
+import gmailgdogra.pojo.Swipe;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -23,12 +23,12 @@ public class ReadXlsxService {
     private static final int COL_SWIPE_DATE_TIME = 2;
     private static final int COL_DEVICE_NAME = 5;
 
-    public List<SwipeRecord> readAllRows(InputStream inputStream) throws IOException {
+    public List<Swipe> readAllRows(InputStream inputStream) throws IOException {
         return collectDataFrom(new XSSFWorkbook(inputStream).getSheetAt(0));
     }
 
-    private List<SwipeRecord> collectDataFrom(Sheet sheet) throws IOException {
-        List<SwipeRecord> data = new ArrayList<>();
+    private List<Swipe> collectDataFrom(Sheet sheet) throws IOException {
+        List<Swipe> data = new ArrayList<>();
         for (int rowIndex = DATA_START_ROW; rowIndex <= sheet.getPhysicalNumberOfRows(); rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (row != null) {
@@ -39,7 +39,7 @@ public class ReadXlsxService {
                 Officer officer = new Officer(firstName, lastName);
                 LocalDateTime swipeDateAndTime = row.getCell(COL_SWIPE_DATE_TIME).getLocalDateTimeCellValue();
                 String deviceName = row.getCell(COL_DEVICE_NAME).getStringCellValue();
-                data.add(new SwipeRecord(officer, swipeDateAndTime, deviceName));
+                data.add(new Swipe(officer, swipeDateAndTime, deviceName));
             }
         }
         if (data.size() == 0) {
