@@ -23,10 +23,14 @@ public class ReadXlsxService {
     private static final int COL_DEVICE_NAME = 5;
 
     public List<Swipe> readAllRows(InputStream inputStream) throws IOException {
-        return collectDataFrom(new XSSFWorkbook(inputStream).getSheetAt(0));
+        List<Swipe> data = collectDataFrom(new XSSFWorkbook(inputStream).getSheetAt(0));
+        if (data.isEmpty()) {
+            throw new IOException();
+        }
+        return data;
     }
 
-    private List<Swipe> collectDataFrom(Sheet sheet) throws IOException {
+    private List<Swipe> collectDataFrom(Sheet sheet) {
         List<Swipe> data = new ArrayList<>();
         for (int rowIndex = AppConstants.DATA_START_ROW; rowIndex <= sheet.getPhysicalNumberOfRows(); rowIndex++) {
             Row row = sheet.getRow(rowIndex);
@@ -40,9 +44,6 @@ public class ReadXlsxService {
                 String deviceName = row.getCell(COL_DEVICE_NAME).getStringCellValue();
                 data.add(new Swipe(officer, swipeDateAndTime, deviceName));
             }
-        }
-        if (data.size() == 0) {
-            throw new IOException();
         }
         return data;
     }
