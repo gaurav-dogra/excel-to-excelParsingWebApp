@@ -1,4 +1,4 @@
-package gmailgdogra;
+package net.gdogra;
 
 public class AppConstants {
 
@@ -21,6 +21,8 @@ public class AppConstants {
     public static final int ROW_COUNT_TEST_FILE_1 = 170;
 
     public static String EXCEL_FILE_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public static final String EMAIL_ADD = "gaurav.dogra.fullstack@gmail.com";
+
 
     private AppConstants() {}
 

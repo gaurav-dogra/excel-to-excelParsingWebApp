@@ -1,4 +1,4 @@
-package gmailgdogra.service;
+package net.gdogra.service;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -7,20 +7,22 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.time.LocalTime;
 
-import static gmailgdogra.AppConstants.EVENT_DATE_COL_NO;
-import static gmailgdogra.AppConstants.FIRST_NAME_COL_NO;
-import static gmailgdogra.AppConstants.LOCATION_COL_NO;
-import static gmailgdogra.AppConstants.LOGICAL_DEVICE_COL_NO;
-import static gmailgdogra.AppConstants.TIME_INFO_START_INDEX;
-import static gmailgdogra.AppConstants.TITLE_ROW_NO;
+import static net.gdogra.AppConstants.EVENT_DATE_COL_NO;
+import static net.gdogra.AppConstants.FIRST_NAME_COL_NO;
+import static net.gdogra.AppConstants.LOCATION_COL_NO;
+import static net.gdogra.AppConstants.LOGICAL_DEVICE_COL_NO;
+import static net.gdogra.AppConstants.TIME_INFO_START_INDEX;
+import static net.gdogra.AppConstants.TITLE_ROW_NO;
 
 
-public class DailyReportFormattingService {
+public class DailyReportService {
 
     private static XSSFWorkbook workbook;
     private static XSSFSheet sheet;
 
-    public static XSSFWorkbook of(XSSFWorkbook plainXlsx) {
+    private DailyReportService() {}
+
+    public static XSSFWorkbook format(XSSFWorkbook plainXlsx) {
         workbook = plainXlsx;
         sheet = workbook.getSheetAt(0);
         insertEmptyRowAfterEachLocation();
@@ -32,14 +34,16 @@ public class DailyReportFormattingService {
         for (int rowNo = 2; rowNo < sheet.getPhysicalNumberOfRows(); rowNo++) {
             String previousRowLocation = sheet.getRow(rowNo - 1).getCell(0).getStringCellValue();
             String currentRowLocation = sheet.getRow(rowNo).getCell(0).getStringCellValue();
+            if (previousRowLocation.isEmpty()) {
+                continue;
+            }
             if (!previousRowLocation.equals(currentRowLocation)) {
-                insertEmptyRowBefore(rowNo);
-                rowNo++;
+                insertEmptyRowAt(rowNo);
             }
         }
     }
 
-    private static void insertEmptyRowBefore(int rowNo) {
+    private static void insertEmptyRowAt(int rowNo) {
         shiftRowsDownByOneFrom(rowNo);
         Row row = sheet.createRow(rowNo);
         for (int col = LOCATION_COL_NO; col <= LOGICAL_DEVICE_COL_NO; col++) {

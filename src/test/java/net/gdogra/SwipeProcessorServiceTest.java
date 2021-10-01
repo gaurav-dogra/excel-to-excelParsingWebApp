@@ -1,12 +1,12 @@
-package gmailgdogra;
+package net.gdogra;
 
-import gmailgdogra.pojo.Location;
-import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.OutputRow;
-import gmailgdogra.pojo.Shift;
-import gmailgdogra.pojo.SwipeRecord;
-import gmailgdogra.service.ReadXlsxService;
-import gmailgdogra.service.SwipeProcessorService;
+import net.gdogra.pojo.Location;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.OutputRow;
+import net.gdogra.pojo.Shift;
+import net.gdogra.pojo.Swipe;
+import net.gdogra.service.ReadXlsxService;
+import net.gdogra.service.SwipeProcessorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -190,7 +190,7 @@ class SwipeProcessorServiceTest {
         Path path = Paths.get("src/main/resources/test file 1.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
-        List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);
+        List<Swipe> allSwipes = readXlsxService.readAllRows(stream);
         List<Shift> shifts = getShiftsForTestFile1();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
@@ -203,7 +203,7 @@ class SwipeProcessorServiceTest {
         Path path = Paths.get("src/main/resources/test file 2.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
-        List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);
+        List<Swipe> allSwipes = readXlsxService.readAllRows(stream);
         List<Shift> shifts = getShiftsForTestFile2();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInOutSwipesPrevTwoShifts();
@@ -216,7 +216,7 @@ class SwipeProcessorServiceTest {
         Path path = Paths.get("src/main/resources/test file 1.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
-        List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);
+        List<Swipe> allSwipes = readXlsxService.readAllRows(stream);
         List<Shift> shifts = getShiftsForTestFile1();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInSwipesCurrentShift();
@@ -229,7 +229,7 @@ class SwipeProcessorServiceTest {
         Path path = Paths.get("src/main/resources/test file 2.xlsx");
         InputStream stream = new FileInputStream(path.toFile());
 
-        List<SwipeRecord> allSwipes = readXlsxService.readAllRows(stream);
+        List<Swipe> allSwipes = readXlsxService.readAllRows(stream);
         List<Shift> shifts = getShiftsForTestFile2();
         swipeProcessorService.prepareData(allSwipes, shifts);
         List<OutputRow> results = swipeProcessorService.getInSwipesCurrentShift();

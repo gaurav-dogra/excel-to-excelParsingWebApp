@@ -1,12 +1,21 @@
-package gmailgdogra.service;
+package net.gdogra.service;
 
-import gmailgdogra.pojo.*;
+import net.gdogra.pojo.Location;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.OutputRow;
+import net.gdogra.pojo.Shift;
+import net.gdogra.pojo.Swipe;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,17 +48,17 @@ public class SwipeProcessorService {
         swipeOutDevicesMap.put("PLA0105 - Turnstile East OUT", Location.TL_PLAISTOW);
     }
 
-    public void prepareData(List<SwipeRecord> allSwipes, List<Shift> shifts) {
+    public void prepareData(List<Swipe> allSwipes, List<Shift> shifts) {
         dayOne = getDayOneFromSwipes(allSwipes);
         inOutSwipesPrevTwoShifts = getPrevShiftInOutSwipes(allSwipes, shifts);
         inSwipesCurrentShift = getCurrentShiftInSwipes(allSwipes, shifts);
     }
 
-    private List<OutputRow> getCurrentShiftInSwipes(List<SwipeRecord> allSwipes, List<Shift> shifts) {
+    private List<OutputRow> getCurrentShiftInSwipes(List<Swipe> allSwipes, List<Shift> shifts) {
         Set<Officer> currentShiftOfficers = getCurrentShiftOfficers(allSwipes, shifts);
         List<OutputRow> returnedValueList = new ArrayList<>();
 
-        List<SwipeRecord> selectedSwipes = allSwipes.stream()
+        List<Swipe> selectedSwipes = allSwipes.stream()
                 .filter(swipe -> swipe.getSwipeDateTime().toLocalDate().isAfter(dayOne))
                 .filter(swipe -> swipeInDevicesMap.containsKey(swipe.getDeviceName()))
                 .filter(swipe -> swipe.getSwipeDateTime().getHour() >= 4 &&
@@ -63,8 +72,8 @@ public class SwipeProcessorService {
         return returnedValueList;
     }
 
-    private OutputRow getCurrentShiftSwipeIn(Officer officer, List<SwipeRecord> selectedSwipes) {
-        SwipeRecord swipeInRecord = selectedSwipes.stream()
+    private OutputRow getCurrentShiftSwipeIn(Officer officer, List<Swipe> selectedSwipes) {
+        Swipe swipeInRecord = selectedSwipes.stream()
                 .filter(swipe -> officer.equals(swipe.getOfficer()))
                 .sorted()
                 .findFirst()
@@ -74,7 +83,7 @@ public class SwipeProcessorService {
                 parseDateTime(swipeInRecord.getSwipeDateTime()), swipeInRecord.getDeviceName());
     }
 
-    private Set<Officer> getCurrentShiftOfficers(List<SwipeRecord> allSwipes, List<Shift> shifts) {
+    private Set<Officer> getCurrentShiftOfficers(List<Swipe> allSwipes, List<Shift> shifts) {
         Set<Officer> prevNightOfficers = getPreviousNightOfficers(shifts);
         return allSwipes.stream()
                 .filter(swipe -> swipe.getSwipeDateTime().toLocalDate().isAfter(dayOne))
@@ -82,7 +91,7 @@ public class SwipeProcessorService {
                 .filter(swipe -> !prevNightOfficers.contains(swipe.getOfficer()))
                 .filter(swipe -> swipe.getSwipeDateTime().getHour() >= 4 &&
                         swipe.getSwipeDateTime().getHour() <= 7)
-                .map(SwipeRecord::getOfficer)
+                .map(Swipe::getOfficer)
                 .collect(Collectors.toSet());
     }
 
@@ -93,7 +102,7 @@ public class SwipeProcessorService {
                 .collect(Collectors.toSet());
     }
 
-    private List<OutputRow> getPrevShiftInOutSwipes(List<SwipeRecord> allSwipes, List<Shift> shifts) {
+    private List<OutputRow> getPrevShiftInOutSwipes(List<Swipe> allSwipes, List<Shift> shifts) {
         List<OutputRow> dailyReportDataList = new ArrayList<>();
         for (Shift shift : shifts) {
             OutputRow swipeIn = getSwipeIn(shift, allSwipes);
@@ -105,7 +114,7 @@ public class SwipeProcessorService {
         return dailyReportDataList;
     }
 
-    private LocalDate getDayOneFromSwipes(List<SwipeRecord> allSwipes) {
+    private LocalDate getDayOneFromSwipes(List<Swipe> allSwipes) {
         Set<LocalDate> allDates = allSwipes.stream()
                 .map(swipe -> swipe.getSwipeDateTime().toLocalDate())
                 .collect(Collectors.toSet());
@@ -113,11 +122,11 @@ public class SwipeProcessorService {
 
     }
 
-    private OutputRow getSwipeIn(Shift shift, List<SwipeRecord> allSwipes) {
+    private OutputRow getSwipeIn(Shift shift, List<Swipe> allSwipes) {
         Officer officer = shift.getOfficer();
         Location location = shift.getLocation();
 
-        SwipeRecord record = allSwipes.stream()
+        Swipe record = allSwipes.stream()
                 .filter(swipe -> officer.equals(swipe.getOfficer()))
                 .filter(swipe -> swipeInDevicesMap.containsKey(swipe.getDeviceName()))
                 .filter(swipe -> location == swipeInDevicesMap.get(swipe.getDeviceName()))
@@ -133,17 +142,17 @@ public class SwipeProcessorService {
                 })
                 .sorted()
                 .findFirst()
-                .orElse(new SwipeRecord(officer, null, null));
+                .orElse(new Swipe(officer, null, null));
 
         return OutputRow.of(location.toString(), officer.getFirstName(), officer.getLastName(),
                 parseDateTime(record.getSwipeDateTime()), record.getDeviceName());
     }
 
-    private OutputRow getSwipeOut(Shift shift, List<SwipeRecord> allSwipes) {
+    private OutputRow getSwipeOut(Shift shift, List<Swipe> allSwipes) {
         Officer officer = shift.getOfficer();
         Location location = shift.getLocation();
 
-        SwipeRecord record = allSwipes.stream()
+        Swipe record = allSwipes.stream()
                 .filter(swipe -> officer.equals(swipe.getOfficer()))
                 .filter(swipe -> swipeOutDevicesMap.containsKey(swipe.getDeviceName()))
                 .filter(swipe -> location == swipeOutDevicesMap.get(swipe.getDeviceName()))
@@ -159,7 +168,7 @@ public class SwipeProcessorService {
                 })
                 .sorted()
                 .reduce((first, second) -> second)
-                .orElse(new SwipeRecord(officer, null, null));
+                .orElse(new Swipe(officer, null, null));
 
         return OutputRow.of(location.toString(), officer.getFirstName(), officer.getLastName(),
                 parseDateTime(record.getSwipeDateTime()), record.getDeviceName());

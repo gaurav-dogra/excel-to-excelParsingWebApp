@@ -1,22 +1,23 @@
-package gmailgdogra.controller;
+package net.gdogra.controller;
 
-import gmailgdogra.pojo.DtoWrapper;
-import gmailgdogra.pojo.Location;
-import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.OutputRow;
-import gmailgdogra.pojo.Shift;
-import gmailgdogra.pojo.SwipeRecord;
-import gmailgdogra.pojo.UserInputDto;
-import gmailgdogra.service.DailyReportFormattingService;
-import gmailgdogra.service.DailyReportGeneratingService;
-import gmailgdogra.service.EmailService;
-import gmailgdogra.service.ExtractOfficersService;
-import gmailgdogra.service.ReadXlsxService;
-import gmailgdogra.service.ShiftReportGeneratingService;
-import gmailgdogra.service.SwipeProcessorService;
+import net.gdogra.dto.DtoWrapper;
+import net.gdogra.dto.UserInputDto;
+import net.gdogra.pojo.Location;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.OutputRow;
+import net.gdogra.pojo.Shift;
+import net.gdogra.pojo.Swipe;
+import net.gdogra.service.DailyReportService;
+import net.gdogra.service.DailyReportGeneratingService;
+import net.gdogra.service.EmailSenderService;
+import net.gdogra.service.ExtractOfficersService;
+import net.gdogra.service.ReadXlsxService;
+import net.gdogra.service.ShiftReportService;
+import net.gdogra.service.SwipeProcessorService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,40 +42,37 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 public class AppController {
 
-    private List<SwipeRecord> allSwipes;
+    private List<Swipe> allSwipes;
 
-    private File convertedFile;
+    private File uploadedFile;
     private File dailyReportFile;
     private File shiftReportFile;
 
     private final ReadXlsxService readXlsxService;
     private final SwipeProcessorService swipeProcessorService;
-
-    @Autowired
-    public AppController(ReadXlsxService readXlsxService, SwipeProcessorService swipeProcessorService) {
-        this.readXlsxService = readXlsxService;
-        this.swipeProcessorService = swipeProcessorService;
-    }
+    private final EmailSenderService emailService;
 
     @GetMapping("/")
     public String uploadPage() {
-        System.out.println("AppController.uploadPage");
+        log.info("AppController.uploadPage");
         return "uploadView";
     }
 
     @PostMapping("/")
     public String upload(Model model, @RequestParam("file") MultipartFile file) {
-        System.out.println("AppController.upload");
+        log.info("AppController.upload");
 
         try {
 
-            convertedFile = new File(System.getProperty("java.io.tmpdir") + "/" +
+            uploadedFile = new File(System.getProperty("java.io.tmpdir") + File.separator +
                     file.getOriginalFilename());
-            file.transferTo(convertedFile);
+            file.transferTo(uploadedFile);
 
-            allSwipes = readXlsxService.readAllRows(new FileInputStream(convertedFile));
+            allSwipes = readXlsxService.readAllRows(new FileInputStream(uploadedFile));
             DtoWrapper dtoWrapper = createUserInputDtoWrapper(allSwipes);
             model.addAttribute("dtoWrapper", dtoWrapper);
 
@@ -88,7 +85,7 @@ public class AppController {
         return "messageView";
     }
 
-    private DtoWrapper createUserInputDtoWrapper(List<SwipeRecord> allSwipes) {
+    private DtoWrapper createUserInputDtoWrapper(List<Swipe> allSwipes) {
 
         Set<Officer> officers = ExtractOfficersService.from(allSwipes);
         DtoWrapper dtoWrapper = new DtoWrapper();
@@ -103,7 +100,7 @@ public class AppController {
 
     @PostMapping("/preview")
     public String preview(@ModelAttribute DtoWrapper dtoWrapper, Model model) throws IOException {
-        System.out.println("AppController.preview");
+        log.info("AppController.preview");
 
         List<Shift> shifts = getShiftsListFromWrapper(dtoWrapper);
 
@@ -112,8 +109,8 @@ public class AppController {
         List<OutputRow> inSwipesCurrentShift = swipeProcessorService.getInSwipesCurrentShift();
 
         XSSFWorkbook dailyReport = DailyReportGeneratingService.write(inOutSwipesPrevTwoShifts);
-        XSSFWorkbook formattedDailyReport = DailyReportFormattingService.of(dailyReport);
-        XSSFWorkbook shiftReport = ShiftReportGeneratingService.write(inSwipesCurrentShift);
+        XSSFWorkbook formattedDailyReport = DailyReportService.format(dailyReport);
+        XSSFWorkbook shiftReport = ShiftReportService.generate(inSwipesCurrentShift);
 
         dailyReportFile = convertWorkbookToFile(formattedDailyReport, createDailyReportFileName());
         shiftReportFile = convertWorkbookToFile(shiftReport, createShiftReportFileName());
@@ -125,7 +122,7 @@ public class AppController {
 
     @GetMapping(value = "/download", produces = "application/zip")
     public void download(HttpServletResponse response) throws IOException {
-        System.out.println("AppController.download");
+        log.info("AppController.download");
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/force-download");
@@ -139,13 +136,11 @@ public class AppController {
 
         for (File file : files) {
             zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
-            FileInputStream fileInputStream = new FileInputStream(file);
-
-            IOUtils.copy(fileInputStream, zipOutputStream);
-            fileInputStream.close();
+            try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                IOUtils.copy(fileInputStream, zipOutputStream);
+            }
             zipOutputStream.closeEntry();
         }
-
         zipOutputStream.close();
     }
 
@@ -175,34 +170,49 @@ public class AppController {
 
     private Shift convertDtoToShift(UserInputDto dtoObj) {
         Officer officer = new Officer(dtoObj.getFirstName(), dtoObj.getLastName());
+        Shift shift = new Shift(officer);
+
         switch (dtoObj.getShiftCode()) {
             case 1:
-                return new Shift(officer, Location.MAIN_GATE, true);
+                shift.setLocation(Location.MAIN_GATE);
+                shift.setDayShift(true);
+                break;
             case 2:
-                return new Shift(officer, Location.MAIN_GATE, false);
+                shift.setLocation(Location.MAIN_GATE);
+                shift.setDayShift(false);
+                break;
             case 3:
-                return new Shift(officer, Location.EP_WEIGHBRIDGE, true);
+                shift.setLocation(Location.EP_WEIGHBRIDGE);
+                shift.setDayShift(true);
+                break;
             case 4:
-                return new Shift(officer, Location.EP_WEIGHBRIDGE, false);
+                shift.setLocation(Location.EP_WEIGHBRIDGE);
+                shift.setDayShift(false);
+                break;
             case 5:
-                return new Shift(officer, Location.VISITORS_RECEPTION, true);
+                shift.setLocation(Location.VISITORS_RECEPTION);
+                shift.setDayShift(true);
+                break;
             case 6:
-                return new Shift(officer, Location.TL_PLAISTOW, true);
+                shift.setLocation(Location.TL_PLAISTOW);
+                shift.setDayShift(true);
+                break;
             case 7:
-                return new Shift(officer, Location.TL_PLAISTOW, false);
             default:
-                throw new RuntimeException("Unable to understand user Input: " + dtoObj);
+                shift.setLocation(Location.TL_PLAISTOW);
+                shift.setDayShift(false);
+                break;
         }
+        return shift;
     }
 
-    @GetMapping("/reportError")
-    public String error(Model model) throws MessagingException {
-        System.out.println("AppController.error");
-
-        EmailService emailService = new EmailService();
-        emailService.sendmail(Arrays.asList(convertedFile, dailyReportFile, shiftReportFile));
-        model.addAttribute("msg", "Thanks for reporting.\nIt helps us improve the app.");
-
+    @GetMapping("/emailFiles")
+    public String emailFiles(Model model) throws MessagingException {
+        log.info("AppController.email Files");
+        File[] files = {uploadedFile, dailyReportFile, shiftReportFile};
+        emailService.sendEmailWithAttachment(files);
+        model.addAttribute("msg", "Thanks for reporting an error in the reports, " +
+                "it would help us improve the app");
         return "messageView";
     }
 

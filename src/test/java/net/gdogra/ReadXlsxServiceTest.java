@@ -1,7 +1,7 @@
-package gmailgdogra;
+package net.gdogra;
 
-import gmailgdogra.pojo.SwipeRecord;
-import gmailgdogra.service.ReadXlsxService;
+import net.gdogra.pojo.Swipe;
+import net.gdogra.service.ReadXlsxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static gmailgdogra.AppConstants.ROW_COUNT_TEST_FILE_1;
+import static net.gdogra.AppConstants.ROW_COUNT_TEST_FILE_1;
 
 @SpringBootTest
 class ReadXlsxServiceTest {
@@ -29,7 +29,7 @@ class ReadXlsxServiceTest {
 
     @Test
     public void test_readAllRows() {
-        List<SwipeRecord> rows = new ArrayList<>();
+        List<Swipe> rows = new ArrayList<>();
         Path path = Paths.get("src/main/resources/test file 1.xlsx");
 
         try {

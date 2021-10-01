@@ -1,9 +1,9 @@
-package gmailgdogra;
+package net.gdogra;
 
-import gmailgdogra.pojo.Officer;
-import gmailgdogra.pojo.SwipeRecord;
-import gmailgdogra.service.ExtractOfficersService;
-import gmailgdogra.service.ReadXlsxService;
+import net.gdogra.pojo.Officer;
+import net.gdogra.pojo.Swipe;
+import net.gdogra.service.ExtractOfficersService;
+import net.gdogra.service.ReadXlsxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +50,9 @@ class ExtractOfficersServiceTest {
         Set<Officer> officers = null;
 
         try {
-            List<SwipeRecord> swipeRecords = readXlsxService.readAllRows(new FileInputStream(path.toFile()));
-            officers = ExtractOfficersService.from(swipeRecords);
+            List<Swipe> swipes = readXlsxService.readAllRows(new FileInputStream(path.toFile()));
+            officers = ExtractOfficersService.from(swipes);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             Assertions.fail("Unable to read file at " + path);
         }
 
