@@ -22,9 +22,10 @@ import java.util.stream.Collectors;
 public class SwipeProcessorService {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    public static final Map<String, Location> swipeInDevicesMap;
-    public static final Map<String, Location> swipeOutDevicesMap;
-    private static LocalDate dayOne;
+    private static final Map<String, Location> swipeInDevicesMap;
+    private static final Map<String, Location> swipeOutDevicesMap;
+
+    private LocalDate dayOne;
     private List<OutputRow> inOutSwipesPrevTwoShifts = new ArrayList<>();
     private List<OutputRow> inSwipesCurrentShift = new ArrayList<>();
 
@@ -126,7 +127,7 @@ public class SwipeProcessorService {
         Officer officer = shift.getOfficer();
         Location location = shift.getLocation();
 
-        Swipe record = allSwipes.stream()
+        Swipe row = allSwipes.stream()
                 .filter(swipe -> officer.equals(swipe.getOfficer()))
                 .filter(swipe -> swipeInDevicesMap.containsKey(swipe.getDeviceName()))
                 .filter(swipe -> location == swipeInDevicesMap.get(swipe.getDeviceName()))
@@ -145,14 +146,14 @@ public class SwipeProcessorService {
                 .orElse(new Swipe(officer, null, null));
 
         return OutputRow.of(location.toString(), officer.getFirstName(), officer.getLastName(),
-                parseDateTime(record.getSwipeDateTime()), record.getDeviceName());
+                parseDateTime(row.getSwipeDateTime()), row.getDeviceName());
     }
 
     private OutputRow getSwipeOut(Shift shift, List<Swipe> allSwipes) {
         Officer officer = shift.getOfficer();
         Location location = shift.getLocation();
 
-        Swipe record = allSwipes.stream()
+        Swipe row = allSwipes.stream()
                 .filter(swipe -> officer.equals(swipe.getOfficer()))
                 .filter(swipe -> swipeOutDevicesMap.containsKey(swipe.getDeviceName()))
                 .filter(swipe -> location == swipeOutDevicesMap.get(swipe.getDeviceName()))
@@ -171,7 +172,7 @@ public class SwipeProcessorService {
                 .orElse(new Swipe(officer, null, null));
 
         return OutputRow.of(location.toString(), officer.getFirstName(), officer.getLastName(),
-                parseDateTime(record.getSwipeDateTime()), record.getDeviceName());
+                parseDateTime(row.getSwipeDateTime()), row.getDeviceName());
     }
 
     private String parseDateTime(LocalDateTime swipeDateTime) {
