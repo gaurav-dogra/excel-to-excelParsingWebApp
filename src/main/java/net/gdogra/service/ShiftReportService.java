@@ -21,18 +21,18 @@ public class ShiftReportService {
         XSSFWorkbook workbook;
         try (FileInputStream templateFile = new FileInputStream("src/main/resources/Shift Report Template.xlsx")) {
             workbook = new XSSFWorkbook(templateFile);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            insertShiftDate(sheet);
-            insertData(sheet, inSwipesCurrentShift);
+            XSSFSheet templateSheet = workbook.getSheetAt(0);
+            insertShiftDate(templateSheet);
+            insertData(templateSheet, inSwipesCurrentShift);
         }
         return workbook;
     }
 
-    private static void insertData(XSSFSheet sheet, List<OutputRow> inSwipesCurrentShift) {
+    private static void insertData(XSSFSheet templateSheet, List<OutputRow> inSwipesCurrentShift) {
         Collections.sort(inSwipesCurrentShift);
-        int currentRowNo = AppConstants.DATA_START_ROW;
+        int currentRowNo = AppConstants.DATA_START_ROW_SHIFT_REPORT;
         for (OutputRow data : inSwipesCurrentShift) {
-            Row row = sheet.getRow(currentRowNo++);
+            Row row = templateSheet.getRow(currentRowNo++);
             row.getCell(AppConstants.LOCATION_COL_NO).setCellValue(data.getLocation());
             row.getCell(AppConstants.FULL_NAME_COL).setCellValue(data.getFirstName() + " " + data.getLastName());
             row.getCell(AppConstants.TIME_ON_COL).setCellValue(data.getEventDate().substring(AppConstants.TIME_INFO_START_INDEX));

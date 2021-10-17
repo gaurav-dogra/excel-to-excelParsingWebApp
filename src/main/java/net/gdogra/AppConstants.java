@@ -13,6 +13,7 @@ public class AppConstants {
 
     public static final int SHIFT_DATE_ROW = 3;
     public static final int DATA_START_ROW = 7;
+    public static final int DATA_START_ROW_SHIFT_REPORT = 6;
     public static final int FULL_NAME_COL = 1;
     public static final int TIME_ON_COL = 2;
     public static final int TIME_OFF_COL = 3;
